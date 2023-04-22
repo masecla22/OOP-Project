@@ -1,0 +1,44 @@
+name: In Time Submission
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+   runs-on: ubuntu-latest
+   steps:
+    - uses: actions/checkout@v3
+    - name: Check if the commit is in time
+      run: |
+        branch=${{ github.head_ref || github.ref_name }}
+        echo $branch
+        valid_branches=("main" "introduction" "rpg" "rts")
+        if [[ ! " ${valid_branches[@]} " =~ " ${branch} " ]]; then
+            echo "Invalid branch, please use one of the following: ${valid_branches[@]}"
+            exit 1
+        fi
+        if [ $branch == "main" ]; then
+            echo "Main branch"
+            exit 0
+        fi
+        current_date=$(date +%s)
+        if [ $branch == "introduction" ]; then
+            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/1?token=${{ secrets.STYLO2K_TOKEN }}")
+        fi
+        if [ $branch == "rpg" ]; then
+            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/2?token=${{ secrets.STYLO2K_TOKEN }}")
+        fi
+        if [ $branch == "rts" ]; then
+            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/3?token=${{ secrets.STYLO2K_TOKEN }}")
+        fi
+
+        echo "The deadline is for $branch is $plain_date"
+        due_date=$(date -d "$plain_date" +%s)
+        if [ $current_date -gt $due_date ]; then
+            echo "The deadline has passed"
+            exit 1
+        fi
+        exit 0
