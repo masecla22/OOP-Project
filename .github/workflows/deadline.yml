@@ -13,8 +13,11 @@ jobs:
     - uses: actions/checkout@v3
     - name: Check if the commit is in time
       run: |
-        branch=${{ github.head_ref || github.ref_name }}
-        echo $branch
+        branch=${{ github.head_ref || github.ref_name }} 
+        group=${{ github.event.repository.name }}
+        # get last 3 characters of the group name
+        group=${group: -3}
+        echo $branch of group $group
         valid_branches=("main" "introduction" "rpg" "rts")
         if [[ ! " ${valid_branches[@]} " =~ " ${branch} " ]]; then
             echo "Invalid branch, please use one of the following: ${valid_branches[@]}"
@@ -25,20 +28,29 @@ jobs:
             exit 0
         fi
         current_date=$(date +%s)
-        if [ $branch == "introduction" ]; then
-            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/1?token=${{ secrets.STYLO2K_TOKEN }}")
+        assignment_id=1
+        if [ $branch == "introduction" ]; then 
+            assignment_id=1
         fi
         if [ $branch == "rpg" ]; then
-            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/2?token=${{ secrets.STYLO2K_TOKEN }}")
+            assignment_id=2
         fi
         if [ $branch == "rts" ]; then
-            plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/3?token=${{ secrets.STYLO2K_TOKEN }}")
+            assignment_id=3
         fi
-
-        echo "The deadline is for $branch is $plain_date"
-        due_date=$(date -d "$plain_date" +%s)
-        if [ $current_date -gt $due_date ]; then
+        plain_date=$(curl -s "https://stylo2k.com/api/oop/deadlines/$assignment_id?token=${{ secrets.STYLO2K_TOKEN }}&group=$group")
+        echo "The deadline is for $branch with id $assignment_id for group $group is $plain_date"
+        soft_due_date=$(date -d "$plain_date" +%s)
+        hard_due_date=$(date -d "$plain_date + 1 day" +%s)
+        # if after the deadline, but before the cut-off deadline
+        # label the PR as late
+        if [ $current_date -gt $soft_due_date ] && [ $current_date -lt $hard_due_date ]; then
+            echo "The deadline has passed, but you can still submit"
+            curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -d '{"labels": ["late"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+            exit 0
+        fi
+        
+        if [ $current_date -gt $hard_due_date ]; then
             echo "The deadline has passed"
             exit 1
         fi
-        exit 0
