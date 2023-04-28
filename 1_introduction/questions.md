@@ -6,6 +6,15 @@ ___
 
 Answer:
 
+The class is essentially like the template for the object. It defines the fields and methods that the object will have. The object is an instance of the class. It is the actual thing that is created in memory.
+
+As an example, if we have
+```java
+String someValue = "Hello!";
+```
+
+`String` is the class and `someValue` is the object.
+
 ___
 
 # Question 2
@@ -76,5 +85,17 @@ What is the output of this program? Explain why.
 ___
 
 Answer:
+
+The output is as follows:
+```
+Bert
+Gerry
+Bert
+James
+```
+
+The reason for that is as follows. There's actually 3 Person objects being created. The first two are created in the main method, and are then modified by the `PersonModifier` class. The third is created in the `modifyPerson2` method of the `PersonModifier` class and is then returned. That means that both `person1` and `modifiedPerson1` are referrences to the same object (which was modified by `modifyPerson1`). Whereas `person2` and `modifiedPerson2` are referrences to different objects (the former was modified by `modifyPerson2` and the latter was created in `modifyPerson2`). 
+
+As such we first see the name of the `person1`. Then we see the name of `person2`. Then we see the name of `modifiedPerson1` which is the same as `person1` because they are referrences to the same object. Finally we see the name of `modifiedPerson2` which is different from `person2` because they are referrences to different objects.
 
 ___
