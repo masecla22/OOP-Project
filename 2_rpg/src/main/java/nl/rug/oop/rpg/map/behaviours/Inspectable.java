@@ -1,5 +1,11 @@
 package nl.rug.oop.rpg.map.behaviours;
 
+/**
+ * Interface for inspectable objects.
+ */
 public interface Inspectable {
-    public void inspect();
+    /**
+     * Inspect this entity.
+     */
+    void inspect();
 }

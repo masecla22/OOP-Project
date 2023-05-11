@@ -1,17 +1,48 @@
 package nl.rug.oop.rpg.map.behaviours;
 
+/**
+ * Interface for fightable objects.
+ */
 public interface Fightable {
-    public void receiveDamage(Fightable from, double damage);
+    /**
+     * Receive damage from an enemy.
+     * 
+     * @param from - the enemy
+     * @param damage - the amount of damage
+     */
+    void receiveDamage(Fightable from, double damage);
     
-    public default void attack(Fightable enemy, double damage) {
+    /**
+     * Attack an enemy.
+     * 
+     * @param enemy - the enemy
+     * @param damage - the amount of damage
+     */
+    default void attack(Fightable enemy, double damage) {
         enemy.receiveDamage(this, damage);
     }
 
-    public double applyNextAttack(Fightable enemy);
+    /**
+     * Apply the next attack to an enemy.
+     * 
+     * @param enemy - the enemy
+     * @return - the amount of damage
+     */
+    double applyNextAttack(Fightable enemy);
 
-    public double getHealth();
+    /**
+     * Get the health of this entity.
+     * 
+     * @return - the health
+     */
+    double getHealth();
 
-    public default boolean isAlive() {
+    /**
+     * Check if this entity is alive.
+     * 
+     * @return - true if alive
+     */
+    default boolean isAlive() {
         return getHealth() > 0;
     }
 }

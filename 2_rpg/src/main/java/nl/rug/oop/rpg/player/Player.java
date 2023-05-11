@@ -14,32 +14,57 @@ import nl.rug.oop.rpg.map.entities.NPC;
 import nl.rug.oop.rpg.map.objects.Door;
 import nl.rug.oop.rpg.map.objects.Room;
 
+/**
+ * The player class.
+ */
 @Data
 @RequiredArgsConstructor
 public class Player implements Fightable {
+    /** The Game of this player. */
     @NonNull
     private Game game;
 
+    /** The name of this player. */
     @NonNull
     private String name;
 
+    /** The room this player is currently in. */
     @NonNull
     private Room currentlyIn;
 
+    /** The health for the player. */
     private double health = 100;
 
+    /** The damage this player deals. */
+    private double damage = 5;
+
+    /**
+     * Returns the health as a formatted string.
+     * 
+     * @return - the formatted health
+     */
     public String getFormattedHealth() {
         return String.format("%.2f", this.health);
     }
 
+    /**
+     * Receives damage from an entity.
+     * 
+     * @param from   - the entity that attacks
+     * @param damage - the damage to deal
+     */
     @Override
     public void receiveDamage(Fightable from, double damage) {
         health -= damage;
         System.out.println("You took " + String.format("%.2f", damage) + " damage!");
     }
 
-    private double damage = 5;
-
+    /**
+     * Attacks the enemy.
+     * 
+     * @param enemy  - the entity to attack
+     * @param damage - the damage to deal
+     */
     @Override
     public void attack(Fightable enemy, double damage) {
         Fightable.super.attack(enemy, damage);
@@ -47,21 +72,39 @@ public class Player implements Fightable {
         System.out.println("You dealt " + damage + " damage!");
     }
 
+    /**
+     * Punches the enemy.
+     * 
+     * @param enemy - the enemy
+     * @return - the amount of damage
+     */
     public double punch(Fightable enemy) {
         this.attack(enemy, damage);
         return damage;
     }
 
+    /**
+     * Headbutts the enemy.
+     * 
+     * @param enemy - the enemy
+     * @return - the amount of damage
+     */
     public double headButt(Fightable enemy) {
         this.attack(enemy, damage * 1.5);
-        this.health-=10;
+        this.health -= 10;
         System.out.println("Your head hurts and you loose 10HP");
         return damage * 1.5;
     }
 
+    /**
+     * Dropkicks the enemy.
+     * 
+     * @param enemy - the enemy
+     * @return - the amount of damage
+     */
     public double dropKick(Fightable enemy) {
         this.attack(enemy, damage * 3.0);
-        if (ThreadLocalRandom.current().nextDouble() < 0.5){
+        if (ThreadLocalRandom.current().nextDouble() < 0.5) {
             this.health -= 35;
             System.out.println("Your leg hurts very badly and you loose 35HP");
         }
@@ -69,6 +112,12 @@ public class Player implements Fightable {
         return damage * 3.0;
     }
 
+    /**
+     * Applies the next attack.
+     * 
+     * @param enemy - the enemy
+     * @return - the amount of damage
+     */
     @Override
     public double applyNextAttack(Fightable enemy) {
         AtomicReference<Double> appliedDamage = new AtomicReference<>(0.0);
@@ -87,10 +136,16 @@ public class Player implements Fightable {
         return appliedDamage.get();
     }
 
+    /**
+     * Handles the player looking around the room.
+     */
     public void handleInspect() {
         this.currentlyIn.inspect();
     }
 
+    /**
+     * Handles the player looking for doors around him.
+     */
     public void handleLookWayOut() {
         List<Door> doors = this.currentlyIn.getDoors();
         if (doors.isEmpty()) {
@@ -105,12 +160,16 @@ public class Player implements Fightable {
                 .prompt("You look around for doors. You see: ")
                 .cursor("Which door do you take? (-1 : stay here)");
 
-        for (Door door : doors)
+        for (Door door : doors) {
             interaction.option(door.getDescription(), () -> door.interact(this));
+        }
 
         interaction.interact();
     }
 
+    /**
+     * Handles the player looking for NPCs in the room.
+     */
     public void handleLookForCompany() {
         if (this.currentlyIn.getNpcs().isEmpty()) {
             this.game.newInteraction()
@@ -124,8 +183,9 @@ public class Player implements Fightable {
                 .prompt("You look if anyone's here.\nYou see: ")
                 .cursor("Interact ? (-1 : do nothing)");
 
-        for (NPC npc : this.currentlyIn.getNpcs())
+        for (NPC npc : this.currentlyIn.getNpcs()) {
             interaction.option(npc.getDescription(), () -> npc.interact(this));
+        }
 
         interaction.interact();
     }

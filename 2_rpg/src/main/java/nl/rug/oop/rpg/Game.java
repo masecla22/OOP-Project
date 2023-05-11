@@ -9,21 +9,38 @@ import nl.rug.oop.rpg.map.objects.Door;
 import nl.rug.oop.rpg.map.objects.Room;
 import nl.rug.oop.rpg.player.Player;
 
+/**
+ * The main game class. 
+ */
 public class Game {
+    /** The scanner used for input. */
     private Scanner scanner;
+
+    /** The player. */
     private Player player;
 
+    /**
+     * Initializes the game.
+     */
     public void initialize() {
         this.scanner = new Scanner(System.in);
         player = new Player(this, "Player", getInitialRoom());
     }
 
+    /**
+     * Runs the game loop.
+     */
     public void run() {
         while (true) {
             buildCurrentInteraction().interact();
         }
     }
 
+    /**
+     * Creates a new interaction.
+     * 
+     * @return the new interaction
+     */
     public DialogInteraction newInteraction() {
         return new DialogInteraction(scanner)
                 .prompt("HP: " + this.player.getFormattedHealth() + ", DMG: "
@@ -31,6 +48,11 @@ public class Game {
                         + "\nWhat do you want to do?");
     }
 
+    /**
+     * Gets the initial room. 
+     * 
+     * @return - the initial room
+     */
     private Room getInitialRoom() {
         Room room = new Room("A rather dusty room full of computers!");
         Room cheeseRoom = new Room("A room with a suspicious amount of cheese!");
@@ -47,6 +69,11 @@ public class Game {
         return room;
     }
 
+    /**
+     * Builds the current interaction.
+     * 
+     * @return - the current interaction
+     */
     private DialogInteraction buildCurrentInteraction() {
         return newInteraction()
                 .option("Inspect current room", player::handleInspect)
