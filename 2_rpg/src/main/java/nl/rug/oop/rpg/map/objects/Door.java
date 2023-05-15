@@ -37,10 +37,11 @@ public class Door implements Inspectable, Interactable {
      */
     @Override
     public void interact(Player player) {
-        if(destination == null){
+        if (destination == null) {
             System.out.println("The door leads into a solid brick wall.");
-            System.out.println("You confidently bump your head against it and bounce back where you were.");
-            return ;
+            System.out.println("You confidently bump your head against it and bounce back where you were. (-0.1 HP)");
+            player.receiveDamage(null, 0.1);
+            return;
         }
 
         player.setCurrentlyIn(destination);
