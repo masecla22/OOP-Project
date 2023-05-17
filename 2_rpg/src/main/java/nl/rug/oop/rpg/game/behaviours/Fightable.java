@@ -1,4 +1,4 @@
-package nl.rug.oop.rpg.map.behaviours;
+package nl.rug.oop.rpg.game.behaviours;
 
 /**
  * Interface for fightable objects.

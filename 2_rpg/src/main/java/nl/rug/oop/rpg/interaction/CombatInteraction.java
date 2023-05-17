@@ -3,7 +3,7 @@ package nl.rug.oop.rpg.interaction;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rpg.Game;
-import nl.rug.oop.rpg.map.behaviours.Fightable;
+import nl.rug.oop.rpg.game.behaviours.Fightable;
 
 /**
  * Represents a combat interaction menu.

@@ -1,4 +1,4 @@
-package nl.rug.oop.rpg.player;
+package nl.rug.oop.rpg.game.player;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rpg.Game;
+import nl.rug.oop.rpg.game.behaviours.Fightable;
+import nl.rug.oop.rpg.game.entities.NPC;
+import nl.rug.oop.rpg.game.objects.Door;
+import nl.rug.oop.rpg.game.objects.Room;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
-import nl.rug.oop.rpg.map.behaviours.Fightable;
-import nl.rug.oop.rpg.map.entities.NPC;
-import nl.rug.oop.rpg.map.objects.Door;
-import nl.rug.oop.rpg.map.objects.Room;
 
 /**
  * The player class.

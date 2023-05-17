@@ -1,13 +1,13 @@
-package nl.rug.oop.rpg.map.entities;
+package nl.rug.oop.rpg.game.entities;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import lombok.Getter;
 import nl.rug.oop.rpg.Game;
+import nl.rug.oop.rpg.game.behaviours.Fightable;
+import nl.rug.oop.rpg.game.objects.Room;
+import nl.rug.oop.rpg.game.player.Player;
 import nl.rug.oop.rpg.interaction.CombatInteraction;
-import nl.rug.oop.rpg.map.behaviours.Fightable;
-import nl.rug.oop.rpg.map.objects.Room;
-import nl.rug.oop.rpg.player.Player;
 
 /**
  * An enemy is an NPC that can fight.
@@ -67,7 +67,6 @@ public class Enemy extends NPC implements Fightable {
      */
     @Override
     public void interact(Player player) {
-        super.interact(player);
         System.out.println("This NPC turns out to be quite hostile!");
 
         new CombatInteraction(getGame(), player, this)
@@ -76,6 +75,13 @@ public class Enemy extends NPC implements Fightable {
                     this.getRoom().removeNPC(this);
                 })
                 .interact();
+    }
+
+    @Override
+    public void inspect() {
+        // There's no real way of inspecting an enemy, as checking them out leads into a
+        // battle being started. This is just a placeholder.
+        System.out.println("This enemy has " + this.health + " health and deals " + this.damage + " damage.");
     }
 
 }

@@ -1,12 +1,12 @@
-package nl.rug.oop.rpg.map.objects;
+package nl.rug.oop.rpg.game.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nl.rug.oop.rpg.map.behaviours.Inspectable;
-import nl.rug.oop.rpg.map.behaviours.Interactable;
-import nl.rug.oop.rpg.player.Player;
+import nl.rug.oop.rpg.game.behaviours.Inspectable;
+import nl.rug.oop.rpg.game.behaviours.Interactable;
+import nl.rug.oop.rpg.game.player.Player;
 
 /**
  * A door is an object that can be interacted with and inspected.

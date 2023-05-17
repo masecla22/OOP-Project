@@ -1,4 +1,4 @@
-package nl.rug.oop.rpg.map.objects;
+package nl.rug.oop.rpg.game.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nl.rug.oop.rpg.map.behaviours.Inspectable;
-import nl.rug.oop.rpg.map.entities.NPC;
+import nl.rug.oop.rpg.game.behaviours.Inspectable;
+import nl.rug.oop.rpg.game.entities.NPC;
 
 /**
  * A room is a place in the map that can be entered and exited.

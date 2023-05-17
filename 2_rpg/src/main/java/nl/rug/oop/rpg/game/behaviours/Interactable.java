@@ -1,6 +1,6 @@
-package nl.rug.oop.rpg.map.behaviours;
+package nl.rug.oop.rpg.game.behaviours;
 
-import nl.rug.oop.rpg.player.Player;
+import nl.rug.oop.rpg.game.player.Player;
 
 /**
  * Interface for interactable objects.

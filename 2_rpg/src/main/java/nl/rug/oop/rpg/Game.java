@@ -2,15 +2,15 @@ package nl.rug.oop.rpg;
 
 import java.util.Scanner;
 
+import nl.rug.oop.rpg.game.entities.Enemy;
+import nl.rug.oop.rpg.game.entities.NPC;
+import nl.rug.oop.rpg.game.objects.Door;
+import nl.rug.oop.rpg.game.objects.Room;
+import nl.rug.oop.rpg.game.player.Player;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
-import nl.rug.oop.rpg.map.entities.Enemy;
-import nl.rug.oop.rpg.map.entities.NPC;
-import nl.rug.oop.rpg.map.objects.Door;
-import nl.rug.oop.rpg.map.objects.Room;
-import nl.rug.oop.rpg.player.Player;
 
 /**
- * The main game class. 
+ * The main game class.
  */
 public class Game {
     /** The scanner used for input. */
@@ -49,7 +49,7 @@ public class Game {
     }
 
     /**
-     * Gets the initial room. 
+     * Gets the initial room.
      * 
      * @return - the initial room
      */
