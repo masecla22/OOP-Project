@@ -12,6 +12,9 @@ import nl.rug.oop.rpg.game.objects.Room;
 import nl.rug.oop.rpg.game.player.Player;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
 
+/**
+ * A merchant that sells items to the player.
+ */
 public class Merchant extends NPC {
 
     /**
@@ -22,6 +25,14 @@ public class Merchant extends NPC {
      */
     private List<Map.Entry<Item, Integer>> sellableItems = new ArrayList<>();
 
+    /**
+     * Create a new merchant.
+     * 
+     * @param game        the game
+     * @param room        the room the merchant is in
+     * @param description the description of the merchant
+     * @param name        the name of the merchant
+     */
     public Merchant(@NonNull Game game, @NonNull Room room,
             @NonNull String description, @NonNull String name) {
         super(game, room, description, name);

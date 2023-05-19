@@ -27,6 +27,7 @@ public class Enemy extends NPC implements Fightable {
      * @param game        - the game
      * @param room        - the room
      * @param description - the description
+     * @param name        - the name
      * @param health      - the health
      * @param damage      - the damage
      */
