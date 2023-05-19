@@ -1,5 +1,6 @@
 package nl.rug.oop.rpg.game.player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +25,10 @@ import nl.rug.oop.rpg.interaction.DialogInteraction;
  */
 @Data
 @RequiredArgsConstructor
-public class Player implements Fightable {
+public class Player implements Fightable, Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 1249087623489l;
+
     /** The Game of this player. */
     @NonNull
     private Game game;
