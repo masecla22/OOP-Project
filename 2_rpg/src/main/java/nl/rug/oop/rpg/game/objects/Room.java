@@ -49,6 +49,17 @@ public class Room implements Inspectable, Serializable {
     }
 
     /**
+     * Adds multiple doors to the room.
+     * 
+     * @param doors - the doors to add
+     */
+    public void addDoors(Door... doors) {
+        for (Door door : doors) {
+            addDoor(door);
+        }
+    }
+
+    /**
      * Adds an NPC to the room.
      * 
      * @param npc - the NPC to add
