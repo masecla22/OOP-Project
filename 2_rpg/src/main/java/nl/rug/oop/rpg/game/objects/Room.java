@@ -1,5 +1,6 @@
 package nl.rug.oop.rpg.game.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,10 @@ import nl.rug.oop.rpg.game.entities.NPC;
  */
 @Data
 @RequiredArgsConstructor
-public class Room implements Inspectable {
+public class Room implements Inspectable, Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 92875163129876l;
+
     /** The description of the room. */
     @NonNull
     private String description;
