@@ -1,5 +1,7 @@
 package nl.rug.oop.rpg.game.map;
 
+import java.io.Serializable;
+
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,10 @@ import nl.rug.oop.rpg.game.objects.SpikedDoor;
 
 @Data
 @RequiredArgsConstructor
-public class GameMap {
+public class GameMap implements Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 2430987560976l;
+
     private Room initialRoom;
 
     @NonNull
