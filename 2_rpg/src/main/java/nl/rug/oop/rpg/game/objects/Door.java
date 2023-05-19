@@ -3,7 +3,6 @@ package nl.rug.oop.rpg.game.objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rpg.game.behaviours.Inspectable;
 import nl.rug.oop.rpg.game.behaviours.Interactable;
 import nl.rug.oop.rpg.game.player.Player;
@@ -12,12 +11,14 @@ import nl.rug.oop.rpg.game.player.Player;
  * A door is an object that can be interacted with and inspected.
  */
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Door implements Inspectable, Interactable {
     /** The description of the door. */
     @NonNull
     private String description;
+
+    /** The room the door comes from */
+    private Room source;
 
     /** The room the door leads to. */
     private Room destination;

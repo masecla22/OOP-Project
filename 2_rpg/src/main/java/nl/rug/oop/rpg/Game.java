@@ -2,10 +2,7 @@ package nl.rug.oop.rpg;
 
 import java.util.Scanner;
 
-import nl.rug.oop.rpg.game.entities.Enemy;
-import nl.rug.oop.rpg.game.entities.NPC;
-import nl.rug.oop.rpg.game.objects.Door;
-import nl.rug.oop.rpg.game.objects.Room;
+import nl.rug.oop.rpg.game.map.GameMap;
 import nl.rug.oop.rpg.game.player.Player;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
 
@@ -19,12 +16,19 @@ public class Game {
     /** The player. */
     private Player player;
 
+    private GameMap map;
+
     /**
      * Initializes the game.
      */
     public void initialize() {
         this.scanner = new Scanner(System.in);
-        player = new Player(this, "Player", getInitialRoom());
+        this.map = new GameMap(this);
+
+        this.map.initialize();
+
+        player = new Player(this, "Player", this.map.getInitialRoom());
+        player.initialize();
     }
 
     /**
@@ -44,29 +48,8 @@ public class Game {
     public DialogInteraction newInteraction() {
         return new DialogInteraction(scanner)
                 .prompt("HP: " + this.player.getFormattedHealth() + ", DMG: "
-                        + this.player.getDamage()
+                        + this.player.getDamage() + ", Gold: " + this.player.getGold()
                         + "\nWhat do you want to do?");
-    }
-
-    /**
-     * Gets the initial room.
-     * 
-     * @return - the initial room
-     */
-    private Room getInitialRoom() {
-        Room room = new Room("A rather dusty room full of computers!");
-        Room cheeseRoom = new Room("A room with a suspicious amount of cheese!");
-        room.addDoor(new Door("A door to the cheese room", cheeseRoom));
-
-        cheeseRoom.addDoor(new Door("Mystery door!"));
-
-        NPC cheeseSeller = new NPC(this, cheeseRoom, "Cheese seller");
-        cheeseRoom.addNPC(cheeseSeller);
-
-        NPC fighter = new Enemy(this, cheeseRoom, "Anxious cheese-powered fighter", 20, 30);
-        cheeseRoom.addNPC(fighter);
-
-        return room;
     }
 
     /**
@@ -76,6 +59,7 @@ public class Game {
      */
     private DialogInteraction buildCurrentInteraction() {
         return newInteraction()
+                .option("Check inventory", player::handleCheckInventory)
                 .option("Inspect current room", player::handleInspect)
                 .option("Look for a way out", player::handleLookWayOut)
                 .option("Look for company", player::handleLookForCompany);

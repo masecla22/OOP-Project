@@ -1,5 +1,8 @@
 package nl.rug.oop.rpg.game.player;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
@@ -10,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rpg.Game;
 import nl.rug.oop.rpg.game.behaviours.Fightable;
 import nl.rug.oop.rpg.game.entities.NPC;
+import nl.rug.oop.rpg.game.items.Item;
+import nl.rug.oop.rpg.game.items.ModifierItem;
 import nl.rug.oop.rpg.game.objects.Door;
 import nl.rug.oop.rpg.game.objects.Room;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
@@ -38,6 +43,16 @@ public class Player implements Fightable {
     /** The damage this player deals. */
     private double damage = 5;
 
+    /** How much gold the player has */
+    private int gold = 0;
+
+    /** The inventory of this player. */
+    private PlayerInventory inventory;
+
+    public void initialize() {
+        inventory = new PlayerInventory(game, new ArrayList<>());
+    }
+
     /**
      * Returns the health as a formatted string.
      * 
@@ -55,6 +70,17 @@ public class Player implements Fightable {
      */
     @Override
     public void receiveDamage(Fightable from, double damage) {
+        List<Item> items = this.getInventory().getItems();
+
+        // Sort alphabetically to maintain consistency
+        Collections.sort(items, Comparator.comparing(c -> c.getName()));
+
+        for (Item item : items) {
+            if (item instanceof ModifierItem modifier) {
+                damage = modifier.modifyIncomingDamage(damage);
+            }
+        }
+
         health -= damage;
         System.out.println("You took " + String.format("%.2f", damage) + " damage!");
     }
@@ -67,6 +93,17 @@ public class Player implements Fightable {
      */
     @Override
     public void attack(Fightable enemy, double damage) {
+        List<Item> items = this.getInventory().getItems();
+
+        // Sort alphabetically to maintain consistency
+        Collections.sort(items, Comparator.comparing(c -> c.getName()));
+
+        for (Item item : items) {
+            if (item instanceof ModifierItem modifier) {
+                damage = modifier.modifyOutgoingDamage(damage);
+            }
+        }
+
         Fightable.super.attack(enemy, damage);
 
         System.out.println("You dealt " + damage + " damage!");
@@ -152,7 +189,6 @@ public class Player implements Fightable {
             this.game.newInteraction()
                     .prompt("You look around for doors. Your chances look grim as you find none.")
                     .interact();
-
             return;
         }
 
@@ -184,9 +220,47 @@ public class Player implements Fightable {
                 .cursor("Interact ? (-1 : do nothing)");
 
         for (NPC npc : this.currentlyIn.getNpcs()) {
-            interaction.option(npc.getDescription(), () -> npc.interact(this));
+            interaction.option(npc.getName(), () -> npc.interact(this));
         }
 
         interaction.interact();
+    }
+
+    public void handleCheckInventory() {
+        if (this.getInventory().getItems().size() == 0) {
+            this.game.newInteraction()
+                    .prompt("You look at your inventory\n" + "It's empty")
+                    .interact();
+            return;
+        }
+
+        this.game.newInteraction()
+                .prompt("You look at your inventory\n" + this.inventory.toString())
+                .cursor("What do you want to do ? (-1 : go back)")
+                .option("Use an item", () -> this.inventory.handleItemUse(this))
+                .interact();
+    }
+
+    public void removeGold(int gold) {
+        this.gold -= gold;
+    }
+
+    public void addGold(int gold) {
+        this.gold += gold;
+    }
+
+    public void heal(double health) {
+        List<Item> items = this.getInventory().getItems();
+
+        // Sort alphabetically to maintain consistency
+        Collections.sort(items, Comparator.comparing(c -> c.getName()));
+
+        for (Item item : items) {
+            if (item instanceof ModifierItem modifier) {
+                health = modifier.modifyIncomingHealing(health);
+            }
+        }
+
+        this.health += health;
     }
 }

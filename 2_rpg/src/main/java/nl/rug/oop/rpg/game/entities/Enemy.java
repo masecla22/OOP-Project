@@ -30,8 +30,8 @@ public class Enemy extends NPC implements Fightable {
      * @param health      - the health
      * @param damage      - the damage
      */
-    public Enemy(Game game, Room room, String description, double health, double damage) {
-        super(game, room, description);
+    public Enemy(Game game, Room room, String description, String name, double health, double damage) {
+        super(game, room, description, name);
         this.health = health;
         this.damage = damage;
     }
@@ -73,6 +73,11 @@ public class Enemy extends NPC implements Fightable {
                 .onWin(() -> {
                     System.out.println("You have defeated the enemy! They're now gone!");
                     this.getRoom().removeNPC(this);
+
+                    double reward = this.damage * 8;
+                    reward = Math.max(0, reward);
+                    reward *= ThreadLocalRandom.current().nextDouble() / 2 + 3;
+                    player.addGold((int) reward);
                 })
                 .interact();
     }

@@ -8,10 +8,10 @@ public abstract class ConsumableItem extends Item {
         super(name, description);
     }
 
-    protected void removeFromInventory(Player player) {
-
+    public void conusme(Player player) {
+        player.getInventory().removeItem(this);
+        this.applyEffects(player);
     }
 
-    public abstract void consume(Player player);
-
+    protected abstract void applyEffects(Player player);
 }

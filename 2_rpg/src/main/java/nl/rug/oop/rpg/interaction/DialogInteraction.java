@@ -34,7 +34,7 @@ public class DialogInteraction {
     /**
      * Adds an option to the dialog interaction.
      * 
-     * @param option - the option
+     * @param option   - the option
      * @param runnable - the action
      * @return - this
      */
@@ -71,7 +71,7 @@ public class DialogInteraction {
      */
     public void interact() {
         System.out.println(this.prompt);
-        if (options.size() == 0){
+        if (options.size() == 0) {
             return;
         }
 
@@ -85,7 +85,7 @@ public class DialogInteraction {
                 System.out.println(cursor);
             }
             System.out.print("> ");
-            
+
             try {
                 choice = scanner.nextInt();
             } catch (InputMismatchException exception) {
@@ -93,12 +93,12 @@ public class DialogInteraction {
                 break;
             }
 
-            if (choice == -1){
+            if (choice == -1) {
                 break;
             }
         }
 
-        if (choice == -1){
+        if (choice == -1) {
             return;
         }
 

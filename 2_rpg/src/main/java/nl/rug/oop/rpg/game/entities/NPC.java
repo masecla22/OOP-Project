@@ -17,12 +17,16 @@ public abstract class NPC implements Inspectable, Interactable {
     /** The game the NPC is a part of. */
     @NonNull
     private Game game;
-    
+
     /** The room the NPC is in. */
     @NonNull
     private Room room;
-    
+
     /** The description of the NPC. */
     @NonNull
     private String description;
+
+    /** The name of the NPC */
+    @NonNull
+    private String name;
 }
