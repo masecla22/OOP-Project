@@ -102,6 +102,10 @@ public class DialogInteraction {
             return;
         }
 
-        actions.get(choice).run();
+        Runnable runnable = actions.get(choice);
+
+        if (runnable != null) {
+            runnable.run();
+        }
     }
 }
