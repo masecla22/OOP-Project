@@ -7,12 +7,18 @@ import nl.rug.oop.rpg.game.entities.Enemy;
 import nl.rug.oop.rpg.game.entities.NPC;
 import nl.rug.oop.rpg.game.player.Player;
 
+/**
+ * A protected door. You cannot go through it until all the enemies are dead.
+ */
 public class ProtectedDoor extends Door {
 
-    public ProtectedDoor(@NonNull String description) {
-        this(description, null, null);
-    }
-
+    /**
+     * Create a new protected door.
+     * 
+     * @param description the description of the door
+     * @param source      the room the door is in
+     * @param target      the room the door leads to
+     */
     public ProtectedDoor(@NonNull String description, @NonNull Room source, @NonNull Room target) {
         super(description + ". It will not let you through unless all the enemies are dead!",
                 source, target);
