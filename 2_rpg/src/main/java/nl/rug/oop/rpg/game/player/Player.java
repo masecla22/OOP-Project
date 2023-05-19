@@ -47,7 +47,7 @@ public class Player implements Fightable, Serializable {
     /** The damage this player deals. */
     private double damage = 5;
 
-    /** How much gold the player has */
+    /** How much gold the player has. */
     private int gold = 0;
 
     /** The inventory of this player. */
@@ -230,6 +230,9 @@ public class Player implements Fightable, Serializable {
         interaction.interact();
     }
 
+    /**
+     * Handles the player checking their inventory.
+     */
     public void handleCheckInventory() {
         if (this.getInventory().getItems().size() == 0) {
             this.game.newInteraction()
@@ -245,14 +248,30 @@ public class Player implements Fightable, Serializable {
                 .interact();
     }
 
+    /**
+     * Removes gold from the player.
+     * 
+     * @param gold - the amount of gold to remove
+     */
     public void removeGold(int gold) {
         this.gold -= gold;
     }
 
+    /**
+     * Adds gold to the player.
+     * 
+     * @param gold - the amount of gold to add
+     */
     public void addGold(int gold) {
         this.gold += gold;
     }
 
+    /**
+     * Heals a player for a certain amount of health.
+     * Will apply all the modifier items of the player.
+     * 
+     * @param health - the amount of health to heal
+     */
     public void heal(double health) {
         List<Item> items = this.getInventory().getItems();
 
