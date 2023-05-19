@@ -1,5 +1,7 @@
 package nl.rug.oop.rpg.game.entities;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -13,7 +15,10 @@ import nl.rug.oop.rpg.game.objects.Room;
  */
 @Data
 @AllArgsConstructor
-public abstract class NPC implements Inspectable, Interactable {
+public abstract class NPC implements Inspectable, Interactable, Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 1398649861938l;
+
     /** The game the NPC is a part of. */
     @NonNull
     private Game game;
@@ -26,7 +31,7 @@ public abstract class NPC implements Inspectable, Interactable {
     @NonNull
     private String description;
 
-    /** The name of the NPC */
+    /** The name of the NPC. */
     @NonNull
     private String name;
 }
