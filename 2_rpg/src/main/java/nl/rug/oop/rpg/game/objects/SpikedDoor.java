@@ -3,11 +3,17 @@ package nl.rug.oop.rpg.game.objects;
 import lombok.NonNull;
 import nl.rug.oop.rpg.game.player.Player;
 
+/**
+ * A spiked door. You will take damage if you walk through it.
+ */
 public class SpikedDoor extends Door {
-    public SpikedDoor(@NonNull String description) {
-        this(description, null, null);
-    }
-
+    /**
+     * Create a new spiked door.
+     * 
+     * @param description the description of the door
+     * @param source      the room the door is in
+     * @param target      the room the door leads to
+     */
     public SpikedDoor(@NonNull String description, @NonNull Room source, @NonNull Room target) {
         super(description + ". You will take 7 damage if you walk through this door!",
                 source, target);
