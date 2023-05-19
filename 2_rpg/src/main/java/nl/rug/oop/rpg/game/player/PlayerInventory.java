@@ -1,5 +1,6 @@
 package nl.rug.oop.rpg.game.player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,19 +13,35 @@ import nl.rug.oop.rpg.game.items.ConsumableItem;
 import nl.rug.oop.rpg.game.items.Item;
 import nl.rug.oop.rpg.interaction.DialogInteraction;
 
+/**
+ * The player's inventory.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerInventory {
+public class PlayerInventory implements Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 32087650123865l;
+
     @NonNull
-    private transient Game game;
+    private Game game;
 
     @Getter
     private List<Item> items = new ArrayList<>();
 
+    /**
+     * Adds an item to the inventory.
+     * 
+     * @param item - the item to add
+     */
     public void addItem(Item item) {
         items.add(item);
     }
 
+    /**
+     * Removes an item from the inventory.
+     * 
+     * @param item - the item to remove
+     */
     public void removeItem(Item item) {
         items.remove(item);
     }
@@ -48,6 +65,11 @@ public class PlayerInventory {
         return inventory.toString();
     }
 
+    /**
+     * Handles the use of an item.
+     * 
+     * @param player - the player using the item
+     */
     public void handleItemUse(Player player) {
         if (items.isEmpty()) {
             System.out.println("You have no items to use");
@@ -59,7 +81,7 @@ public class PlayerInventory {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             interaction.option(item.getName(), () -> {
-                if(item instanceof ConsumableItem consumable){
+                if (item instanceof ConsumableItem consumable) {
                     consumable.conusme(player);
                 } else {
                     System.out.println("You can't use this item");
