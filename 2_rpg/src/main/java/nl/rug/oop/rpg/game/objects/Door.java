@@ -12,7 +12,10 @@ import nl.rug.oop.rpg.game.player.Player;
  */
 @Data
 @AllArgsConstructor
-public class Door implements Inspectable, Interactable {
+public class Door implements Inspectable, Interactable, Serializable {
+    /** Serial version ID. */
+    private static final long serialVersionUID = 2140956097087l;
+
     /** The description of the door. */
     @NonNull
     private String description;
