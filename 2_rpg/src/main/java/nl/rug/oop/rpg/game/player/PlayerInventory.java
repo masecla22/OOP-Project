@@ -82,7 +82,7 @@ public class PlayerInventory implements Serializable {
             Item item = items.get(i);
             interaction.option(item.getName(), () -> {
                 if (item instanceof ConsumableItem consumable) {
-                    consumable.conusme(player);
+                    consumable.consume(player);
                 } else {
                     System.out.println("You can't use this item");
                 }

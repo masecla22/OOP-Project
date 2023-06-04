@@ -22,7 +22,7 @@ public abstract class ConsumableItem extends Item {
      * 
      * @param player the player
      */
-    public void conusme(Player player) {
+    public void consume(Player player) {
         player.getInventory().removeItem(this);
         this.applyEffects(player);
     }
