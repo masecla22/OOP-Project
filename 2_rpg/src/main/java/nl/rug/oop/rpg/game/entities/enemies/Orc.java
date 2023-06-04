@@ -18,5 +18,9 @@ public class Orc extends Enemy {
     public Orc(Game game, Room room) {
         super(game, room, "An orc, a fearsome warrior", "Orc", 50, 10);
     }
-    
+
+    @Override
+    public Orc copy() {
+        return new Orc(this.getGame(), this.getRoom());
+    }
 }

@@ -35,4 +35,9 @@ public class HealingWizard extends Buffer {
     public String getDialog() {
         return "I can heal you for 50 gold";
     }
+
+    @Override
+    public HealingWizard copy() {
+        return new HealingWizard(this.getGame(), this.getRoom());
+    }
 }

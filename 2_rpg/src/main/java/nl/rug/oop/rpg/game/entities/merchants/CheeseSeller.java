@@ -29,4 +29,12 @@ public class CheeseSeller extends Merchant {
             addToInventory(new Cheese(), ThreadLocalRandom.current().nextInt(10, 31));
         }
     }
+
+    @Override
+    public CheeseSeller copy() {
+        CheeseSeller result = new CheeseSeller(this.getGame(), this.getRoom());
+        result.setSellableItems(this.copyInventory());
+
+        return result;
+    }
 }

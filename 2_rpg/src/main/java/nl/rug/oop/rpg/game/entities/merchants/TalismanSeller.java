@@ -26,4 +26,12 @@ public class TalismanSeller extends Merchant {
         this.addToInventory(new SimpleTalisman(), 50);
         this.addToInventory(new WarriorTalisman(), 200);
     }
+
+    @Override
+    public TalismanSeller copy() {
+        TalismanSeller result = new TalismanSeller(this.getGame(), this.getRoom());
+        result.setSellableItems(this.copyInventory());
+
+        return result;
+    }
 }
