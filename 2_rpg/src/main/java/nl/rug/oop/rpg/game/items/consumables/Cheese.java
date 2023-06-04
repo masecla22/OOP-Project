@@ -20,4 +20,8 @@ public class Cheese extends ConsumableItem {
         player.setHealth(player.getHealth() + 100);
     }
 
+    @Override
+    public Cheese copy(){
+        return new Cheese();
+    }
 }

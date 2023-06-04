@@ -24,4 +24,9 @@ public class SimpleTalisman extends ModifierItem {
     public double modifyIncomingHealing(double healing) {
         return healing * 1.5;
     }
+
+    @Override
+    public SimpleTalisman copy(){
+        return new SimpleTalisman();
+    }
 }
