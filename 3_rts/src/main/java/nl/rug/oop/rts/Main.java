@@ -14,5 +14,8 @@ public class Main {
      */
     public static void main(String[] args) {
         FlatDarculaLaf.setup(); // Dark mode
+
+        Game game = new Game();
+        game.initialize();
     }
 }
