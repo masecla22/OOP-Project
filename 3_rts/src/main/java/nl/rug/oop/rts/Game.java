@@ -1,13 +1,18 @@
 package nl.rug.oop.rts;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import nl.rug.oop.rts.model.Edge;
+import nl.rug.oop.rts.model.Map;
+import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.view.MainMenuClass;
 import nl.rug.oop.rts.view.settings.SettingsView;
+import nl.rug.oop.rts.view.singleplayer.SingleplayerView;
 
 public class Game {
     private JFrame frame;
@@ -53,6 +58,29 @@ public class Game {
 
         this.frame.revalidate();
         this.frame.repaint();
+    }
+
+    public void handleSingleplayer() {
+        Node a = new Node(0, new Point(100, 100), "bruh");
+        Node b = new Node(1, new Point(200, 200), "bruh");
+        Node c = new Node(2, new Point(150, 300), "veoj");
+
+        Edge ab = new Edge(0, a, b);
+        Edge bc = new Edge(1, b, c);
+        Edge ca = new Edge(2, c, a);
+
+        Map map = new Map();
+
+        map.addNode(a);
+        map.addNode(b);
+        map.addNode(c);
+
+        map.addEdge(ab);
+        map.addEdge(bc);
+        map.addEdge(ca);
+
+        SingleplayerView view = new SingleplayerView(this, map);
+        this.handleView(view);
     }
 
     public void openSettings() {
