@@ -20,7 +20,6 @@ public class MapView extends JPanel {
     private Map map;
 
     private Point offset = new Point(0, 0);
-    private double zoom = 1.0;
 
     public MapView(Game game, Map map) {
         super();
@@ -75,7 +74,7 @@ public class MapView extends JPanel {
     }
 
     private Point transformPoint(Point point) {
-        return new Point((int) (point.x * zoom + offset.x), (int) (point.y * zoom + offset.y));
+        return new Point((int) (point.x + offset.x), (int) (point.y + offset.y));
     }
 
 }
