@@ -39,7 +39,7 @@ public class MainMenuClass extends JPanel {
         // Singleplayer
         JButton singleplayerButton = new JButton("Singleplayer");
         singleplayerButton.addActionListener(e -> {
-            // handle button click
+            game.handleSingleplayer();
         });
 
         // Multiplayer
