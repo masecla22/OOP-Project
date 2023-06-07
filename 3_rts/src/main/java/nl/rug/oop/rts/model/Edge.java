@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @EqualsAndHashCode(of = "id")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Edge {
-    private int id;
+    private final int id;
 
     @NonNull
     private Node pointA;
