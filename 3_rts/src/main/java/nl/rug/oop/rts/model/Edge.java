@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nl.rug.oop.rts.interfaces.Selectable;
 
 @Data
 @EqualsAndHashCode(of = "id")
 @RequiredArgsConstructor
-public class Edge {
+public class Edge implements Selectable {
     private final int id;
 
     @NonNull
