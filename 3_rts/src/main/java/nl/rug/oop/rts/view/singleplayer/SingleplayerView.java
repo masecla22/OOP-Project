@@ -26,7 +26,7 @@ public class SingleplayerView extends GameView {
         int availableId = this.getMap().getNextNodeId();
 
         Point offset = this.getMap().getOffset();
-        Point point = new Point(offset.x + 100, offset.y + 100);
+        Point point = new Point(-offset.x + 100, -offset.y + 100);
 
         Node node = new Node(availableId, point, nodeName);
         this.getMap().addNode(node);
