@@ -27,13 +27,14 @@ public abstract class GameView extends JPanel implements Observer {
 
         this.setLayout(new BorderLayout());
 
-        this.map.addObserver(this);
         this.add(buildTopBar(), BorderLayout.PAGE_START);
 
         this.map.addObserver(this);
 
         MapView mapView = new MapView(map);
         this.add(mapView, BorderLayout.CENTER);
+
+        this.add(new NodeOptionsView(map), BorderLayout.LINE_START);
     }
 
     @Override
