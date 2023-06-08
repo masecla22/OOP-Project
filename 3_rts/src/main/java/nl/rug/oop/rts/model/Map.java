@@ -26,12 +26,7 @@ public class Map implements Observable {
     public void removeNode(Node node) {
         nodes.remove(node);
 
-        for (Edge edge : edges) {
-            if (edge.isConnectedTo(node)) {
-                edges.remove(edge);
-            }
-        }
-
+        edges.removeIf(edge -> edge.isConnectedTo(node));
         this.update();
     }
 
