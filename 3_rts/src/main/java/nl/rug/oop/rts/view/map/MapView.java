@@ -51,7 +51,7 @@ public class MapView extends JPanel implements Observer {
 
             if (position != null) {
                 // Create a fake node which represents the mouse (it won't be rendered)
-                Point fakePosition = map.transformPoint(position);
+                Point fakePosition = map.subtractOffset(position);
                 Node fakeNode = new Node(-1, fakePosition, "Fake Node");
 
                 // Draw the edge between the fake node and the selected node
@@ -71,14 +71,14 @@ public class MapView extends JPanel implements Observer {
             g.setColor(toUse);
             g.setStroke(new BasicStroke(3));
             Point position = node.getPosition();
-            position = map.transformPoint(position);
+            position = map.addOffset(position);
 
             int actualSize = Node.NODE_SIZE + 10;
             g.drawRect(position.x - actualSize / 2, position.y - actualSize / 2, actualSize, actualSize);
         }
 
         Point position = node.getPosition();
-        position = map.transformPoint(position);
+        position = map.addOffset(position);
 
         Image image = TextureLoader.getInstance().getTexture("factionMordor", Node.NODE_SIZE, Node.NODE_SIZE);
         g.drawImage(image, position.x - Node.NODE_SIZE / 2, position.y - Node.NODE_SIZE / 2, null);
@@ -95,8 +95,8 @@ public class MapView extends JPanel implements Observer {
         Point pointA = edge.getPointA().getPosition();
         Point pointB = edge.getPointB().getPosition();
 
-        pointA = map.transformPoint(pointA);
-        pointB = map.transformPoint(pointB);
+        pointA = map.addOffset(pointA);
+        pointB = map.addOffset(pointB);
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
