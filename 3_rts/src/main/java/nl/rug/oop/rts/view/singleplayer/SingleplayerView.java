@@ -8,5 +8,5 @@ public class SingleplayerView extends GameView {
     public SingleplayerView(Game game, Map map) {
         super(game, map);
     }
-    
+
 }
