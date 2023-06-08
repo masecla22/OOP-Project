@@ -10,21 +10,28 @@ import java.awt.Point;
 import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.mouse.MapMouseHandler;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.observing.Observer;
 import nl.rug.oop.rts.util.TextureLoader;
 
-public class MapView extends JPanel {
+public class MapView extends JPanel implements Observer {
     private Game game;
-    private Map map;
 
-    private Point offset = new Point(0, 0);
+    private Map map;
 
     public MapView(Game game, Map map) {
         super();
         this.game = game;
         this.map = map;
+
+        this.map.addObserver(this);
+
+        MapMouseHandler mapMouseHandler = new MapMouseHandler(this.map);
+        this.addMouseListener(mapMouseHandler);
+        this.addMouseMotionListener(mapMouseHandler);
     }
 
     @Override
@@ -45,8 +52,19 @@ public class MapView extends JPanel {
     }
 
     private void renderNode(Graphics2D g, Node node) {
+        if (node.equals(map.getSelectedNode())) {
+            g.setColor(Color.RED);
+            g.setStroke(new BasicStroke(3));
+            Point position = node.getPosition();
+            position = map.transformPoint(position);
+
+            int actualSize = Node.NODE_SIZE + 10;
+            g.drawRect(position.x - actualSize / 2, position.y - actualSize / 2, actualSize,
+                    actualSize);
+        }
+
         Point position = node.getPosition();
-        position = transformPoint(position);
+        position = map.transformPoint(position);
 
         Image image = TextureLoader.getInstance().getTexture("factionMordor", Node.NODE_SIZE, Node.NODE_SIZE);
         g.drawImage(image, position.x - Node.NODE_SIZE / 2, position.y - Node.NODE_SIZE / 2, null);
@@ -63,8 +81,8 @@ public class MapView extends JPanel {
         Point pointA = edge.getPointA().getPosition();
         Point pointB = edge.getPointB().getPosition();
 
-        pointA = transformPoint(pointA);
-        pointB = transformPoint(pointB);
+        pointA = map.transformPoint(pointA);
+        pointB = map.transformPoint(pointB);
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
@@ -72,9 +90,4 @@ public class MapView extends JPanel {
 
         g.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
     }
-
-    private Point transformPoint(Point point) {
-        return new Point((int) (point.x + offset.x), (int) (point.y + offset.y));
-    }
-
 }
