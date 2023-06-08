@@ -83,4 +83,28 @@ public class Map implements Observable {
 
         return null;
     }
+
+    public int getNextNodeId() {
+        int maxId = 0;
+
+        for (Node node : this.getNodes()) {
+            if (node.getId() > maxId) {
+                maxId = node.getId();
+            }
+        }
+
+        return maxId + 1;
+    }
+
+    public int getNextEdgeId() {
+        int maxId = 0;
+
+        for (Edge edge : this.getEdges()) {
+            if (edge.getId() > maxId) {
+                maxId = edge.getId();
+            }
+        }
+
+        return maxId + 1;
+    }
 }
