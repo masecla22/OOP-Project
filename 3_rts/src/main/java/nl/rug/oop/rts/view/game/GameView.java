@@ -8,12 +8,14 @@ import javax.swing.JPanel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
+import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.observing.Observer;
 import nl.rug.oop.rts.view.map.MapView;
 
 @Getter(AccessLevel.PROTECTED)
-public class GameView extends JPanel implements Observer {
+public abstract class GameView extends JPanel implements Observer {
     private Game game;
     private Map map;
 
@@ -68,11 +70,19 @@ public class GameView extends JPanel implements Observer {
         topBar.add(removeNodeButton);
 
         removeNodeButton.addActionListener(e -> {
-            this.map.removeNode(this.map.getSelectedNode());
+            this.removeNode(this.map.getSelectedNode());
         });
 
         removeEdgeButton.setEnabled(false);
 
         return topBar;
     }
+
+    public abstract void removeNode(Node node);
+
+    public abstract Node createNode(String nodeName);
+
+    public abstract void addEdge(Node node1, Node node2);
+
+    public abstract void removeEdge(Edge edge);
 }
