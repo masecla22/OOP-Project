@@ -8,11 +8,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import nl.rug.oop.rts.interfaces.Selectable;
 
 @Data
 @EqualsAndHashCode(of = "id")
 @RequiredArgsConstructor
-public class Node {
+@ToString(of = {"id", "name"})
+public class Node implements Selectable {
     public static final int NODE_SIZE = 64;
 
     private final int id;
