@@ -1,4 +1,4 @@
-package nl.rug.oop.rts.observing;
+package nl.rug.oop.rts.interfaces.observing;
 
 import javax.swing.JPanel;
 
