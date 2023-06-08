@@ -9,22 +9,18 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.mouse.MapMouseHandler;
+import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
-import nl.rug.oop.rts.observing.Observer;
 import nl.rug.oop.rts.util.TextureLoader;
 
 public class MapView extends JPanel implements Observer {
-    private Game game;
-
     private Map map;
 
-    public MapView(Game game, Map map) {
+    public MapView(Map map) {
         super();
-        this.game = game;
         this.map = map;
 
         this.map.addObserver(this);
@@ -47,20 +43,38 @@ public class MapView extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
 
         // Draw all the nodes
-        map.getEdges().forEach((c) -> renderEdges(g2d, c));
+        map.getEdges().forEach((c) -> renderEdge(g2d, c));
         map.getNodes().forEach((c) -> renderNode(g2d, c));
+
+        if (map.isAddingEdge()) {
+            Point position = this.getMousePosition();
+
+            if (position != null) {
+                // Create a fake node which represents the mouse (it won't be rendered)
+                Point fakePosition = map.transformPoint(position);
+                Node fakeNode = new Node(-1, fakePosition, "Fake Node");
+
+                // Draw the edge between the fake node and the selected node
+                Edge fakeEdge = new Edge(-1, fakeNode, (Node) map.getSelection());
+                renderEdge(g2d, fakeEdge);
+            }
+        }
     }
 
     private void renderNode(Graphics2D g, Node node) {
-        if (node.equals(map.getSelectedNode())) {
-            g.setColor(Color.RED);
+        if (map.getSelection() instanceof Node selectedNode && node.equals(selectedNode)) {
+            Color toUse = Color.RED;
+            if (map.isAddingEdge()) {
+                toUse = Color.BLUE;
+            }
+
+            g.setColor(toUse);
             g.setStroke(new BasicStroke(3));
             Point position = node.getPosition();
             position = map.transformPoint(position);
 
             int actualSize = Node.NODE_SIZE + 10;
-            g.drawRect(position.x - actualSize / 2, position.y - actualSize / 2, actualSize,
-                    actualSize);
+            g.drawRect(position.x - actualSize / 2, position.y - actualSize / 2, actualSize, actualSize);
         }
 
         Point position = node.getPosition();
@@ -77,7 +91,7 @@ public class MapView extends JPanel implements Observer {
         g.drawString(node.getName(), position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 - textHeight);
     }
 
-    private void renderEdges(Graphics2D g, Edge edge) {
+    private void renderEdge(Graphics2D g, Edge edge) {
         Point pointA = edge.getPointA().getPosition();
         Point pointB = edge.getPointB().getPosition();
 
@@ -89,5 +103,20 @@ public class MapView extends JPanel implements Observer {
                 0, new float[] { 9 }, 0));
 
         g.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
+
+        // Draw a little circle in the middle
+        int handleSize = 10;
+
+        g.fillOval((pointA.x + pointB.x - (int) (handleSize * 1.4)) / 2,
+                (pointA.y + pointB.y - (int) (handleSize * 1.4)) / 2,
+                (int) (handleSize * 1.4), (int) (handleSize * 1.4));
+        g.setColor(Color.WHITE);
+
+        if (this.map.getSelection() instanceof Edge selectedEdge && edge.equals(selectedEdge)) {
+            g.setColor(Color.RED);
+        }
+
+        g.fillOval((pointA.x + pointB.x - handleSize) / 2, (pointA.y + pointB.y - handleSize) / 2, handleSize,
+                handleSize);
     }
 }
