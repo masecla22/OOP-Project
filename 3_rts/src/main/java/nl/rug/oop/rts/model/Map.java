@@ -95,16 +95,21 @@ public class Map implements Observable {
         observers.remove(observer);
     }
 
-    public Point transformPoint(Point point) {
+    public Point addOffset(Point point) {
         Point offset = this.getOffset();
         return new Point((int) (point.x + offset.x), (int) (point.y + offset.y));
+    }
+
+    public Point subtractOffset(Point point) {
+        Point offset = this.getOffset();
+        return new Point((int) (point.x - offset.x), (int) (point.y - offset.y));
     }
 
     public Selectable getSelectableAt(int x, int y) {
         // First check the nodes
         for (Node node : this.getNodes()) {
             Point position = node.getPosition();
-            position = transformPoint(position);
+            position = addOffset(position);
 
             if (x >= position.x - Node.NODE_SIZE / 2 && x <= position.x + Node.NODE_SIZE / 2
                     && y >= position.y - Node.NODE_SIZE / 2 && y <= position.y + Node.NODE_SIZE / 2) {
@@ -116,8 +121,8 @@ public class Map implements Observable {
             Point pointA = edge.getPointA().getPosition();
             Point pointB = edge.getPointB().getPosition();
 
-            pointA = transformPoint(pointA);
-            pointB = transformPoint(pointB);
+            pointA = addOffset(pointA);
+            pointB = addOffset(pointB);
 
             int middleX = (pointA.x + pointB.x) / 2;
             int middleY = (pointA.y + pointB.y) / 2;
