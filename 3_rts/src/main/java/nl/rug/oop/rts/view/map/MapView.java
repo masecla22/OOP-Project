@@ -42,10 +42,10 @@ public class MapView extends JPanel implements Observer {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Draw all the nodes
+        // Draw all the edges
         map.getEdges().forEach((c) -> renderEdge(g2d, c));
-        map.getNodes().forEach((c) -> renderNode(g2d, c));
 
+        // Draw the fake edge (from a selected node to the mouse)
         if (map.isAddingEdge()) {
             Point position = this.getMousePosition();
 
@@ -59,6 +59,8 @@ public class MapView extends JPanel implements Observer {
                 renderEdge(g2d, fakeEdge);
             }
         }
+
+        map.getNodes().forEach((c) -> renderNode(g2d, c));
     }
 
     private void renderNode(Graphics2D g, Node node) {
