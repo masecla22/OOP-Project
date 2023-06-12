@@ -41,7 +41,7 @@ public class SettingsView extends JPanel {
         backButton.setPreferredSize(new Dimension(200, 50));
         this.add(backButton, BorderLayout.PAGE_START);
 
-    }
+    } 
 
     private void addSaveButton() {
         JButton saveButton = new JButton("Save");
