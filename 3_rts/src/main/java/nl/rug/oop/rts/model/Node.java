@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import nl.rug.oop.rts.interfaces.Selectable;
+import nl.rug.oop.rts.model.units.Unit;
 
 @Data
 @EqualsAndHashCode(of = "id")
@@ -27,4 +28,6 @@ public class Node implements Selectable {
     private String name;
 
     private Set<Edge> edges = new HashSet<>();
+
+    private Set<Unit> units = new HashSet<>();
 }
