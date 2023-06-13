@@ -3,7 +3,6 @@ package nl.rug.oop.rts.model;
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 import lombok.Getter;
 import nl.rug.oop.rts.interfaces.Selectable;
@@ -21,8 +20,6 @@ public class Map implements Observable {
 
     private Selectable selection;
 
-    private CompletableFuture<Node> addingEdge = null;
-
     public void addNode(Node node) {
         nodes.add(node);
         this.update();
@@ -37,28 +34,11 @@ public class Map implements Observable {
 
     public void setSelection(Selectable selection) {
         this.selection = selection;
-        if (this.selection == null)
-            this.addingEdge = null;
-
         this.update();
-    }
-
-    public boolean isAddingEdge() {
-        return this.addingEdge != null;
     }
 
     public void setOffset(Point offset) {
         this.offset = offset;
-        this.update();
-    }
-
-    public void markAddingEdge() {
-        this.addingEdge = new CompletableFuture<>();
-        this.update();
-    }
-
-    public void unmarkAddingEdge() {
-        this.addingEdge = null;
         this.update();
     }
 
