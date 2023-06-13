@@ -34,6 +34,11 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
             fields.addAll(this.getFieldsFor(clazz.getSuperclass()));
         }
 
+        // Remove static fields
+        fields.removeIf(field -> (field.getModifiers() & Modifier.STATIC) != 0);
+        // Remove transient fields
+        fields.removeIf(field -> (field.getModifiers() & Modifier.TRANSIENT) != 0);
+
         return fields;
     }
 
@@ -46,10 +51,6 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
 
         List<Field> fields = this.getFieldsFor(clazz);
         for (Field field : fields) {
-            if ((field.getModifiers() & Modifier.TRANSIENT) != 0) {
-                continue;
-            }
-
             field.setAccessible(true);
             jsonResult.put(field.getName(), this.getTreeSerializer().toJson(field.get(object)));
         }
@@ -71,10 +72,6 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
 
         List<Field> fields = this.getFieldsFor(clazz);
         for (Field field : fields) {
-            if ((field.getModifiers() & Modifier.TRANSIENT) != 0) {
-                continue;
-            }
-
             field.setAccessible(true);
             field.set(result, this.getTreeSerializer().fromJson(json.get(field.getName()), field));
         }
