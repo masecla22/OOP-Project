@@ -5,60 +5,123 @@ import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This class is used to convert a List of JsonValues to a JSON String.
+ */
 @RequiredArgsConstructor
 public class JsonWriter {
     private final boolean prettyPrint;
 
     private int indent = 0;
 
+    /**
+     * Converts a List of JsonValues to a JSON String.
+     * 
+     * @param values - the list of JsonValues
+     * @return - the String representation of the JsonValues
+     */
     public String print(List<JsonValue> values) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
-            JsonValue value = values.get(i);
-            if (value.getType().equals(JsonToken.START_OBJECT)) {
-                indent(builder);
-                builder.append("{");
-                newLine(builder);
-                incrementIndent();
-            } else if (value.getType().equals(JsonToken.END_OBJECT)) {
-                decrementIndent();
-                newLine(builder);
-                indent(builder);
-                builder.append("}");
-                addCommaIfNeeded(builder, values.get(i + 1).getType());
-            } else if (value.getType().equals(JsonToken.START_ARRAY)) {
-                builder.append("[");
-                incrementIndent();
-                newLine(builder);
-            } else if (value.getType().equals(JsonToken.END_ARRAY)) {
-                decrementIndent();
-                newLine(builder);
-                indent(builder);
-                builder.append("]");
-                addCommaIfNeeded(builder, values.get(i + 1).getType());
-            } else if (value.getType().equals(JsonToken.NAME)) {
-                indent(builder);
-                builder.append(value.getValue() + ":");
-                if (prettyPrint) {
-                    builder.append(" ");
-                }
-            } else if (value.getType().equals(JsonToken.BOOLEAN) || value.getType().equals(JsonToken.NULL)
-                    || value.getType().equals(JsonToken.NUMBER)) {
-                if (!values.get(i - 1).getType().equals(JsonToken.NAME))
-                    indent(builder);
-                builder.append(value.getValue());
-                addCommaIfNeeded(builder, values.get(i + 1).getType());
-            } else if (value.getType().equals(JsonToken.STRING)) {
-                if (!values.get(i - 1).getType().equals(JsonToken.NAME))
-                    indent(builder);
-
-                String stringValue = (String) value.getValue();
-                builder.append("\"" + escape(stringValue) + "\"");
-                addCommaIfNeeded(builder, values.get(i + 1).getType());
+            JsonValue current = values.get(i), previous = null, next = null;
+            if (i > 0) {
+                previous = values.get(i - 1);
             }
+            if (i < values.size() - 1) {
+                next = values.get(i + 1);
+            }
+
+            printJsonValue(builder, previous, current, next);
         }
 
         return builder.toString();
+    }
+
+    private void printJsonValue(StringBuilder builder, JsonValue previous, JsonValue current, JsonValue next) {
+        switch (current.getType()) {
+            case START_OBJECT:
+                printStartObject(builder, current);
+                break;
+            case END_OBJECT:
+                printEndObject(builder, current, next);
+                break;
+            case START_ARRAY:
+                printStartArray(builder, current);
+                break;
+            case END_ARRAY:
+                printEndArray(builder, current, next);
+                break;
+            case NAME:
+                printName(builder, current);
+                break;
+            case BOOLEAN:
+            case NULL:
+            case NUMBER:
+                printPrimitive(builder, previous, current, next);
+                break;
+            case STRING:
+                printString(builder, previous, current, next);
+                break;
+            case EOF:
+                break;
+        }
+    }
+
+    private void printStartObject(StringBuilder builder, JsonValue current) {
+        indent(builder);
+        builder.append("{");
+        incrementIndent();
+        newLine(builder);
+    }
+
+    private void printEndObject(StringBuilder builder, JsonValue current, JsonValue next) {
+        decrementIndent();
+        newLine(builder);
+        indent(builder);
+        builder.append("}");
+        addCommaIfNeeded(builder, next.getType());
+    }
+
+    private void printStartArray(StringBuilder builder, JsonValue current) {
+        indent(builder);
+        builder.append("[");
+        incrementIndent();
+        newLine(builder);
+    }
+
+    private void printEndArray(StringBuilder builder, JsonValue current, JsonValue next) {
+        decrementIndent();
+        newLine(builder);
+        indent(builder);
+        builder.append("]");
+        addCommaIfNeeded(builder, next.getType());
+    }
+
+    private void printName(StringBuilder builder, JsonValue current) {
+        indent(builder);
+        builder.append(current.getValue() + ":");
+        if (prettyPrint) {
+            builder.append(" ");
+        }
+    }
+
+    private void printPrimitive(StringBuilder builder, JsonValue previous, JsonValue current, JsonValue next) {
+        if (!previous.getType().equals(JsonToken.NAME)) {
+            indent(builder);
+        }
+
+        builder.append(current.getValue());
+        addCommaIfNeeded(builder, next.getType());
+    }
+
+    private void printString(StringBuilder builder, JsonValue previous, JsonValue current, JsonValue next) {
+        if (!previous.getType().equals(JsonToken.NAME)) {
+            indent(builder);
+        }
+
+        String stringValue = (String) current.getValue();
+        builder.append("\"" + escape(stringValue) + "\"");
+        addCommaIfNeeded(builder, next.getType());
     }
 
     private String escape(String s) {

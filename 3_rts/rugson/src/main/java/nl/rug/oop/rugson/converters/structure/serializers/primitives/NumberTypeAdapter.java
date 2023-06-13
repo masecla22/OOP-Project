@@ -9,6 +9,9 @@ import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
 import nl.rug.oop.rugson.objects.JsonElement;
 
+/**
+ * Type adapter for numbers. Will handle lazy parsing of numbers.
+ */
 public class NumberTypeAdapter extends TypeAdapter<Number> {
 
     public NumberTypeAdapter(ObjectTreeSerializer serializer) {

@@ -10,6 +10,11 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * Type adapter for maps. The map Key type must be String, otherwise JSON isn't really
+ * able to handle it. A custom format could be implemented in the form of: [{key: key, value: value},...]
+ * but that would be a lot of work for little gain. 
+ */
 public class MapTypeAdapter extends TypeAdapter<Map<?, ?>> {
 
     public MapTypeAdapter(ObjectTreeSerializer treeSerializer) {

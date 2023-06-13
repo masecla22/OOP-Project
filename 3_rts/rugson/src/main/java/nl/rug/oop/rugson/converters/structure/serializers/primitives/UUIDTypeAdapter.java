@@ -9,6 +9,12 @@ import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
 import nl.rug.oop.rugson.objects.JsonElement;
 
+/**
+ * Type adapter for UUID's.
+ * It will use the UUID.fromString() method to parse the string, so it will
+ * throw an exception if the string is not a valid UUID. It will use the
+ * UUID.toString() method to serialize the UUID.
+ */
 public class UUIDTypeAdapter extends TypeAdapter<UUID> {
 
     public UUIDTypeAdapter(ObjectTreeSerializer treeSerializer) {

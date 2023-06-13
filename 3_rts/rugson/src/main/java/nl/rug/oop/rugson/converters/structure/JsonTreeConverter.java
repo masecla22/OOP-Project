@@ -11,11 +11,27 @@ import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * This class converts a list of {@link JsonValue}s to a {@link JsonElement}.
+ * (and vice versa)
+ */
 public class JsonTreeConverter {
+    /**
+     * Converts a list of {@link JsonValue}s to a {@link JsonElement}.
+     * 
+     * @param value - the list of {@link JsonValue}s
+     * @return - the {@link JsonElement}
+     */
     public JsonElement convertToJsonTree(List<JsonValue> value) {
         return convertToJsonTree(new ArrayDeque<>(value));
     }
 
+    /**
+     * Converts a queue of {@link JsonValue}s to a {@link JsonElement}.
+     * 
+     * @param value - the list of {@link JsonValue}s
+     * @return - the {@link JsonElement}
+     */
     public JsonElement convertToJsonTree(Queue<JsonValue> value) {
         // If string, boolean, number or null, return value
         JsonValue firstValue = value.poll();
@@ -29,43 +45,60 @@ public class JsonTreeConverter {
         }
 
         if (firstType.equals(JsonToken.START_ARRAY)) {
-            JsonArray array = new JsonArray();
-            while (!value.peek().getType().equals(JsonToken.END_ARRAY)) {
-                array.add(convertToJsonTree(value));
-            }
-
-            // Consume the end array
-            value.poll();
-
-            return array;
+            return handleStartArray(value);
         }
 
         if (firstType.equals(JsonToken.START_OBJECT)) {
-            JsonObject object = new JsonObject();
-            while (!value.peek().getType().equals(JsonToken.END_OBJECT)) {
-                JsonValue name = value.poll();
-                if (!name.getType().equals(JsonToken.NAME)) {
-                    throw new RuntimeException("Expected name, got " + name.getType());
-                }
-
-                String nameValue = (String) name.getValue();
-                JsonElement objectValue = convertToJsonTree(value);
-                object.put(nameValue, objectValue);
-            }
-
-            // Consume the end object
-            value.poll();
-
-            return object;
+            return handleStartObject(value);
         }
 
         throw new RuntimeException("Unexpected token " + firstType);
     }
 
+    private JsonElement handleStartObject(Queue<JsonValue> value) {
+        JsonObject object = new JsonObject();
+        while (!value.peek().getType().equals(JsonToken.END_OBJECT)) {
+            JsonValue name = value.poll();
+            if (!name.getType().equals(JsonToken.NAME)) {
+                throw new RuntimeException("Expected name, got " + name.getType());
+            }
+
+            String nameValue = (String) name.getValue();
+            JsonElement objectValue = convertToJsonTree(value);
+            object.put(nameValue, objectValue);
+        }
+
+        // Consume the end object
+        value.poll();
+
+        return object;
+    }
+
+    private JsonElement handleStartArray(Queue<JsonValue> value) {
+        JsonArray array = new JsonArray();
+        while (!value.peek().getType().equals(JsonToken.END_ARRAY)) {
+            array.add(convertToJsonTree(value));
+        }
+
+        // Consume the end array
+        value.poll();
+
+        return array;
+    }
+
+    /**
+     * Converts a {@link JsonElement} to a list of {@link JsonValue}s.
+     *
+     * @param element    - the element to convert
+     * @param endWithEof - whether to end the list with an EOF token
+     * 
+     * @return - the list of {@link JsonValue}s
+     */
     public List<JsonValue> convertFromJsonTree(JsonElement element, boolean endWithEof) {
         List<JsonValue> result = recursivelyBuildJsonList(element);
-        if (endWithEof)
+        if (endWithEof) {
             result.add(new JsonValue(JsonToken.EOF));
+        }
         return result;
     }
 

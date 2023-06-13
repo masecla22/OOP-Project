@@ -8,6 +8,9 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
 
+/**
+ * Type adapter for lists. Lists are serialized as JsonArrays.
+ */
 public class ListTypeAdapter extends TypeAdapter<List<?>> {
 
     public ListTypeAdapter(ObjectTreeSerializer treeSerializer) {
@@ -27,8 +30,9 @@ public class ListTypeAdapter extends TypeAdapter<List<?>> {
         List<?> result = new ArrayList<>();
         Class<?> genericType = genericTypes.get(0);
 
-        for (JsonElement element : consumer.asJsonArray())
+        for (JsonElement element : consumer.asJsonArray()) {
             result.add(this.getTreeSerializer().fromJson(element, genericType));
+        }
 
         return result;
     }
@@ -36,8 +40,9 @@ public class ListTypeAdapter extends TypeAdapter<List<?>> {
     @Override
     public JsonElement serialize(List<?> object) {
         JsonArray result = new JsonArray();
-        for (Object element : object)
+        for (Object element : object) {
             result.add(this.getTreeSerializer().toJson(element));
+        }
 
         return result;
     }

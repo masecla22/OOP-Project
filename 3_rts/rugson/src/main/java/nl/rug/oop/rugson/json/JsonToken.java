@@ -1,5 +1,8 @@
 package nl.rug.oop.rugson.json;
 
+/**
+ * This enum represents the different types of JSON tokens.
+ */
 public enum JsonToken {
     START_ARRAY,
     END_ARRAY,
@@ -13,6 +16,5 @@ public enum JsonToken {
 
     NUMBER,
     STRING,
-
-    EOF;
+    EOF
 }

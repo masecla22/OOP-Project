@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * JsonArray is a class that represents a JSON array.
+ * It is a list of JsonElements.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = "values")

@@ -7,6 +7,10 @@ import java.util.Set;
 
 import lombok.ToString;
 
+/**
+ * JsonObject is a class that represents a JSON object.
+ * It is a map of JsonElements.
+ */
 @ToString(of = "values")
 public class JsonObject extends JsonElement implements Map<String, JsonElement> {
     private transient Map<String, JsonElement> values = new HashMap<>();

@@ -10,9 +10,31 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * This class is responsible for serializing and deserializing objects using
+ * reflection. Specifically, this type adapter
+ * is used for objects that do not have a custom type adapter, and will iterate
+ * all the fields of the object and
+ * serialize them. It will also create a new instance of the object and set the
+ * fields to the deserialized values.
+ * 
+ * - A public no-args constructor is required for this type adapter to work.
+ * - Transient fields will not be serialized.
+ * - Static fields will not be serialized.
+ * - All fields from the class and all superclasses will be serialized.
+ */
 public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     public ReflectiveTypeAdapter(ObjectTreeSerializer treeSerializer) {
         super(treeSerializer);
+    }
+
+    private List<Field> getFieldsFor(Class<?> clazz) {
+        List<Field> fields = List.of(clazz.getDeclaredFields());
+        if (clazz.getSuperclass() != null) {
+            fields.addAll(this.getFieldsFor(clazz.getSuperclass()));
+        }
+
+        return fields;
     }
 
     @Override
@@ -21,7 +43,9 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
         JsonObject jsonResult = new JsonObject();
 
         Class<?> clazz = object.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
+
+        List<Field> fields = this.getFieldsFor(clazz);
+        for (Field field : fields) {
             if ((field.getModifiers() & Modifier.TRANSIENT) != 0) {
                 continue;
             }
@@ -44,7 +68,9 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
         Object result = clazz.getConstructor().newInstance();
 
         JsonObject json = (JsonObject) consumer;
-        for (Field field : clazz.getDeclaredFields()) {
+
+        List<Field> fields = this.getFieldsFor(clazz);
+        for (Field field : fields) {
             if ((field.getModifiers() & Modifier.TRANSIENT) != 0) {
                 continue;
             }

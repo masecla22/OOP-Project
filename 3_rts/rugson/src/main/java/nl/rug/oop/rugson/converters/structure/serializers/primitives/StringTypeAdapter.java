@@ -8,6 +8,9 @@ import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
 import nl.rug.oop.rugson.objects.JsonElement;
 
+/**
+ * Type adapter for strings. Very simple, just spits out the string.
+ */
 public class StringTypeAdapter extends TypeAdapter<String> {
 
     public StringTypeAdapter(ObjectTreeSerializer treeSerializer) {
