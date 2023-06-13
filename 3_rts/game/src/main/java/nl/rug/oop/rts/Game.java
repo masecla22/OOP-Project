@@ -18,6 +18,9 @@ import nl.rug.oop.rts.view.settings.SettingsView;
 public class Game {
     private JFrame frame;
 
+    /**
+     * something
+     */
     public void initialize() {
         this.frame = new JFrame("RTS Game");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
