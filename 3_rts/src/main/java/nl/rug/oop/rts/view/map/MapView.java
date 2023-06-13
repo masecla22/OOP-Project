@@ -9,6 +9,7 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
+import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.mouse.MapMouseHandler;
 import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
@@ -17,15 +18,18 @@ import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.util.TextureLoader;
 
 public class MapView extends JPanel implements Observer {
-    private Map map;
 
-    public MapView(Map map) {
+    private Map map;
+    private MapController mapController;
+
+    public MapView(Map map, MapController mapController) {
         super();
         this.map = map;
+        this.mapController = mapController;
 
         this.map.addObserver(this);
 
-        MapMouseHandler mapMouseHandler = new MapMouseHandler(this.map);
+        MapMouseHandler mapMouseHandler = new MapMouseHandler(this.map, mapController);
         this.addMouseListener(mapMouseHandler);
         this.addMouseMotionListener(mapMouseHandler);
     }
@@ -46,7 +50,7 @@ public class MapView extends JPanel implements Observer {
         map.getEdges().forEach((c) -> renderEdge(g2d, c));
 
         // Draw the fake edge (from a selected node to the mouse)
-        if (map.isAddingEdge()) {
+        if (mapController.isAddingEdge()) {
             Point position = this.getMousePosition();
 
             if (position != null) {
@@ -66,7 +70,7 @@ public class MapView extends JPanel implements Observer {
     private void renderNode(Graphics2D g, Node node) {
         if (map.getSelection() instanceof Node selectedNode && node.equals(selectedNode)) {
             Color toUse = Color.RED;
-            if (map.isAddingEdge()) {
+            if (mapController.isAddingEdge()) {
                 toUse = Color.BLUE;
             }
 
