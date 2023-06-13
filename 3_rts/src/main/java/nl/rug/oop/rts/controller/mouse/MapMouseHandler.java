@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
@@ -14,6 +15,9 @@ import nl.rug.oop.rts.model.Node;
 public class MapMouseHandler extends MouseAdapter {
     @NonNull
     private Map map;
+    
+    @NonNull
+    private MapController mapController;
 
     private Point draggedPoint = null;
 
@@ -23,18 +27,18 @@ public class MapMouseHandler extends MouseAdapter {
 
         Selectable selectable = map.getSelectableAt(e.getX(), e.getY());
         if (selectable instanceof Node node) {
-            if (map.isAddingEdge()) {
-                map.getAddingEdge().complete(node);
+            if (mapController.isAddingEdge()) {
+                mapController.getAddingEdge().complete(node);
                 return;
             }
         }
 
-        map.setSelection(map.getSelectableAt(e.getX(), e.getY()));
+        mapController.setSelection(map.getSelectableAt(e.getX(), e.getY()));
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (map.isAddingEdge()) {
+        if (mapController.isAddingEdge()) {
             map.update();
         }
     }
@@ -45,7 +49,7 @@ public class MapMouseHandler extends MouseAdapter {
 
         // If selected node is null, we drag map
         if (map.getSelection() == null) {
-            map.setOffset(new Point(map.getOffset().x + delta.x, map.getOffset().y + delta.y));
+            mapController.setOffset(new Point(map.getOffset().x + delta.x, map.getOffset().y + delta.y));
         } else {
             Selectable selection = map.getSelection();
 
