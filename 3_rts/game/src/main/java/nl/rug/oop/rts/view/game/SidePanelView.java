@@ -1,38 +1,47 @@
 package nl.rug.oop.rts.view.game;
 
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 
-import java.awt.*;
-
-public class NodeOptionsView extends JPanel implements Observer {
+public class SidePanelView extends JPanel implements Observer {
     private Map map;
     private Game game;
 
-    private Node nodeShowingOptionsFor = null;
+    private Selectable showingOptionsFor;
 
-    public NodeOptionsView(Map map) {
+    public SidePanelView(Map map) {
         super();
         this.map = map;
         this.map.addObserver(this);
 
         // It looks awful without this
         setBorder(new EmptyBorder(10, 10, 10, 10));
-        this.add(new JLabel("No node selected right now!"));
+        setPreferredSize(new Dimension(200, 0));
+
+        // Set the initial state
+        this.showNoNodeSelected(true);
     }
 
     @Override
     public void update() {
         if (this.map.getSelection() == null)
-            this.showNoNodeSelected();
+            this.showNoNodeSelected(false);
         else if (this.map.getSelection() instanceof Node)
             this.showNodeOptions();
         else if (this.map.getSelection() instanceof Edge)
@@ -42,14 +51,14 @@ public class NodeOptionsView extends JPanel implements Observer {
     }
 
     private void showNodeOptions() {
-        if (nodeShowingOptionsFor != null && nodeShowingOptionsFor.equals(this.map.getSelection()))
+        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection()))
             return;
 
-        nodeShowingOptionsFor = (Node) this.map.getSelection();
+        showingOptionsFor = this.map.getSelection();
 
         this.removeAll();
 
-        Node selectedNode = (Node) this.map.getSelection();
+        Node selectedNode = (Node) showingOptionsFor;
 
         JPanel nodeOptions = new JPanel();
         nodeOptions.setLayout(new GridLayout(4, 1, 1, 2));
@@ -63,20 +72,21 @@ public class NodeOptionsView extends JPanel implements Observer {
         nodeName.setPreferredSize(new Dimension(50, 30));
         nodeOptions.add(nodeName);
 
-        //add buttons for adding/removing armies on/from selected node
+        // add buttons for adding/removing armies on/from selected node
 
         JButton addArmy = new JButton("Add army");
-        /**addArmy.setPreferredSize(new Dimension(50, 30));
-        String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
-        JComboBox<String> armiesDropDown = new JComboBox<>(armies);*/
+        /**
+         * addArmy.setPreferredSize(new Dimension(50, 30));
+         * String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
+         * JComboBox<String> armiesDropDown = new JComboBox<>(armies);
+         */
 
         nodeOptions.add(addArmy);
-        //nodeOptions.add(armiesDropDown);
+        // nodeOptions.add(armiesDropDown);
 
         addArmy.addActionListener(e -> {
             this.game.handleAddArmy(nodeOptions);
         });
-
 
         JButton removeArmy = new JButton("Remove army");
         removeArmy.setPreferredSize(new Dimension(50, 30));
@@ -112,24 +122,25 @@ public class NodeOptionsView extends JPanel implements Observer {
     }
 
     private void showEdgeOptions() {
-        if (nodeShowingOptionsFor != null)
-            nodeShowingOptionsFor = null;
+        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection()))
+            return;
 
+        showingOptionsFor = this.map.getSelection();
         this.removeAll();
 
-        Edge selectedEdge = (Edge) this.map.getSelection();
+        Edge selectedEdge = (Edge) showingOptionsFor;
 
         this.add(new JLabel("Edge connects \n"));
         this.add(new JLabel(selectedEdge.getPointA().getName() + " - " + selectedEdge.getPointB().getName()));
     }
 
-    private void showNoNodeSelected() {
-        if (nodeShowingOptionsFor == null)
+    private void showNoNodeSelected(boolean ignoreSelection) {
+        if (!ignoreSelection && showingOptionsFor == null)
             return;
 
-        nodeShowingOptionsFor = null;
+        showingOptionsFor = null;
         this.removeAll();
 
-        this.add(new JLabel("No node selected right now!"));
+        this.add(new JLabel("Nothing selected right now!"));
     }
 }
