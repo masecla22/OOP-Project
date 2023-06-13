@@ -20,4 +20,8 @@ public class Apple extends ConsumableItem {
         player.setHealth(player.getHealth() + 500);
     }
 
+    @Override
+    public Apple copy(){
+        return new Apple();
+    }
 }

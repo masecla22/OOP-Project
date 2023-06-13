@@ -19,4 +19,9 @@ public class Goblin extends Enemy {
         super(game, room, "A goblin, small but deals a lot of damage", "Orc", 30, 50);
     }
 
+    @Override
+    public Goblin copy() {
+        return new Goblin(this.getGame(), this.getRoom());
+    }
+
 }

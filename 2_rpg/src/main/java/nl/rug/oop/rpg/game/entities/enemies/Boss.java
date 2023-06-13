@@ -19,4 +19,8 @@ public class Boss extends Enemy {
         super(game, room, "The Final Boss of the Game.", "The Boss.", 5000, 30);
     }
 
+    @Override
+    public Boss copy(){
+        return new Boss(this.getGame(), this.getRoom());
+    }
 }

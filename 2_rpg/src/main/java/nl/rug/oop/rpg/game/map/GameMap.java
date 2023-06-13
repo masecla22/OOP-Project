@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rpg.Game;
+import nl.rug.oop.rpg.game.entities.Illusionist;
 import nl.rug.oop.rpg.game.entities.buffers.DamageWizard;
 import nl.rug.oop.rpg.game.entities.buffers.HealingWizard;
 import nl.rug.oop.rpg.game.entities.enemies.Boss;
@@ -94,6 +95,9 @@ public class GameMap implements Serializable {
 
         CheeseSeller cheeseRoomSeller = new CheeseSeller(game, cheeseRoom);
         cheeseRoom.addNPC(cheeseRoomSeller);
+
+        Illusionist cheeseRoomIllusionist = new Illusionist(game, cheeseRoom);
+        cheeseRoom.addNPC(cheeseRoomIllusionist);
     }
 
     private void populateFirstEnemyRoom(Room enemyRoom1) {

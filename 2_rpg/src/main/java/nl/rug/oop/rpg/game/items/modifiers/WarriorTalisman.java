@@ -23,4 +23,9 @@ public class WarriorTalisman extends ModifierItem {
     public double modifyOutgoingDamage(double damage) {
         return damage * 2;
     }
+
+    @Override
+    public WarriorTalisman copy(){
+        return new WarriorTalisman();
+    }
 }

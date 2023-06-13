@@ -18,5 +18,9 @@ public class CheeseFighter extends Enemy {
     public CheeseFighter(Game game, Room room) {
         super(game, room, "A cheese fighter who seems overly confident", "Cheese Fighter", 30, 10);
     }
-    
+
+    @Override
+    public CheeseFighter copy() {
+        return new CheeseFighter(this.getGame(), this.getRoom());
+    }
 }

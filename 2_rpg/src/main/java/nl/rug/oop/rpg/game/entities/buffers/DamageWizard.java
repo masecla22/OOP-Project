@@ -36,4 +36,8 @@ public class DamageWizard extends Buffer {
         return "I can increase your base damage for 20 gold";
     }
 
+    @Override
+    public DamageWizard copy() {
+        return new DamageWizard(this.getGame(), this.getRoom());
+    }
 }

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
 import lombok.NonNull;
+import lombok.Setter;
 import nl.rug.oop.rpg.Game;
 import nl.rug.oop.rpg.game.items.Item;
 import nl.rug.oop.rpg.game.objects.Room;
@@ -15,7 +17,7 @@ import nl.rug.oop.rpg.interaction.DialogInteraction;
 /**
  * A merchant that sells items to the player.
  */
-public class Merchant extends NPC {
+public abstract class Merchant extends NPC {
 
     /**
      * These are all the items the merchant sells. The value is how much the item
@@ -23,6 +25,7 @@ public class Merchant extends NPC {
      * 
      * We use an array to allow for duplicated items being sold by the same NPC
      */
+    @Setter(AccessLevel.PROTECTED)
     private List<Map.Entry<Item, Integer>> sellableItems = new ArrayList<>();
 
     /**
@@ -40,6 +43,23 @@ public class Merchant extends NPC {
 
     protected void addToInventory(Item item, int cost) {
         sellableItems.add(new SimpleEntry<>(item, cost));
+    }
+
+    /**
+     * Creates a copy of the inventory. This will also copy the items inside
+     * using their {@link Item#copy()} method. 
+     * 
+     * @return - A copy of the inventory
+     */
+    protected List<Map.Entry<Item, Integer>> copyInventory() {
+        List<Map.Entry<Item, Integer>> duplicateItems = new ArrayList<>();
+        for (Map.Entry<Item, Integer> current : sellableItems) {
+            Item item = current.getKey().copy();
+            int cost = current.getValue();
+            duplicateItems.add(new SimpleEntry<>(item, cost));
+        }
+
+        return duplicateItems;
     }
 
     @Override

@@ -30,4 +30,12 @@ public class FoodSeller extends Merchant {
         this.addToInventory(new Apple(), 3);
     }
 
+    @Override
+    public FoodSeller copy() {
+        FoodSeller result = new FoodSeller(this.getGame(), this.getRoom());
+        result.setSellableItems(this.copyInventory());
+
+        return result;
+    }
+
 }

@@ -12,7 +12,7 @@ import nl.rug.oop.rpg.interaction.CombatInteraction;
 /**
  * An enemy is an NPC that can fight.
  */
-public class Enemy extends NPC implements Fightable {
+public abstract class Enemy extends NPC implements Fightable {
     /** The health of this enemy. */
     @Getter
     private double health;
