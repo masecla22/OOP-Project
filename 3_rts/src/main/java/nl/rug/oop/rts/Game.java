@@ -7,12 +7,14 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import nl.rug.oop.rts.controller.map.MapController;
+import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.view.MainMenuClass;
+import nl.rug.oop.rts.view.game.GameView;
 import nl.rug.oop.rts.view.settings.SettingsView;
-import nl.rug.oop.rts.view.singleplayer.SingleplayerView;
 
 public class Game {
     private JFrame frame;
@@ -77,7 +79,9 @@ public class Game {
 
         // Map map = new Map(); // TODO: Replace this with saving and loading
 
-        SingleplayerView view = new SingleplayerView(this, map);
+        MapController spMapController = new SinglePlayerMapController(map);
+
+        GameView view = new GameView(this, map, spMapController);
         this.handleView(view);
     }
 
