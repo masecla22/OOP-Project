@@ -4,8 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
@@ -90,5 +89,12 @@ public class Game {
 
     public void openSettings() {
         handleView(new SettingsView(this));
+    }
+
+    public void handleAddArmy(JPanel nodeOptions) {
+        String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
+        JComboBox<String> armiesDropDown = new JComboBox<>(armies);
+
+        nodeOptions.add(armiesDropDown);
     }
 }

@@ -125,10 +125,10 @@ public class GameView extends JPanel implements Observer {
             this.map.setSelection(null);
         });
 
-        topBar.add(addArmyButton);
+        /**topBar.add(addArmyButton);
         addArmyButton.addActionListener(e -> {
             // this.map.addArmy();
-        });
+        });*/
 
         return topBar;
     }

@@ -1,20 +1,25 @@
 package nl.rug.oop.rugson.objects;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@NoArgsConstructor
 @AllArgsConstructor
-public class JsonArray implements Iterable<JsonObject> {
-    private List<JsonObject> values;
+@ToString(of = "values")
+public class JsonArray extends JsonElement implements Iterable<JsonElement> {
+    private List<JsonElement> values = new ArrayList<>();
 
     @Override
-    public Iterator<JsonObject> iterator() {
+    public Iterator<JsonElement> iterator() {
         return values.iterator();
     }
 
-    public JsonObject get(int index) {
+    public JsonElement get(int index) {
         return values.get(index);
     }
 
@@ -26,7 +31,7 @@ public class JsonArray implements Iterable<JsonObject> {
         return values.isEmpty();
     }
 
-    public void add(JsonObject value) {
+    public void add(JsonElement value) {
         values.add(value);
     }
 }

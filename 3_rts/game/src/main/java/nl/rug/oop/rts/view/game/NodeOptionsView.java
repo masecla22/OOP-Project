@@ -1,19 +1,21 @@
 package nl.rug.oop.rts.view.game;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 
+import java.awt.*;
+
 public class NodeOptionsView extends JPanel implements Observer {
     private Map map;
+    private Game game;
 
     private Node nodeShowingOptionsFor = null;
 
@@ -49,10 +51,39 @@ public class NodeOptionsView extends JPanel implements Observer {
 
         Node selectedNode = (Node) this.map.getSelection();
 
-        this.add(new JLabel("Node"));
-        JTextField nodeName = new JTextField(selectedNode.getName(), 10);
+        JPanel nodeOptions = new JPanel();
+        nodeOptions.setLayout(new GridLayout(4, 1, 1, 2));
+        this.add(nodeOptions);
 
-        this.add(nodeName);
+        JLabel node = new JLabel("Node:", SwingConstants.CENTER);
+        node.setPreferredSize(new Dimension(50, 30));
+        nodeOptions.add(node);
+
+        JTextField nodeName = new JTextField(selectedNode.getName(), 10);
+        nodeName.setPreferredSize(new Dimension(50, 30));
+        nodeOptions.add(nodeName);
+
+        //add buttons for adding/removing armies on/from selected node
+
+        JButton addArmy = new JButton("Add army");
+        /**addArmy.setPreferredSize(new Dimension(50, 30));
+        String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
+        JComboBox<String> armiesDropDown = new JComboBox<>(armies);*/
+
+        nodeOptions.add(addArmy);
+        //nodeOptions.add(armiesDropDown);
+
+        addArmy.addActionListener(e -> {
+            this.game.handleAddArmy(nodeOptions);
+        });
+
+
+        JButton removeArmy = new JButton("Remove army");
+        removeArmy.setPreferredSize(new Dimension(50, 30));
+        removeArmy.addActionListener(e -> {
+            // this.game.handleRemoveArmy();
+        });
+        nodeOptions.add(removeArmy);
 
         nodeName.getDocument().addDocumentListener(new DocumentListener() {
 

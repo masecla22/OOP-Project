@@ -289,8 +289,13 @@ public class JsonReader {
             if (lastValue != null) {
                 if (!lastValue.getType().equals(JsonToken.NAME) &&
                         !lastValue.getType().equals(JsonToken.END_OBJECT) &&
-                        !lastValue.getType().equals(JsonToken.END_ARRAY)) {
-                    throw new IOException("Unexpected character " + c);
+                        !lastValue.getType().equals(JsonToken.END_ARRAY) &&
+                        !lastValue.getType().equals(JsonToken.START_ARRAY) &&
+                        !lastValue.getType().equals(JsonToken.STRING) &&
+                        !lastValue.getType().equals(JsonToken.NULL) &&
+                        !lastValue.getType().equals(JsonToken.BOOLEAN) &&
+                        !lastValue.getType().equals(JsonToken.NUMBER)) {
+                    throw new IOException("Unexpected character " + c+" "+lastValue.getType());
                 }
             }
 
@@ -301,5 +306,20 @@ public class JsonReader {
         } else {
             throw new IOException("Unexpected character " + c);
         }
+    }
+
+    public List<JsonValue> ingestEverything() {
+        List<JsonValue> result = new ArrayList<JsonValue>();
+        JsonValue nextValue;
+        try {
+            while ((nextValue = ingestNextValue()) != null) {
+                result.add(nextValue);
+                if (nextValue.getType().equals(JsonToken.EOF))
+                    break;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 }
