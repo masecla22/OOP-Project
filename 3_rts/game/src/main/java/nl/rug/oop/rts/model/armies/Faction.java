@@ -15,4 +15,9 @@ public enum Faction {
     private String niceName;
 
     private String team;
+
+    @Override
+    public String toString() {
+        return niceName;
+    }
 }
