@@ -3,7 +3,12 @@ package nl.rug.oop.rts.view.game;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -14,6 +19,7 @@ import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.armies.Faction;
 
 public class SidePanelView extends JPanel implements Observer {
     private Map map;
@@ -70,23 +76,26 @@ public class SidePanelView extends JPanel implements Observer {
 
         // add buttons for adding/removing armies on/from selected node
 
-        /**addNodeButton.addActionListener(e -> {
-            this.mapController.createNode(JOptionPane.showInputDialog("What is the name of the node?"));
-        });*/
+        /**
+         * addNodeButton.addActionListener(e -> {
+         * this.mapController.createNode(JOptionPane.showInputDialog("What is the name
+         * of the node?"));
+         * });
+         */
 
         JButton addArmy = new JButton("Add army");
 
         nodeOptions.add(addArmy);
 
-
-        String[] options = {"Men", "Elves", "Dwarves", "Mordor", "Isengard"};
         addArmy.addActionListener(e -> {
-            this.game.handleAddArmy(JOptionPane.showOptionDialog(null,
+            int pickedOption = JOptionPane.showOptionDialog(null,
                     "Which army would you like to add?",
                     "Select a faction",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
-                    null, options, null));
+                    null, Faction.values(), null);
+
+            System.out.println(pickedOption);
         });
 
         JButton removeArmy = new JButton("Remove army");
