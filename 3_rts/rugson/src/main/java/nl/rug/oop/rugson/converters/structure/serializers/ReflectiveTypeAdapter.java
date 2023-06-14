@@ -2,6 +2,7 @@ package nl.rug.oop.rugson.converters.structure.serializers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.SneakyThrows;
@@ -29,7 +30,10 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     }
 
     private List<Field> getFieldsFor(Class<?> clazz) {
-        List<Field> fields = List.of(clazz.getDeclaredFields());
+        List<Field> fields = new ArrayList<>();
+        for(Field cr : clazz.getDeclaredFields())
+            fields.add(cr);
+
         if (clazz.getSuperclass() != null) {
             fields.addAll(this.getFieldsFor(clazz.getSuperclass()));
         }
