@@ -5,11 +5,17 @@ import java.awt.Point;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.armies.Army;
+import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.model.units.UnitFactory;
 
 public class SinglePlayerMapController extends MapController {
 
-    public SinglePlayerMapController(Map map) {
+    private UnitFactory unitFactory;
+
+    public SinglePlayerMapController(UnitFactory unitFactory, Map map) {
         super(map);
+        this.unitFactory = unitFactory;
     }
 
     @Override
@@ -44,11 +50,18 @@ public class SinglePlayerMapController extends MapController {
 
     @Override
     public void runSimulationStep() {
-
     }
 
     @Override
-    public void addArmy() {
-        
+    public void addArmy(Node node, Faction faction) {
+        Army army = unitFactory.buildArmy(faction);
+        node.addArmy(army);
+        this.getMap().update();
+    }
+
+    @Override
+    public void removeArmy(Node node, Army army) {
+        node.removeArmy(army);
+        this.getMap().update();
     }
 }
