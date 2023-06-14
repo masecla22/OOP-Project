@@ -86,7 +86,7 @@ public class MapView extends JPanel implements Observer {
         Point position = node.getPosition();
         position = map.addOffset(position);
 
-        Image image = TextureLoader.getInstance().getTexture("factionMordor", Node.NODE_SIZE, Node.NODE_SIZE);
+        Image image = TextureLoader.getInstance().getTexture("node3", Node.NODE_SIZE, Node.NODE_SIZE);
         g.drawImage(image, position.x - Node.NODE_SIZE / 2, position.y - Node.NODE_SIZE / 2, null);
 
         g.setColor(Color.BLACK);
@@ -95,6 +95,22 @@ public class MapView extends JPanel implements Observer {
         int textHeight = g.getFontMetrics().getHeight();
 
         g.drawString(node.getName(), position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 - textHeight);
+
+        renderArmies(g, node);
+    }
+
+    private void renderArmies(Graphics2D g, Node node){
+        String text = Integer.toString(node.getArmies().size())+" armis";
+        Point position = node.getPosition();
+        position = map.addOffset(position);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.BLACK);
+
+        int textWidth = g2d.getFontMetrics().stringWidth(text);
+        int textHeight = g2d.getFontMetrics().getHeight();
+
+        g2d.drawString(text, position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 + 100 - textHeight);
     }
 
     private void renderEdge(Graphics2D g, Edge edge) {

@@ -36,7 +36,7 @@ public class GameView extends JPanel implements Observer {
 
         MapView mapView = new MapView(map, mapController);
         this.add(mapView, BorderLayout.CENTER);
-        this.add(new SidePanelView(map), BorderLayout.LINE_START);
+        this.add(new SidePanelView(map, mapController), BorderLayout.LINE_START);
     }
 
     @Override

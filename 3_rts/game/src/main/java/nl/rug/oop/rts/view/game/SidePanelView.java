@@ -14,11 +14,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Faction;
 
 public class SidePanelView extends JPanel implements Observer {
@@ -26,11 +28,14 @@ public class SidePanelView extends JPanel implements Observer {
     private Game game;
 
     private Selectable showingOptionsFor;
+    private MapController mapController;
 
-    public SidePanelView(Map map) {
+    public SidePanelView(Map map, MapController mapController) {
         super();
         this.map = map;
         this.map.addObserver(this);
+
+        this.mapController = mapController;
 
         // It looks awful without this
         setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -95,13 +100,23 @@ public class SidePanelView extends JPanel implements Observer {
                     JOptionPane.INFORMATION_MESSAGE,
                     null, Faction.values(), null);
 
-            System.out.println(pickedOption);
+            if (pickedOption != JOptionPane.CLOSED_OPTION) {
+                Faction faction = Faction.values()[pickedOption];
+                this.mapController.addArmy(selectedNode, faction);
+            }
         });
 
         JButton removeArmy = new JButton("Remove army");
         removeArmy.setPreferredSize(new Dimension(50, 30));
         removeArmy.addActionListener(e -> {
-            // this.game.handleRemoveArmy();
+            Army army = (Army) JOptionPane.showInputDialog(null,
+                    "Which army would you like to remove?",
+                    "Select an army",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, selectedNode.getArmies().toArray(), null);
+
+            if (army != null)
+                this.mapController.removeArmy(selectedNode, army);
         });
         nodeOptions.add(removeArmy);
 
