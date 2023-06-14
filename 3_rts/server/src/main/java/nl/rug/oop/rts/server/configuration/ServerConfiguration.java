@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nl.rug.oop.rts.server.configuration.sql.SQLConfiguration;
 import nl.rug.oop.rugson.Rugson;
 
 @Data
@@ -17,8 +18,9 @@ public class ServerConfiguration {
     private transient Rugson rugson;
     private transient Logger logger;
     private transient File file;
-    
+
     private int port = 7779;
+    private SQLConfiguration sql = new SQLConfiguration();
 
     public static ServerConfiguration loadConfiguration(Rugson rugson, File file, Logger logger) {
         try {
