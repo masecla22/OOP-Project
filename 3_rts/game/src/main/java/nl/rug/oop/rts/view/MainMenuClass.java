@@ -45,7 +45,7 @@ public class MainMenuClass extends JPanel {
         // Multiplayer
         JButton multiplayerButton = new JButton("Multiplayer");
         multiplayerButton.addActionListener(e -> {
-            // handle button click
+            game.handleMultiplayer();
         });
 
         // Settings
