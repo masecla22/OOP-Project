@@ -1,4 +1,4 @@
-package nl.rug.oop.rts.server.user;
+package nl.rug.oop.rts.protocol.user;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
