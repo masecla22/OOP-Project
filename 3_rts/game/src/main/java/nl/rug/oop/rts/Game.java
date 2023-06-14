@@ -91,10 +91,7 @@ public class Game {
         handleView(new SettingsView(this));
     }
 
-    public void handleAddArmy(JPanel nodeOptions) {
-        String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
-        JComboBox<String> armiesDropDown = new JComboBox<>(armies);
+    public void handleAddArmy(int selectAFaction) {
 
-        nodeOptions.add(armiesDropDown);
     }
 }

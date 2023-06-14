@@ -3,11 +3,7 @@ package nl.rug.oop.rts.view.game;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -74,18 +70,23 @@ public class SidePanelView extends JPanel implements Observer {
 
         // add buttons for adding/removing armies on/from selected node
 
+        /**addNodeButton.addActionListener(e -> {
+            this.mapController.createNode(JOptionPane.showInputDialog("What is the name of the node?"));
+        });*/
+
         JButton addArmy = new JButton("Add army");
-        /**
-         * addArmy.setPreferredSize(new Dimension(50, 30));
-         * String[] armies = { "Men", "Elves", "Dwarves", "Mordor", "Isengard" };
-         * JComboBox<String> armiesDropDown = new JComboBox<>(armies);
-         */
 
         nodeOptions.add(addArmy);
-        // nodeOptions.add(armiesDropDown);
 
+
+        String[] options = {"Men", "Elves", "Dwarves", "Mordor", "Isengard"};
         addArmy.addActionListener(e -> {
-            this.game.handleAddArmy(nodeOptions);
+            this.game.handleAddArmy(JOptionPane.showOptionDialog(null,
+                    "Which army would you like to add?",
+                    "Select a faction",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null, options, null));
         });
 
         JButton removeArmy = new JButton("Remove army");
