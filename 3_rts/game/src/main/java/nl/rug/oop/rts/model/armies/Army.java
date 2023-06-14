@@ -12,4 +12,9 @@ import nl.rug.oop.rts.model.units.Unit;
 public class Army {
     private List<Unit> units = new ArrayList<>();
     private Faction faction;
+
+    @Override
+    public String toString() {
+        return faction.toString() + " army (" + units.size() + " units)";
+    }
 }
