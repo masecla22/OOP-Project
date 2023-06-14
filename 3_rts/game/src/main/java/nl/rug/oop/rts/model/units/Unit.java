@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Unit {
+    private UnitType type;
+
     private String name;
 
     private double damage;
