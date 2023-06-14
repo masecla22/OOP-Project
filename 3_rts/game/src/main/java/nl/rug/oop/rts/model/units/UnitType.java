@@ -31,7 +31,7 @@ public enum UnitType {
     GUARDIAN(Guardian.class, 10.0, 20.0, 40.0, 60.0, List.of("Adolph", "Goofy", "Mario")),
     PHALANX(Phalanx.class, 5.0, 10.0, 50.0, 60.0, List.of("Lorenzo", "Greg", "Gabby")),
 
-    LORIEN_WARRIOR(LorienWarrior.class, 15.0, 30.0, 60.0, 70.0, List.of("Fabiola", "Fernus", "Fabrizzio")),
+    LORIEN_WARRIOR(LorienWarrior.class, 15.0, 30.0, 60.0, 70.0, List.of("Fabiola", "Fernus", "Fabrizio")),
     MIRKWOOD_ARCHER(MirkwoodArcher.class, 10.0, 30.0, 70.0, 80.0, List.of("Odobasian", "Roberta", "Paulo")),
     RIVENDELL_LANCER(RivendellLancer.class, 10.0, 40.0, 70.0, 90.0, List.of("Maya", "Karina", "Sebastian")),
 
