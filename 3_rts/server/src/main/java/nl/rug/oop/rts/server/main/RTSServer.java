@@ -11,10 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
 import nl.rug.oop.rts.server.connection.ConnectionManager;
+import nl.rug.oop.rts.server.handlers.HandlerBinder;
 import nl.rug.oop.rts.server.logging.CustomFormatter;
 import nl.rug.oop.rts.server.logging.FileLogHandler;
 import nl.rug.oop.rts.server.logging.LoggingOutputStream;
@@ -22,6 +24,7 @@ import nl.rug.oop.rts.server.user.UserManager;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
+@Getter
 public class RTSServer {
     private ExecutorService threadPool;
     private Logger logger;
@@ -79,6 +82,12 @@ public class RTSServer {
 
         this.connectionManager = new ConnectionManager(threadPool, rugson, packetDictionary);
         this.connectionManager.start(this.configuration.getPort());
+
+        this.connectionManager.addConnectionHandler((connection) -> {
+            // Register all listeners on the connection
+            HandlerBinder binder = new HandlerBinder(this, connection);
+            binder.bind();
+        });
 
         logger.info("Connection manager started on port: " + this.configuration.getPort() + ".");
     }
