@@ -34,12 +34,19 @@ public class SQLConfiguration {
 
         // Cancel any previous tasks
         sqlAliver.cancel();
+        sqlAliver = new Timer();
 
         // Load SQL driver
         Class.forName("com.mysql.cj.jdbc.Driver");
 
-        String url = String.format("jdbc:mysql://%s:%d/%s", host, port, database);
+        String url = String.format("jdbc:mysql://%s:%d/", host, port);
         Connection connection = DriverManager.getConnection(url, username, password);
+
+        // Ensure database exsists
+        connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database).execute();
+
+        // Select database
+        connection.prepareStatement("USE " + database).execute();
 
         sqlAliver.scheduleAtFixedRate(new TimerTask() {
             @Override
