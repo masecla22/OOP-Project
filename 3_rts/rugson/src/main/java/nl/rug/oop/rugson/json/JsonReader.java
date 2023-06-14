@@ -215,6 +215,10 @@ public class JsonReader {
 
         char initialCharacter = (char) inputStream.read();
         do {
+            if (initialCharacter == '"') {
+                break;
+            }
+
             if (initialCharacter == '\\') {
                 char nextCharacter = (char) inputStream.read();
                 if (nextCharacter == 'u') {
