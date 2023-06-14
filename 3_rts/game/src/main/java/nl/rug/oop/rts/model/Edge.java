@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rts.interfaces.Selectable;
-import nl.rug.oop.rts.model.units.Unit;
+import nl.rug.oop.rts.model.armies.Army;
 
 @Data
 @EqualsAndHashCode(of = "id")
@@ -22,7 +22,7 @@ public class Edge implements Selectable {
     @NonNull
     private Node pointB;
 
-    private Set<Unit> units = new HashSet<>();
+    private Set<Army> armies = new HashSet<>();
 
     public boolean isConnectedTo(Node node) {
         return pointA.equals(node) || pointB.equals(node);
