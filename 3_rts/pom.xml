@@ -16,6 +16,7 @@
         <module>game</module>
         <module>rugson</module>
         <module>server</module>
+        <module>protocol</module>
     </modules>
 
     <!-- implementation details -->
