@@ -1,30 +1,41 @@
 package nl.rug.oop.rts;
 
-import java.awt.*;
+import java.awt.Point;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
+import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.units.UnitFactory;
 import nl.rug.oop.rts.view.MainMenuClass;
 import nl.rug.oop.rts.view.game.GameView;
 import nl.rug.oop.rts.view.game.LoginView;
 import nl.rug.oop.rts.view.game.MultiplayerView;
 import nl.rug.oop.rts.view.game.RegisterView;
 import nl.rug.oop.rts.view.settings.SettingsView;
+import nl.rug.oop.rugson.Rugson;
+import nl.rug.oop.rugson.RugsonBuilder;
 
 public class Game {
     private JFrame frame;
+    private Rugson rugson;
+
+    private List<JPanel> accessedViews = new ArrayList<>();
 
     /**
      * something
      */
     public void initialize() {
+        this.initializeRugson();
+
         this.frame = new JFrame("RTS Game");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
@@ -37,7 +48,9 @@ public class Game {
         this.frame.setVisible(true);
     }
 
-    private List<JPanel> accessedViews = new ArrayList<>();
+    private void initializeRugson() {
+        this.rugson = new RugsonBuilder().build();
+    }
 
     public void handleQuitting() {
         this.frame.dispose();
@@ -82,21 +95,26 @@ public class Game {
         map.addEdge(bc);
         map.addEdge(ca);
 
-        // Map map = new Map(); // TODO: Replace this with saving and loading
-
-        MapController spMapController = new SinglePlayerMapController(map);
+        UnitFactory unitFactory = new UnitFactory((int) Instant.now().toEpochMilli());
+        MapController spMapController = new SinglePlayerMapController(unitFactory, map);
 
         GameView view = new GameView(this, map, spMapController);
         this.handleView(view);
     }
 
     public void openSettings() {
-        handleView(new SettingsView(this));
+        handleView(new SettingsView(this, new SettingsController(this.rugson)));
     }
 
-    public void handleMultiplayer () { handleView(new MultiplayerView(this)); }
+    public void handleMultiplayer() {
+        handleView(new MultiplayerView(this));
+    }
 
-    public void handleLogin() { handleView(new LoginView(this)); }
+    public void handleLogin() {
+        handleView(new LoginView(this));
+    }
 
-    public void handleRegister() {handleView(new RegisterView(this)); }
+    public void handleRegister() {
+        handleView(new RegisterView(this));
+    }
 }
