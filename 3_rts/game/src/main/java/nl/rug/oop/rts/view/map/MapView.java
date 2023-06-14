@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -15,6 +16,9 @@ import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.armies.Army;
+import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.model.armies.Team;
 import nl.rug.oop.rts.util.TextureLoader;
 
 public class MapView extends JPanel implements Observer {
@@ -96,21 +100,71 @@ public class MapView extends JPanel implements Observer {
 
         g.drawString(node.getName(), position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 - textHeight);
 
-        renderArmies(g, node);
+        renderArmies(g, position, node);
     }
 
-    private void renderArmies(Graphics2D g, Node node){
-        String text = Integer.toString(node.getArmies().size())+" armis";
-        Point position = node.getPosition();
-        position = map.addOffset(position);
+    private void renderArmies(Graphics2D g, Point position, Node node) {
+        List<Army> allArmies = node.getArmies();
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.BLACK);
+        List<Army> teamA = allArmies.stream().filter((c) -> c.getFaction().getTeam().equals(Team.TEAM_A)).toList();
+        List<Army> teamB = allArmies.stream().filter((c) -> c.getFaction().getTeam().equals(Team.TEAM_B)).toList();
 
-        int textWidth = g2d.getFontMetrics().stringWidth(text);
-        int textHeight = g2d.getFontMetrics().getHeight();
+        double emptySpace = Math.PI / 5;
+        double halfPi = Math.PI / 2;
 
-        g2d.drawString(text, position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 + 100 - textHeight);
+        renderArmiesAt(g, position, teamA, halfPi - emptySpace, -halfPi + emptySpace);
+        renderArmiesAt(g, position, teamB, halfPi + emptySpace, Math.PI + halfPi - emptySpace);
+    }
+
+    private void renderArmiesAt(Graphics2D g, Point position, List<Army> army, double beginAngle, double endAngle) {
+        double angle = endAngle - beginAngle;
+        double angleStep = angle / (army.size() + 1);
+
+        int radiusToDrawAt = 45;
+
+        for (int i = 0; i < army.size(); i++) {
+            double currentAngle = beginAngle + angleStep * (i + 1);
+
+            int x = (int) (Math.cos(currentAngle) * radiusToDrawAt) + position.x - Node.NODE_SIZE / 4;
+            int y = (int) (Math.sin(currentAngle) * radiusToDrawAt) + position.y - Node.NODE_SIZE / 4;
+
+            renderArmy(g, army.get(i), x, y);
+        }
+    }
+
+    private void renderArmy(Graphics2D g, Army army, int x, int y) {
+        int armyTextureSize = 32;
+
+        Faction faction = army.getFaction();
+        Image image = TextureLoader.getInstance().getTexture(faction.getTexture(), armyTextureSize, armyTextureSize);
+
+        if (faction.getTeam().equals(Team.TEAM_A)) {
+            g.setColor(Color.RED);
+        } else {
+            g.setColor(Color.BLUE);
+        }
+
+        g.fillRect(x - 2, y - 2, armyTextureSize + 4, armyTextureSize + 4);
+        g.drawImage(image, x, y, null);
+
+        g.setColor(Color.BLACK);
+
+        String armyString = army.toString();
+
+        int textWidth = g.getFontMetrics().stringWidth(armyString);
+        int textHeight = g.getFontMetrics().getHeight();
+
+        // If team a, place text on right of image
+        int textPosX = x;
+        int textPosY = y + armyTextureSize / 2 + textHeight / 4;
+
+        if (faction.getTeam().equals(Team.TEAM_A)) {
+            textPosX += armyTextureSize + 6;
+        } else {
+            textPosX -= textWidth + 6;
+        }
+
+        g.drawString(armyString, textPosX, textPosY);
     }
 
     private void renderEdge(Graphics2D g, Edge edge) {
