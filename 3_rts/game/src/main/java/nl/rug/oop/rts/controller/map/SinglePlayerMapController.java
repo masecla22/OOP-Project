@@ -5,7 +5,6 @@ import java.awt.Point;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
-import nl.rug.oop.rts.model.armies.Faction;
 
 public class SinglePlayerMapController extends MapController {
 
@@ -49,7 +48,7 @@ public class SinglePlayerMapController extends MapController {
     }
 
     @Override
-    public void addArmy(Faction faction) {
+    public void addArmy() {
         
     }
 }
