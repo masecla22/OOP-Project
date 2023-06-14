@@ -11,6 +11,8 @@ import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.armies.Army;
+import nl.rug.oop.rts.model.armies.Faction;
 
 @RequiredArgsConstructor
 public abstract class MapController {
@@ -31,7 +33,9 @@ public abstract class MapController {
 
     public abstract void runSimulationStep();
 
-    public abstract void addArmy();
+    public abstract void addArmy(Node node, Faction faction);
+
+    public abstract void removeArmy(Node node, Army army);
 
     public void setSelection(Selectable selection) {
         if (selection == null) {
