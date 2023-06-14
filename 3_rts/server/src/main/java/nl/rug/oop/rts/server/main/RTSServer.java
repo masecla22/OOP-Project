@@ -3,6 +3,7 @@ package nl.rug.oop.rts.server.main;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.ConsoleHandler;
@@ -10,12 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
 import nl.rug.oop.rts.server.connection.ConnectionManager;
 import nl.rug.oop.rts.server.logging.CustomFormatter;
 import nl.rug.oop.rts.server.logging.FileLogHandler;
 import nl.rug.oop.rts.server.logging.LoggingOutputStream;
+import nl.rug.oop.rts.server.user.UserManager;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
@@ -27,6 +30,9 @@ public class RTSServer {
 
     private ServerConfiguration configuration;
     private Rugson rugson;
+
+    private Connection connection;
+    private UserManager userManager;
 
     public RTSServer() {
         this.threadPool = Executors.newCachedThreadPool();
@@ -42,6 +48,9 @@ public class RTSServer {
 
         this.setupConfiguration();
         this.setupRugson();
+
+        this.setupSQLConnection();
+        this.setupUserManager();
 
         this.setupConnectionManager();
     }
@@ -72,6 +81,17 @@ public class RTSServer {
         this.connectionManager.start(this.configuration.getPort());
 
         logger.info("Connection manager started on port: " + this.configuration.getPort() + ".");
+    }
+
+    @SneakyThrows
+    private void setupSQLConnection() {
+        this.connection = this.configuration.getSql().openConnection();
+        logger.info("SQL connection established.");
+    }
+
+    private void setupUserManager() {
+        this.userManager = new UserManager(this.connection);
+        logger.info("User manager setup.");
     }
 
     private void setupLogging() {
