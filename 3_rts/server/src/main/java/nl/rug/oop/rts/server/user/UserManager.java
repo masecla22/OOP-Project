@@ -5,14 +5,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import nl.rug.oop.rts.protocol.user.User;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserManager {
+    @NonNull
     private Connection connection;
+
+    private Map<UUID, User> activeTokens = new HashMap<>();
 
     public void initialize() throws SQLException {
         ensureTable();
@@ -86,7 +95,44 @@ public class UserManager {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
-            return new User(statement.executeQuery());
+            ResultSet set = statement.executeQuery();
+            if (set.first()) {
+                return new User(set);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public User getUser(UUID token) {
+        return activeTokens.get(token);
+    }
+
+    public void logout(UUID token) {
+        activeTokens.remove(token);
+    }
+
+    public UUID login(User user) {
+        UUID token = UUID.randomUUID();
+        activeTokens.put(token, user);
+        return token;
+    }
+
+    public UUID login(String username, String password) throws SQLException {
+        String query = "SELECT * FROM `rts_users` WHERE `username` = ? AND `password` = ?;";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, hashPassword(password));
+
+            ResultSet set = statement.executeQuery();
+
+            if (set.first()) {
+                User user = new User(set);
+                return login(user);
+            } else {
+                return null;
+            }
         }
     }
 
