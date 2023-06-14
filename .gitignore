@@ -63,3 +63,6 @@ target/
 *.zip
 *.tar.gz
 *.rar
+
+# Ignore the RTS config file
+config.json
