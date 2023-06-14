@@ -2,6 +2,7 @@ package nl.rug.oop.rts.model.units;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -26,27 +27,28 @@ import nl.rug.oop.rts.model.units.mordor.OrcWarrior;
 @Getter
 @AllArgsConstructor
 public enum UnitType {
-    AXE_THROWER(AxeThrower.class),
-    GUARDIAN(Guardian.class),
-    PHALANX(Phalanx.class),
+    AXE_THROWER(AxeThrower.class, List.of()),
+    GUARDIAN(Guardian.class, List.of()),
+    PHALANX(Phalanx.class, List.of()),
 
-    LORIEN_WARRIOR(LorienWarrior.class),
-    MIRKWOOD_ARCHER(MirkwoodArcher.class),
-    RIVENDELL_LANCER(RivendellLancer.class),
+    LORIEN_WARRIOR(LorienWarrior.class, List.of()),
+    MIRKWOOD_ARCHER(MirkwoodArcher.class, List.of()),
+    RIVENDELL_LANCER(RivendellLancer.class, List.of()),
 
-    URUK_CROSSBOW_MAN(UrukCrossbowman.class),
-    URUK_HAI(UrukHai.class),
-    WARG_RIDER(WargRider.class),
+    URUK_CROSSBOW_MAN(UrukCrossbowman.class, List.of()),
+    URUK_HAI(UrukHai.class, List.of()),
+    WARG_RIDER(WargRider.class, List.of()),
 
-    GONDOR_SOLDIER(GondorSoldier.class),
-    ITHILIEN_RANGER(IthilienRanger.class),
-    TOWER_GUARD(TowerGuard.class),
+    GONDOR_SOLDIER(GondorSoldier.class, List.of()),
+    ITHILIEN_RANGER(IthilienRanger.class, List.of()),
+    TOWER_GUARD(TowerGuard.class, List.of()),
 
-    HARADRIM_ARCHER(HaradrimArcher.class),
-    ORC_PIKEMAN(OrcPikeman.class),
-    ORC_WARRIOR(OrcWarrior.class);
+    HARADRIM_ARCHER(HaradrimArcher.class, List.of()),
+    ORC_PIKEMAN(OrcPikeman.class, List.of()),
+    ORC_WARRIOR(OrcWarrior.class, List.of());
 
     private Class<? extends Unit> unitClass;
+    private List<String> availableNames;
 
     private static Map<UnitType, Constructor<? extends Unit>> cachedConstructors = new HashMap<>();
 
