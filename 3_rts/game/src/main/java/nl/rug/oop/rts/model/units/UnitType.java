@@ -27,25 +27,25 @@ import nl.rug.oop.rts.model.units.mordor.OrcWarrior;
 @Getter
 @AllArgsConstructor
 public enum UnitType {
-    AXE_THROWER(AxeThrower.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    GUARDIAN(Guardian.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    PHALANX(Phalanx.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    AXE_THROWER(AxeThrower.class, 10.0, 30.0, 60.0, 80.0, List.of("Ralph", "Mickey", "Bob")),
+    GUARDIAN(Guardian.class, 10.0, 20.0, 40.0, 60.0, List.of("Adolph", "Goofy", "Mario")),
+    PHALANX(Phalanx.class, 5.0, 10.0, 50.0, 60.0, List.of("Lorenzo", "Greg", "Gabby")),
 
-    LORIEN_WARRIOR(LorienWarrior.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    MIRKWOOD_ARCHER(MirkwoodArcher.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    RIVENDELL_LANCER(RivendellLancer.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    LORIEN_WARRIOR(LorienWarrior.class, 15.0, 30.0, 60.0, 70.0, List.of("Fabiola", "Fernus", "Fabrizzio")),
+    MIRKWOOD_ARCHER(MirkwoodArcher.class, 10.0, 30.0, 70.0, 80.0, List.of("Odobasian", "Roberta", "Paulo")),
+    RIVENDELL_LANCER(RivendellLancer.class, 10.0, 40.0, 70.0, 90.0, List.of("Maya", "Karina", "Sebastian")),
 
-    URUK_CROSSBOW_MAN(UrukCrossbowman.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    URUK_HAI(UrukHai.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    WARG_RIDER(WargRider.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    URUK_CROSSBOW_MAN(UrukCrossbowman.class, 5.0, 40.0, 60.0, 90.0, List.of("Angelus", "Pablo", "Petrus")),
+    URUK_HAI(UrukHai.class, 10.0, 20.0, 40.0, 80.0, List.of("Lucretiu", "Feriga", "Don")),
+    WARG_RIDER(WargRider.class, 7.0, 25.0, 60.0, 90.0, List.of("Cici", "Souvlaki", "Couscous")),
 
-    GONDOR_SOLDIER(GondorSoldier.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    ITHILIEN_RANGER(IthilienRanger.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    TOWER_GUARD(TowerGuard.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    GONDOR_SOLDIER(GondorSoldier.class, 10.0, 30.0, 80.0, 100.0, List.of("Cerasela", "Cayus", "Gordon")),
+    ITHILIEN_RANGER(IthilienRanger.class, 5.0, 40.0, 60.0, 75.0, List.of("Mathew", "Andrei", "Paprika")),
+    TOWER_GUARD(TowerGuard.class, 10.0, 35.0, 80.0, 90.0, List.of("Hobo", "Horatiu", "Lawrence")),
 
-    HARADRIM_ARCHER(HaradrimArcher.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    ORC_PIKEMAN(OrcPikeman.class, 0.0, 0.0, 0.0, 0.0, List.of()),
-    ORC_WARRIOR(OrcWarrior.class, 0.0, 0.0, 0.0, 0.0, List.of());
+    HARADRIM_ARCHER(HaradrimArcher.class, 30.0, 40.0, 50.0, 60.0, List.of("Hercules", "Ignatiu", "Chilli")),
+    ORC_PIKEMAN(OrcPikeman.class, 10.0, 20.0, 80.0, 110.0, List.of("Dove", "Kyle", "Karen")),
+    ORC_WARRIOR(OrcWarrior.class, 20.0, 30.0, 70.0, 90.0, List.of("Patricia", "Romin", "Goyle"));
 
     private Class<? extends Unit> unitClass;
     
