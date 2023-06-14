@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,8 +23,6 @@ public class SettingsView extends JPanel {
         actualOptions.setLayout(new GridLayout(4, 2, 10, 20));
 
         addBackButton();
-        addUsernameOption(actualOptions);
-        addThemeDropDown(actualOptions);
         addCentralServer(actualOptions);
         addSaveButton();
 
@@ -41,7 +38,7 @@ public class SettingsView extends JPanel {
         backButton.setPreferredSize(new Dimension(200, 50));
         this.add(backButton, BorderLayout.PAGE_START);
 
-    } 
+    }
 
     private void addSaveButton() {
         JButton saveButton = new JButton("Save");
@@ -52,25 +49,6 @@ public class SettingsView extends JPanel {
         saveButton.setPreferredSize(new Dimension(200, 50));
         this.add(saveButton, BorderLayout.PAGE_END);
 
-    }
-
-    private void addUsernameOption(JPanel actualOptions) {
-        // this adds a label and a text field
-        JLabel usernameLabel = new JLabel("Username:", SwingConstants.CENTER);
-        JTextField usernameField = new JTextField("Username");
-
-        actualOptions.add(usernameLabel);
-        actualOptions.add(usernameField);
-    }
-
-    private void addThemeDropDown(JPanel actualOptions) {
-        String[] themes = { "Theme 1", "Theme 2", "Theme 3" };
-
-        JLabel themeLabel = new JLabel("Theme:", SwingConstants.CENTER);
-        JComboBox<String> themeDropDown = new JComboBox<>(themes);
-
-        actualOptions.add(themeLabel);
-        actualOptions.add(themeDropDown);
     }
 
     private void addCentralServer(JPanel actualOptions) {
