@@ -17,7 +17,7 @@
     <groupId>nl.rug.oop.rts</groupId>
     <artifactId>rts-game</artifactId>
     <version>1.0-SNAPSHOT</version>
-    
+
     <name>rts-game</name>
 
     <packaging>jar</packaging>
@@ -43,6 +43,12 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-intellij-themes</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.rug.oop.rts</groupId>
+            <artifactId>rugson</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
