@@ -21,7 +21,7 @@ public class SettingsView extends JPanel {
         this.game = game;
         this.setLayout(new BorderLayout());
         JPanel actualOptions = new JPanel();
-        actualOptions.setLayout(new GridLayout(4, 2, 10, 10));
+        actualOptions.setLayout(new GridLayout(4, 2, 10, 20));
 
         addBackButton();
         addUsernameOption(actualOptions);

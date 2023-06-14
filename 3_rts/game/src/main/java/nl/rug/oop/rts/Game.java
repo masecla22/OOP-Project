@@ -1,6 +1,6 @@
 package nl.rug.oop.rts;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +13,9 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.view.MainMenuClass;
 import nl.rug.oop.rts.view.game.GameView;
+import nl.rug.oop.rts.view.game.LoginView;
+import nl.rug.oop.rts.view.game.MultiplayerView;
+import nl.rug.oop.rts.view.game.RegisterView;
 import nl.rug.oop.rts.view.settings.SettingsView;
 
 public class Game {
@@ -90,4 +93,10 @@ public class Game {
     public void openSettings() {
         handleView(new SettingsView(this));
     }
+
+    public void handleMultiplayer () { handleView(new MultiplayerView(this)); }
+
+    public void handleLogin() { handleView(new LoginView(this)); }
+
+    public void handleRegister() {handleView(new RegisterView(this)); }
 }
