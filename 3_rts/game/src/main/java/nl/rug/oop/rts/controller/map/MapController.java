@@ -31,6 +31,8 @@ public abstract class MapController {
 
     public abstract void runSimulationStep();
 
+    public abstract void addArmy();
+
     public void setSelection(Selectable selection) {
         if (selection == null) {
             this.addingEdge = null;

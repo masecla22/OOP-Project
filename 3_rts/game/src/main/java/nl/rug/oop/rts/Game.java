@@ -90,8 +90,4 @@ public class Game {
     public void openSettings() {
         handleView(new SettingsView(this));
     }
-
-    public void handleAddArmy(int selectAFaction) {
-
-    }
 }
