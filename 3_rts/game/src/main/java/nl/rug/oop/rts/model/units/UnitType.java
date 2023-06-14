@@ -27,27 +27,34 @@ import nl.rug.oop.rts.model.units.mordor.OrcWarrior;
 @Getter
 @AllArgsConstructor
 public enum UnitType {
-    AXE_THROWER(AxeThrower.class, List.of()),
-    GUARDIAN(Guardian.class, List.of()),
-    PHALANX(Phalanx.class, List.of()),
+    AXE_THROWER(AxeThrower.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    GUARDIAN(Guardian.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    PHALANX(Phalanx.class, 0.0, 0.0, 0.0, 0.0, List.of()),
 
-    LORIEN_WARRIOR(LorienWarrior.class, List.of()),
-    MIRKWOOD_ARCHER(MirkwoodArcher.class, List.of()),
-    RIVENDELL_LANCER(RivendellLancer.class, List.of()),
+    LORIEN_WARRIOR(LorienWarrior.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    MIRKWOOD_ARCHER(MirkwoodArcher.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    RIVENDELL_LANCER(RivendellLancer.class, 0.0, 0.0, 0.0, 0.0, List.of()),
 
-    URUK_CROSSBOW_MAN(UrukCrossbowman.class, List.of()),
-    URUK_HAI(UrukHai.class, List.of()),
-    WARG_RIDER(WargRider.class, List.of()),
+    URUK_CROSSBOW_MAN(UrukCrossbowman.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    URUK_HAI(UrukHai.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    WARG_RIDER(WargRider.class, 0.0, 0.0, 0.0, 0.0, List.of()),
 
-    GONDOR_SOLDIER(GondorSoldier.class, List.of()),
-    ITHILIEN_RANGER(IthilienRanger.class, List.of()),
-    TOWER_GUARD(TowerGuard.class, List.of()),
+    GONDOR_SOLDIER(GondorSoldier.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    ITHILIEN_RANGER(IthilienRanger.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    TOWER_GUARD(TowerGuard.class, 0.0, 0.0, 0.0, 0.0, List.of()),
 
-    HARADRIM_ARCHER(HaradrimArcher.class, List.of()),
-    ORC_PIKEMAN(OrcPikeman.class, List.of()),
-    ORC_WARRIOR(OrcWarrior.class, List.of());
+    HARADRIM_ARCHER(HaradrimArcher.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    ORC_PIKEMAN(OrcPikeman.class, 0.0, 0.0, 0.0, 0.0, List.of()),
+    ORC_WARRIOR(OrcWarrior.class, 0.0, 0.0, 0.0, 0.0, List.of());
 
     private Class<? extends Unit> unitClass;
+    
+    private double minDamage;
+    private double maxDamage;
+
+    private double minHealth;
+    private double maxHealth;
+
     private List<String> availableNames;
 
     private static Map<UnitType, Constructor<? extends Unit>> cachedConstructors = new HashMap<>();
