@@ -1,6 +1,7 @@
 package nl.rug.oop.rts.server.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
 import nl.rug.oop.rts.server.connection.ConnectionManager;
 import nl.rug.oop.rts.server.logging.CustomFormatter;
@@ -31,14 +33,16 @@ public class RTSServer {
         this.logger = Logger.getLogger("RTS-Server");
     }
 
-    public void start() {
+    public void start() throws IOException {
         this.setupLogging();
 
         logger.info("--- Starting RTS-Server ---");
         logger.info("             - Kindly brought to you by Team 48 <3");
         logger.info("");
-        
+
         this.setupConfiguration();
+        this.setupRugson();
+
         this.setupConnectionManager();
     }
 
@@ -56,10 +60,18 @@ public class RTSServer {
         logger.info("Loaded and setup configuration for the server.");
     }
 
-    private void setupConnectionManager() {
-        this.connectionManager = new ConnectionManager(threadPool);
-        this.connectionManager.start();
-        logger.info("Connection manager started");
+    private void setupRugson() {
+        this.rugson = new RugsonBuilder().setPrettyPrint(false).build();
+        System.out.println("Setup Rugson instance!");
+    }
+
+    private void setupConnectionManager() throws IOException {
+        RTSPacketDictionary packetDictionary = new RTSPacketDictionary();
+
+        this.connectionManager = new ConnectionManager(threadPool, rugson, packetDictionary);
+        this.connectionManager.start(this.configuration.getPort());
+
+        logger.info("Connection manager started on port: " + this.configuration.getPort() + ".");
     }
 
     private void setupLogging() {
