@@ -11,10 +11,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import nl.rug.oop.rugson.converters.structure.serializers.EnumTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.ReflectiveTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.collections.ListTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.collections.MapTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.collections.SetTypeAdapter;
+import nl.rug.oop.rugson.converters.structure.serializers.primitives.BooleanTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.primitives.NumberTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.primitives.StringTypeAdapter;
 import nl.rug.oop.rugson.converters.structure.serializers.primitives.UUIDTypeAdapter;
@@ -55,6 +57,9 @@ public class ObjectTreeSerializer {
         this.register(Number.class, new NumberTypeAdapter());
         this.register(String.class, new StringTypeAdapter());
         this.register(UUID.class, new UUIDTypeAdapter());
+
+        this.register(Enum.class, new EnumTypeAdapter());
+        this.register(Boolean.class, new BooleanTypeAdapter());
 
         Set<Class<?>> coveredByNumber = Set.of(byte.class, short.class, int.class, long.class, float.class,
                 double.class);
@@ -113,6 +118,16 @@ public class ObjectTreeSerializer {
     @SuppressWarnings("unchecked")
     public <K> JsonElement toJson(K object) {
         Class<K> clazz = (Class<K>) object.getClass();
+        TypeAdapter<K> converter = (TypeAdapter<K>) getConverter(clazz);
+
+        return converter.serialize(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <K> JsonElement toJson(K object, Class<?> clazz) {
+        if (object != null)
+            clazz = (Class<K>) object.getClass();
+
         TypeAdapter<K> converter = (TypeAdapter<K>) getConverter(clazz);
 
         return converter.serialize(object);
