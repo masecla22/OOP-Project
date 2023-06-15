@@ -19,6 +19,7 @@ import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.packet.Packet;
+import nl.rug.oop.rts.protocol.packet.definitions.authentication.AuthenticatedPacket;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
@@ -159,5 +160,15 @@ public class MultiplayerConnectionController {
     @SneakyThrows
     private void actuallySendPacket(Packet packet) {
         this.connection.sendPacket(packet);
+    }
+
+    public void sendAuthenticatedPacket(AuthenticatedPacket packet) {
+        if (this.connection == null)
+            throw new IllegalStateException("Not connected to server.");
+        if (this.authToken == null)
+            throw new IllegalStateException("Not logged in.");
+
+        packet.setSessionToken(authToken);
+        sendPacket(packet);
     }
 }
