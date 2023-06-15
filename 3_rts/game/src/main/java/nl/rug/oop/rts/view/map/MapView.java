@@ -23,6 +23,8 @@ import nl.rug.oop.rts.util.TextureLoader;
 
 public class MapView extends JPanel implements Observer {
 
+    public static final int MAP_SIZE = 2000;
+
     private Map map;
     private MapController mapController;
 
@@ -44,9 +46,13 @@ public class MapView extends JPanel implements Observer {
             throw new RuntimeException("Graphics object is not a Graphics2D object!");
         }
 
+        Point offset = map.getOffset();
+
         // Draw background
-        g.drawImage(TextureLoader.getInstance().getTexture("mapTexture", this.getWidth(), this.getHeight()), 0, 0,
-                null);
+        g.drawImage(TextureLoader.getInstance().getTexture("mapTexture", MAP_SIZE, MAP_SIZE),
+                offset.x, offset.y, null);
+
+        System.out.println(offset);
 
         Graphics2D g2d = (Graphics2D) g;
 
