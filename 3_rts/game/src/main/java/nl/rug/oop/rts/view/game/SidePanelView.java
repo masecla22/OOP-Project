@@ -27,6 +27,7 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 public class SidePanelView extends JPanel implements Observer {
     private Map map;
 
+    
     private Selectable showingOptionsFor;
     private MapController mapController;
 

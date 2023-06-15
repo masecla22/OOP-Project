@@ -7,9 +7,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.view.game.MultiplayerView;
+import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 
 public class MainMenuClass extends JPanel {
-
     private Game game;
 
     public MainMenuClass(Game game) {
@@ -39,13 +40,13 @@ public class MainMenuClass extends JPanel {
         // Singleplayer
         JButton singleplayerButton = new JButton("Singleplayer");
         singleplayerButton.addActionListener(e -> {
-            game.handleSingleplayer();
+            handleSingleplayer();
         });
 
         // Multiplayer
         JButton multiplayerButton = new JButton("Multiplayer");
         multiplayerButton.addActionListener(e -> {
-            game.handleMultiplayer();
+            handleMultiplayer();
         });
 
         // Settings
@@ -64,6 +65,16 @@ public class MainMenuClass extends JPanel {
         this.add(multiplayerButton);
         this.add(settingsButton);
         this.add(quitButton);
+    }
+
+    private void handleSingleplayer() {
+        SingleplayerMenuView menuView = new SingleplayerMenuView(game);
+        game.handleView(menuView);
+    }
+
+    private void handleMultiplayer() {
+        MultiplayerView multiplayerView = new MultiplayerView(game);
+        game.handleView(multiplayerView);
     }
 
 }
