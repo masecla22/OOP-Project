@@ -1,9 +1,9 @@
 package nl.rug.oop.rts.server.handlers.authentication;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginRequest;
@@ -21,8 +21,7 @@ public class LoginHandler extends PacketListener<LoginRequest> {
     }
 
     @Override
-    @SneakyThrows
-    protected boolean handlePacket(SocketConnection connection, LoginRequest packet) {
+    protected boolean handlePacket(SocketConnection connection, LoginRequest packet) throws IOException {
         String username = packet.getUsername();
         String password = packet.getPassword();
 

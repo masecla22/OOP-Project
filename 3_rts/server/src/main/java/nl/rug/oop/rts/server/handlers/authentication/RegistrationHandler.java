@@ -1,8 +1,9 @@
 package nl.rug.oop.rts.server.handlers.authentication;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.UUID;
 
-import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
@@ -19,8 +20,7 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
     }
 
     @Override
-    @SneakyThrows
-    protected boolean handlePacket(SocketConnection connection, RegistrationRequest packet) {
+    protected boolean handlePacket(SocketConnection connection, RegistrationRequest packet) throws IOException {
         String username = packet.getUsername();
         String password = packet.getPassword();
 
@@ -30,7 +30,7 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
             UUID token = this.userManager.login(registered);
             RegistrationResponse response = new RegistrationResponse(true, null, token);
             connection.sendPacket(response);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLException e) {
             RegistrationResponse response = new RegistrationResponse(false, e.getMessage(), null);
             connection.sendPacket(response);
         }
