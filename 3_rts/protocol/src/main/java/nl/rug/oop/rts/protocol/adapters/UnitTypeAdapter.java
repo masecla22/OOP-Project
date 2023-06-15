@@ -4,16 +4,11 @@ import java.util.List;
 
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
 public class UnitTypeAdapter extends TypeAdapter<Unit> {
-
-    public UnitTypeAdapter(ObjectTreeSerializer serializer) {
-        super(serializer);
-    }
 
     @Override
     public JsonElement serialize(Unit object) {

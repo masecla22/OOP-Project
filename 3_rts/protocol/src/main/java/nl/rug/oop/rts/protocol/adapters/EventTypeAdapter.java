@@ -5,7 +5,6 @@ import java.util.List;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
@@ -14,8 +13,8 @@ public class EventTypeAdapter extends TypeAdapter<Event> {
 
     private EventFactory eventFactory;
 
-    public EventTypeAdapter(ObjectTreeSerializer serializer) {
-        super(serializer);
+    public EventTypeAdapter(EventFactory eventFactory) {
+        this.eventFactory = eventFactory;
     }
 
     @Override
