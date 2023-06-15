@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.AwaitPacketOnce;
@@ -59,6 +60,11 @@ public class MultiplayerConnectionController {
 
         Socket socket = new Socket(centralServer, port);
         this.connection = new SocketConnection(rugson, socket, threadPool, getPacketDictionary());
+    }
+
+    @SneakyThrows
+    public void closeConnection() {
+        this.connection.closeConnection();
     }
 
     private PacketDictionary getPacketDictionary() {

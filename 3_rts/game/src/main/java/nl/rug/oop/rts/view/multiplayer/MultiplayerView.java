@@ -51,6 +51,11 @@ public class MultiplayerView extends View {
         attemptLogin();
     }
 
+    @Override
+    public void onClose() {
+        this.connectionController.closeConnection();
+    }
+
     private void attemptLogin() {
         try {
             this.connectionController.openConnection();

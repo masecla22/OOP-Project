@@ -45,7 +45,8 @@ public class Game {
 
     public void handleBack() {
         if (this.accessedViews.size() > 0) {
-            this.accessedViews.remove(this.accessedViews.size() - 1);
+            View view = this.accessedViews.remove(this.accessedViews.size() - 1);
+            view.onClose();
         }
 
         JPanel lastView = this.accessedViews.get(this.accessedViews.size() - 1);
@@ -55,7 +56,7 @@ public class Game {
         this.frame.repaint();
     }
 
-    public void handleView(JPanel panel) {
+    public void handleView(View panel) {
         this.accessedViews.add(panel);
         this.frame.setContentPane(panel);
 
