@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.map.MapController;
+import nl.rug.oop.rts.controller.map.MapSimulationController;
 import nl.rug.oop.rts.interfaces.observing.Observer;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
@@ -22,12 +23,15 @@ public class GameView extends JPanel implements Observer {
     private Map map;
 
     private MapController mapController;
+    private MapSimulationController simulationController;
 
-    public GameView(Game game, Map map, MapController mapController) {
+    public GameView(Game game, Map map, MapController mapController, MapSimulationController simulationController) {
         super();
         this.game = game;
+
         this.map = map;
         this.mapController = mapController;
+        this.simulationController = simulationController;
 
         this.setLayout(new BorderLayout());
         this.add(buildTopBar(), BorderLayout.PAGE_START);
@@ -124,6 +128,13 @@ public class GameView extends JPanel implements Observer {
                 this.mapController.removeEdge(selectedEdge);
             this.map.setSelection(null);
         });
+
+        JButton simulateStep = new JButton("Simulate Step");
+        simulateStep.addActionListener(e -> {
+            this.simulationController.simulateStep();
+        });
+
+        topBar.add(simulateStep);
 
         return topBar;
     }
