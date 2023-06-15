@@ -4,12 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
@@ -17,6 +17,7 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
@@ -26,12 +27,12 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
-public class MultiplayerView extends View {
+public class MultiplayerView extends View implements Observer {
     private Game game;
 
     private Rugson rugson;
     private MultiplayerConnectionController connectionController;
-    private ExecutorService executorService;
+    private SettingsController settingsController;
 
     private UnitFactory unitFactory;
     private EventFactory eventFactory;
@@ -39,16 +40,17 @@ public class MultiplayerView extends View {
     public MultiplayerView(Game game, SettingsController settingsController) {
         this.initializeRugson();
 
+        this.settingsController = settingsController;
+
         this.unitFactory = new MultiPlayerUnitFactory();
         this.eventFactory = new EventFactory(unitFactory);
 
         this.game = game;
 
-        this.connectionController = new MultiplayerConnectionController(settingsController, rugson,
-                executorService, unitFactory, eventFactory);
+        this.connectionController = new MultiplayerConnectionController(settingsController, rugson, unitFactory,
+                eventFactory);
 
         addLoading();
-        attemptLogin();
     }
 
     @Override
@@ -56,19 +58,29 @@ public class MultiplayerView extends View {
         this.connectionController.closeConnection();
     }
 
+    @Override
+    public void onOpen() {
+        System.out.println("attemping login");
+        this.attemptLogin();
+    }
+
     private void attemptLogin() {
         try {
-            this.connectionController.openConnection();
+            if (!this.connectionController.openConnection()) {
+                SwingUtilities.invokeLater(this::addSomethingWrong);
+                return;
+            }
+
             this.connectionController.ensureLogin().thenAccept(c -> {
                 if (c) {
-                    System.out.println("LOGIN SUCCESS");
+                    System.out.println("LOGIN SUCCESS " + this.connectionController.getUser().getName());
                 } else {
-                    this.addLoginRegister();
+                    SwingUtilities.invokeLater(this::addLoginRegister);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            addSomethingWrong();
+            SwingUtilities.invokeLater(this::addSomethingWrong);
             return;
         }
     }
@@ -77,6 +89,7 @@ public class MultiplayerView extends View {
         JLabel loadingLabel = new JLabel("Loading...", SwingConstants.CENTER);
         this.add(loadingLabel, BorderLayout.CENTER);
         addBackButton();
+        this.update();
     }
 
     private void addSomethingWrong() {
@@ -85,6 +98,7 @@ public class MultiplayerView extends View {
         JLabel somethingWrongLabel = new JLabel("Something went wrong, please try again", SwingConstants.CENTER);
         this.add(somethingWrongLabel, BorderLayout.CENTER);
         addBackButton();
+        this.update();
     }
 
     private void addLoginRegister() {
@@ -100,6 +114,7 @@ public class MultiplayerView extends View {
         addRegisterButton(userOptions);
 
         addBackButton();
+        this.update();
     }
 
     private void addLayout(JPanel userOptions) {
@@ -125,7 +140,7 @@ public class MultiplayerView extends View {
         JButton loginButton = new JButton("Log In");
         loginButton.setPreferredSize(new Dimension(50, 26));
         loginButton.addActionListener(e -> {
-            this.game.handleLogin();
+            handleLogin();
         });
         userOptions.add(loginLabel);
         userOptions.add(loginButton);
@@ -136,7 +151,7 @@ public class MultiplayerView extends View {
         JButton registerButton = new JButton("Register");
         registerButton.setPreferredSize(new Dimension(50, 26));
         registerButton.addActionListener(e -> {
-            this.game.handleRegister();
+            handleRegister();
         });
         userOptions.add(registerLabel);
         userOptions.add(registerButton);
@@ -149,6 +164,14 @@ public class MultiplayerView extends View {
                 .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
                 .addTypeAdapter(Map.class, new GameMapTypeAdapter())
                 .build();
+    }
+
+    private void handleRegister() {
+        this.game.handleView(new RegisterView(game, settingsController, connectionController));
+    }
+
+    private void handleLogin() {
+        this.game.handleView(new LoginView(game, settingsController, connectionController));
     }
 
 }
