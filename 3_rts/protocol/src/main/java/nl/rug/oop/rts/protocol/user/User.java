@@ -19,7 +19,7 @@ public class User {
 
     public User(ResultSet set) throws SQLException {
         this.id = set.getInt("id");
-        this.name = set.getString("name");
+        this.name = set.getString("username");
         this.password = set.getString("password");
         this.elo = set.getInt("elo");
     }
