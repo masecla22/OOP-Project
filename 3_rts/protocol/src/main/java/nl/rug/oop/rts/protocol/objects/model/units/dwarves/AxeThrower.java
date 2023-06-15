@@ -1,8 +1,6 @@
 package nl.rug.oop.rts.protocol.objects.model.units.dwarves;
 
-import static nl.rug.oop.rts.protocol.objects.model.armies.Faction.ISENGARD;
-import static nl.rug.oop.rts.protocol.objects.model.units.UnitType.*;
-
+import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
@@ -14,7 +12,7 @@ public class AxeThrower extends Unit {
     @Override
     public double dealDamage(Unit unit) {
         // not too strong against isengard
-        if (unit.getType().getFaction().equals(ISENGARD)) {
+        if (unit.getType().getFaction().equals(Faction.ISENGARD)) {
             return this.getDamage() * 0.7;
         }
 
@@ -39,7 +37,7 @@ public class AxeThrower extends Unit {
         }
 
         // interaction with any URUK_HAI does not result in great damage
-        else if (unit.getType().equals(URUK_HAI)) {
+        else if (unit.getType().equals(UnitType.URUK_HAI)) {
             this.setHealth(this.getHealth() - damage * 0.9);
         }
 
@@ -49,3 +47,4 @@ public class AxeThrower extends Unit {
         }
     }
 }
+
