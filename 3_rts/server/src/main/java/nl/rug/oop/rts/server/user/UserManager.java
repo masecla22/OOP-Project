@@ -124,6 +124,10 @@ public class UserManager {
     }
 
     public UUID login(String username, String password) throws SQLException {
+        if (username == null || password == null) {
+            return null;
+        }
+
         String query = "SELECT * FROM `rts_users` WHERE `username` = ? AND `password` = ?;";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -141,11 +145,32 @@ public class UserManager {
         }
     }
 
+    private static String bytesToHex(byte[] hash) {
+        // Source: https://www.baeldung.com/sha-256-hashing-java
+        // Needed to convert SHA-256 hash to string
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+
     @SneakyThrows(NoSuchAlgorithmException.class) // I swear SHA-256 exists
     private String hashPassword(String password) {
+        if (password == null) {
+            return null;
+        }
+
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        return new String(hash, StandardCharsets.UTF_8);
+        String hashResult = bytesToHex(hash);
+        System.out.println(hashResult);
+
+        return hashResult;
     }
 
 }
