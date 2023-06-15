@@ -71,6 +71,39 @@ public class MapView extends JPanel implements Observer {
         map.getNodes().forEach((c) -> renderNode(g2d, c));
     }
 
+    private void renderEdge(Graphics2D g, Edge edge) {
+        Point pointA = edge.getPointA().getPosition();
+        Point pointB = edge.getPointB().getPosition();
+
+        pointA = map.addOffset(pointA);
+        pointB = map.addOffset(pointB);
+
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
+                0, new float[] { 9 }, 0));
+
+        g.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
+
+        // Draw a little circle in the middle
+        int handleSize = 10;
+
+        g.fillOval((pointA.x + pointB.x - (int) (handleSize * 1.4)) / 2,
+                (pointA.y + pointB.y - (int) (handleSize * 1.4)) / 2,
+                (int) (handleSize * 1.4), (int) (handleSize * 1.4));
+        g.setColor(Color.WHITE);
+
+        if (this.map.getSelection() instanceof Edge selectedEdge && edge.equals(selectedEdge)) {
+            g.setColor(Color.RED);
+        }
+
+        g.fillOval((pointA.x + pointB.x - handleSize) / 2, (pointA.y + pointB.y - handleSize) / 2, handleSize,
+                handleSize);
+
+        Point center = new Point((pointA.x + pointB.x) / 2, (pointA.y + pointB.y) / 2);
+
+        renderArmies(g, center, edge.getArmies());
+    }
+
     private void renderNode(Graphics2D g, Node node) {
         if (map.getSelection() instanceof Node selectedNode && node.equals(selectedNode)) {
             Color toUse = Color.RED;
@@ -100,12 +133,10 @@ public class MapView extends JPanel implements Observer {
 
         g.drawString(node.getName(), position.x - textWidth / 2, position.y - Node.NODE_SIZE / 2 - textHeight);
 
-        renderArmies(g, position, node);
+        renderArmies(g, position, node.getArmies());
     }
 
-    private void renderArmies(Graphics2D g, Point position, Node node) {
-        List<Army> allArmies = node.getArmies();
-
+    private void renderArmies(Graphics2D g, Point position, List<Army> allArmies) {
         List<Army> teamA = allArmies.stream().filter((c) -> c.getFaction().getTeam().equals(Team.TEAM_A)).toList();
         List<Army> teamB = allArmies.stream().filter((c) -> c.getFaction().getTeam().equals(Team.TEAM_B)).toList();
 
@@ -165,34 +196,5 @@ public class MapView extends JPanel implements Observer {
         }
 
         g.drawString(armyString, textPosX, textPosY);
-    }
-
-    private void renderEdge(Graphics2D g, Edge edge) {
-        Point pointA = edge.getPointA().getPosition();
-        Point pointB = edge.getPointB().getPosition();
-
-        pointA = map.addOffset(pointA);
-        pointB = map.addOffset(pointB);
-
-        g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
-                0, new float[] { 9 }, 0));
-
-        g.drawLine(pointA.x, pointA.y, pointB.x, pointB.y);
-
-        // Draw a little circle in the middle
-        int handleSize = 10;
-
-        g.fillOval((pointA.x + pointB.x - (int) (handleSize * 1.4)) / 2,
-                (pointA.y + pointB.y - (int) (handleSize * 1.4)) / 2,
-                (int) (handleSize * 1.4), (int) (handleSize * 1.4));
-        g.setColor(Color.WHITE);
-
-        if (this.map.getSelection() instanceof Edge selectedEdge && edge.equals(selectedEdge)) {
-            g.setColor(Color.RED);
-        }
-
-        g.fillOval((pointA.x + pointB.x - handleSize) / 2, (pointA.y + pointB.y - handleSize) / 2, handleSize,
-                handleSize);
     }
 }
