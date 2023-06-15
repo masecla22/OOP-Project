@@ -31,6 +31,7 @@ import nl.rug.oop.rugson.Rugson;
 
 @RequiredArgsConstructor
 public class MultiplayerConnectionController {
+    @Getter
     private SocketConnection connection;
 
     @NonNull
