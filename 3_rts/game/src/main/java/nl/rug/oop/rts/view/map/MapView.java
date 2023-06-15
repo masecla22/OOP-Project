@@ -8,8 +8,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.mouse.MapMouseHandler;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
