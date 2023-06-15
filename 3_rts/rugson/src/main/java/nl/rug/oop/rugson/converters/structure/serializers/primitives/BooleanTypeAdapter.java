@@ -14,9 +14,18 @@ public class BooleanTypeAdapter extends TypeAdapter<Boolean> {
 
     @Override
     public Boolean deserialize(JsonElement consumer, Class<Boolean> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return false;
+        }
+
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
         }
+
+        if (consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
+            return null;
+        }
+
         if (!consumer.asJsonValue().getType().equals(JsonToken.BOOLEAN)) {
             throw new IllegalArgumentException("Expected JsonBoolean, got " + consumer.getClass().getSimpleName());
         }

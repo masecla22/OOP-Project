@@ -16,9 +16,18 @@ public class EnumTypeAdapter extends TypeAdapter<Object> {
     @Override
     @SuppressWarnings("unchecked")
     public Object deserialize(JsonElement consumer, Class<Object> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return null;
+        }
+
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
         }
+
+        if (consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
+            return null;
+        }
+        
         if (!clazz.isEnum()) {
             throw new IllegalArgumentException("Expected Enum, got " + clazz.getSimpleName());
         }

@@ -14,8 +14,16 @@ public class StringTypeAdapter extends TypeAdapter<String> {
 
     @Override
     public String deserialize(JsonElement consumer, Class<String> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return null;
+        }
+
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
+        }
+
+        if (consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
+            return null;
         }
 
         if (!consumer.asJsonValue().getType().equals(JsonToken.STRING)) {

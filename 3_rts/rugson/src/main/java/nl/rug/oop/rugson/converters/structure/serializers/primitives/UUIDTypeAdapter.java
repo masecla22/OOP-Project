@@ -15,11 +15,19 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * UUID.toString() method to serialize the UUID.
  */
 public class UUIDTypeAdapter extends TypeAdapter<UUID> {
-    
+
     @Override
     public UUID deserialize(JsonElement consumer, Class<UUID> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return null;
+        }
+
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
+        }
+
+        if (consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
+            return null;
         }
 
         if (!consumer.asJsonValue().getType().equals(JsonToken.STRING)) {

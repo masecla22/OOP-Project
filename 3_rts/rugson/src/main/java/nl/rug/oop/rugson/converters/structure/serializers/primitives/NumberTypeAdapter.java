@@ -15,13 +15,21 @@ public class NumberTypeAdapter extends TypeAdapter<Number> {
 
     @Override
     public Number deserialize(JsonElement consumer, Class<Number> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null)
+            return 0;
+
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
         }
-
+        
+        if(consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
+            return 0;
+        }
+        
         if (!consumer.asJsonValue().getType().equals(JsonToken.NUMBER)) {
             throw new IllegalArgumentException("Expected JsonNumber, got " + consumer.getClass().getSimpleName());
         }
+
 
         JsonNumber number = consumer.asJsonValue().asJsonNumber();
         if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
