@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Unit {
+public abstract class Unit {
     private UnitType type;
 
     private String name;
 
     private double damage;
     private double health;
+
+    public abstract double dealDamage(Unit unit);
+    public abstract void takeDamage(Unit unit, double damage);
 }

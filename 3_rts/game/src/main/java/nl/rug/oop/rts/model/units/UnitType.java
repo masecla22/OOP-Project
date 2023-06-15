@@ -48,7 +48,7 @@ public enum UnitType {
     ORC_WARRIOR(OrcWarrior.class, 20.0, 30.0, 70.0, 90.0, List.of("Patricia", "Romin", "Goyle"));
 
     private Class<? extends Unit> unitClass;
-    
+
     private double minDamage;
     private double maxDamage;
 
