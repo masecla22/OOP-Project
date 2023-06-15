@@ -1,7 +1,7 @@
 package nl.rug.oop.rts.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,9 +22,27 @@ public class Edge implements Selectable {
     @NonNull
     private Node pointB;
 
-    private Set<Army> armies = new HashSet<>();
+    private List<Army> armies = new ArrayList<>();
 
     public boolean isConnectedTo(Node node) {
         return pointA.equals(node) || pointB.equals(node);
+    }
+
+    public void addArmy(Army army) {
+        armies.add(army);
+    }
+
+    public void removeArmy(Army army) {
+        armies.remove(army);
+    }
+
+    public Node getOtherNode(Node node) {
+        if (pointA.equals(node)) {
+            return pointB;
+        } else if (pointB.equals(node)) {
+            return pointA;
+        } else {
+            throw new IllegalArgumentException("Node is not connected to this edge");
+        }
     }
 }
