@@ -10,4 +10,9 @@ public abstract class Event {
     private EventType type;
 
     public abstract void execute(Army army);
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

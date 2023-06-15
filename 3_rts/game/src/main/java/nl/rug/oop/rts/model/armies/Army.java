@@ -25,4 +25,8 @@ public class Army {
     public String toString() {
         return faction.toString() + " army (" + units.size() + " units)";
     }
+
+    public boolean isEmpty() {
+        return units.isEmpty();
+    }
 }
