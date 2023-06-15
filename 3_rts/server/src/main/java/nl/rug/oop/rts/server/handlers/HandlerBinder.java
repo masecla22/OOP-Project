@@ -2,6 +2,7 @@ package nl.rug.oop.rts.server.handlers;
 
 import lombok.AllArgsConstructor;
 import nl.rug.oop.rts.protocol.SocketConnection;
+import nl.rug.oop.rts.server.handlers.authentication.AuthenticatedPacketHandler;
 import nl.rug.oop.rts.server.handlers.authentication.LoginHandler;
 import nl.rug.oop.rts.server.handlers.authentication.RegistrationHandler;
 import nl.rug.oop.rts.server.main.RTSServer;
@@ -18,5 +19,7 @@ public class HandlerBinder {
     private void registerAuthenticationListeners() {
         connection.addListener(new LoginHandler(server.getUserManager()));
         connection.addListener(new RegistrationHandler(server.getUserManager()));
+
+        connection.addListener(new AuthenticatedPacketHandler(server.getUserManager()));
     }
 }
