@@ -8,8 +8,8 @@ import nl.rug.oop.rugson.Rugson;
 public class SettingsController {
     private GameSettings settings;
 
-    public SettingsController(Rugson rugson) {
-        this.settings = GameSettings.loadConfiguration(rugson, new File("game.json"));
+    public SettingsController() {
+        this.settings = GameSettings.loadConfiguration(new Rugson(), new File("game.json"));
     }
 
     public GameSettings getSettings() {
@@ -22,5 +22,13 @@ public class SettingsController {
 
     public void setCentralServer(String centralServer) {
         settings.setCentralServer(centralServer);
+    }
+
+    public void setUsername(String username) {
+        settings.setUsername(username);
+    }
+
+    public void setPassword(String password) {
+        settings.setPassword(password);
     }
 }
