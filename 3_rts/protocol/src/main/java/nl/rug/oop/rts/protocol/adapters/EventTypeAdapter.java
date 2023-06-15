@@ -20,7 +20,7 @@ public class EventTypeAdapter extends TypeAdapter<Event> {
     @Override
     public JsonElement serialize(Event object) {
         JsonObject result = new JsonObject();
-        result.put("type", this.getTreeSerializer().toJson(object.getType().toString()));
+        result.put("type", this.getTreeSerializer().toJson(object.getType().name()));
         return result;
     }
 
