@@ -31,6 +31,7 @@ public class MapSimulationController {
         resolveAllBattles();
         applyEvents();
 
+        purgeArmies();
         resetArmiesStatus();
         update();
     }
@@ -58,6 +59,11 @@ public class MapSimulationController {
 
             armies.removeAll(toRemove);
         }
+    }
+
+    private void purgeArmies() {
+        map.getNodes().forEach(c -> c.getArmies().removeIf(Army::isEmpty));
+        map.getEdges().forEach(c -> c.getArmies().removeIf(Army::isEmpty));
     }
 
     private void applyEvents() {
@@ -172,6 +178,8 @@ public class MapSimulationController {
             if (bArmy.getUnits().size() == 0)
                 teamB.remove(bArmy);
         }
+
+        armies.removeIf(cr -> cr.getUnits().size() == 0);
     }
 
     private void resolveSingleArmy(Army a, Army b) {
