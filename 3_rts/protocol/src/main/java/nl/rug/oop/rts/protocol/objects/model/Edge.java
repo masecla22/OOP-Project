@@ -3,25 +3,28 @@ package nl.rug.oop.rts.protocol.objects.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
 import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 
 @Data
 @EqualsAndHashCode(of = "id")
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Edge implements Selectable {
-    private final int id;
-
-    @NonNull
+    private int id;
     private Node pointA;
-
-    @NonNull
     private Node pointB;
+
+    public Edge(int id, Node pointA, Node pointB) {
+        this.id = id;
+        this.pointA = pointA;
+        this.pointB = pointB;
+    }
 
     private List<Army> armies = new ArrayList<>();
     private List<Event> events = new ArrayList<>();

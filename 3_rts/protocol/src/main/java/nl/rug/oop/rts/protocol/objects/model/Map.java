@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Getter;
+import lombok.Setter;
 import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observable;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 
 @Getter
+@Setter
 public class Map implements Observable {
     private Point offset = new Point(0, 0);
 
