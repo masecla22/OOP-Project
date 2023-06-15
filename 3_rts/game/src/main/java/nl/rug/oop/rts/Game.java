@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import nl.rug.oop.rts.controller.map.MapController;
+import nl.rug.oop.rts.controller.map.MapSimulationController;
 import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.model.Edge;
@@ -97,8 +98,9 @@ public class Game {
 
         UnitFactory unitFactory = new UnitFactory((int) Instant.now().toEpochMilli());
         MapController spMapController = new SinglePlayerMapController(unitFactory, map);
+        MapSimulationController simulationController = new MapSimulationController(map);
 
-        GameView view = new GameView(this, map, spMapController);
+        GameView view = new GameView(this, map, spMapController, simulationController);
         this.handleView(view);
     }
 
