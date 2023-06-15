@@ -13,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.interfaces.observing.Observer;
@@ -22,10 +21,11 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.model.events.Event;
+import nl.rug.oop.rts.model.events.EventType;
 
 public class SidePanelView extends JPanel implements Observer {
     private Map map;
-    private Game game;
 
     private Selectable showingOptionsFor;
     private MapController mapController;
@@ -80,14 +80,6 @@ public class SidePanelView extends JPanel implements Observer {
         nodeOptions.add(nodeName);
 
         // add buttons for adding/removing armies on/from selected node
-
-        /**
-         * addNodeButton.addActionListener(e -> {
-         * this.mapController.createNode(JOptionPane.showInputDialog("What is the name
-         * of the node?"));
-         * });
-         */
-
         JButton addArmy = new JButton("Add army");
 
         nodeOptions.add(addArmy);
@@ -106,6 +98,21 @@ public class SidePanelView extends JPanel implements Observer {
             }
         });
 
+        JButton addEvent = new JButton("Add event");
+        addEvent.setPreferredSize(new Dimension(50, 30));
+        addEvent.addActionListener(e -> {
+            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
+                    "Which event would you like to add?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, EventType.values(), null);
+
+            if (pickedOption != null) {
+                this.mapController.addEvent(selectedNode, pickedOption);
+            }
+        });
+        nodeOptions.add(addEvent);
+
         JButton removeArmy = new JButton("Remove army");
         removeArmy.setPreferredSize(new Dimension(50, 30));
         removeArmy.addActionListener(e -> {
@@ -119,6 +126,19 @@ public class SidePanelView extends JPanel implements Observer {
                 this.mapController.removeArmy(selectedNode, army);
         });
         nodeOptions.add(removeArmy);
+
+        JButton removeEvent = new JButton("Remove event");
+        removeEvent.setPreferredSize(new Dimension(50, 30));
+        removeEvent.addActionListener(e -> {
+            Event event = (Event) JOptionPane.showInputDialog(null,
+                    "Which event would you like to remove?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, selectedNode.getEvents().toArray(), null);
+
+            if (event != null)
+                this.mapController.removeEvent(selectedNode, event);
+        });
 
         nodeName.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -156,6 +176,35 @@ public class SidePanelView extends JPanel implements Observer {
 
         this.add(new JLabel("Edge connects \n"));
         this.add(new JLabel(selectedEdge.getPointA().getName() + " - " + selectedEdge.getPointB().getName()));
+
+        JButton addEvent = new JButton("Add event");
+        addEvent.setPreferredSize(new Dimension(50, 30));
+        addEvent.addActionListener(e -> {
+            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
+                    "Which event would you like to add?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, EventType.values(), null);
+
+            if (pickedOption != null) {
+                this.mapController.addEvent(selectedEdge, pickedOption);
+            }
+        });
+        this.add(addEvent);
+
+        JButton removeEvent = new JButton("Remove event");
+        removeEvent.setPreferredSize(new Dimension(50, 30));
+        removeEvent.addActionListener(e -> {
+            Event event = (Event) JOptionPane.showInputDialog(null,
+                    "Which event would you like to remove?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, selectedEdge.getEvents().toArray(), null);
+
+            if (event != null)
+                this.mapController.removeEvent(selectedEdge, event);
+        });
+        this.add(removeEvent);
     }
 
     private void showNoNodeSelected(boolean ignoreSelection) {
