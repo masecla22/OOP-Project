@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +157,17 @@ public class ObjectTreeSerializer {
         } else {
             return converter.deserialize(element, clazz, new ArrayList<>());
         }
+    }
 
+    @SuppressWarnings("unchecked")
+    public <K> K fromJson(JsonElement element, Class<?> clazz, List<Class<?>> genericTypes) {
+        TypeAdapter<K> converter = (TypeAdapter<K>) getConverter(clazz);
+        return converter.deserialize(element, (Class<K>) clazz, genericTypes);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <K> K fromJson(JsonElement element, Class<?> clazz, Class<?>... genericTypes) {
+        return fromJson(element, (Class<K>) clazz, Arrays.asList(genericTypes));
     }
 
 }
