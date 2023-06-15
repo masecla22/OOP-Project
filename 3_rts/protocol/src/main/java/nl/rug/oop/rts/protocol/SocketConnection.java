@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.packet.Packet;
 import nl.rug.oop.rts.protocol.packet.definitions.keepalive.KeepAlivePacket;
@@ -67,7 +68,7 @@ public class SocketConnection {
                 try {
                     sendPacket(new KeepAlivePacket());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    closeConnection();
                 }
             }
         }, 100, 3000);
@@ -154,7 +155,8 @@ public class SocketConnection {
                 }
 
                 boolean shouldContinue = true;
-                for (PacketListener<?> packetListener : this.packetListeners.get(packetClassToCheck)) {
+                List<PacketListener<?>> toInvoke = new ArrayList<>(this.packetListeners.get(packetClassToCheck));
+                for (PacketListener<?> packetListener : toInvoke) {
                     shouldContinue = packetListener.onReceive(this, packet);
                     if (!shouldContinue)
                         break;
@@ -166,12 +168,18 @@ public class SocketConnection {
         });
     }
 
-    public void closeConnection() throws IOException, InterruptedException {
+    @SneakyThrows
+    public void closeConnection() {
+        if (!this.isRunning.get())
+            return;
+
         this.keepAliveSender.cancel();
         this.isRunning.set(false);
         this.pollingThread.interrupt();
         this.pollingThread.join(5000);
         this.socket.close();
+        System.out.println(
+                "Connection closed! " + this.socket.getInetAddress().getHostAddress() + ":" + this.socket.getPort());
     }
 
     private Packet readNextPacket(int millisTimeout) throws IOException, InterruptedException, TimeoutException {
@@ -185,9 +193,15 @@ public class SocketConnection {
         // (4 bytes for the packet id, 4 bytes for the packet size)
         // This should be essentially instant, but we're waiting just in case
         while (inputStream.available() < 8) {
-            Thread.sleep(10);
-            if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
-                throw new TimeoutException();
+            try {
+                Thread.sleep(10);
+                if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
+                    this.closeConnection();
+                    return null;
+                }
+            } catch (InterruptedException e) {
+                this.closeConnection();
+                return null;
             }
         }
 
@@ -199,9 +213,14 @@ public class SocketConnection {
             // Wait for data to be available
             while (inputStream.available() < size - read &&
                     inputStream.available() < bufferSize) {
-                Thread.sleep(5);
-                if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
-                    throw new TimeoutException();
+                try {
+                    Thread.sleep(5);
+                    if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
+                        throw new TimeoutException();
+                    }
+                } catch (InterruptedException e) {
+                    this.closeConnection();
+                    return null;
                 }
             }
 
