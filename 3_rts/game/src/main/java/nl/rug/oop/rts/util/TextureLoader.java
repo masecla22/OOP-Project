@@ -107,6 +107,7 @@ public class TextureLoader {
         textures.put("factionDwarves", getResourceFromPath(TEXTURE_DIR, FACTION_SUB_DIR, "dwarves.png"));
         textures.put("factionMordor", getResourceFromPath(TEXTURE_DIR, FACTION_SUB_DIR, "mordor.png"));
         textures.put("factionIsengard", getResourceFromPath(TEXTURE_DIR, FACTION_SUB_DIR, "isengard.png"));
+        textures.put("factionRohan", getResourceFromPath(TEXTURE_DIR, FACTION_SUB_DIR, "rohan.png"));
 
         textures.put("fortressMen", getResourceFromPath(TEXTURE_DIR, FORTRESS_SUB_DIR, "men.png"));
         textures.put("fortressElves", getResourceFromPath(TEXTURE_DIR, FORTRESS_SUB_DIR, "elves.png"));
