@@ -27,7 +27,7 @@ public class EnumTypeAdapter extends TypeAdapter<Object> {
         if (consumer.asJsonValue().getType().equals(JsonToken.NULL)) {
             return null;
         }
-        
+
         if (!clazz.isEnum()) {
             throw new IllegalArgumentException("Expected Enum, got " + clazz.getSimpleName());
         }
@@ -43,6 +43,9 @@ public class EnumTypeAdapter extends TypeAdapter<Object> {
 
     @Override
     public JsonElement serialize(Object object) {
+        if (object == null) {
+            return new JsonValue(JsonToken.NULL, null);
+        }
         if (!object.getClass().isEnum()) {
             throw new IllegalArgumentException("Expected Enum, got " + object.getClass().getSimpleName());
         }

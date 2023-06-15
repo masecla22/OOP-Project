@@ -39,6 +39,10 @@ public class UUIDTypeAdapter extends TypeAdapter<UUID> {
 
     @Override
     public JsonElement serialize(UUID object) {
+        if (object == null) {
+            return new JsonValue(JsonToken.NULL, null);
+        }
+        
         return new JsonValue(JsonToken.STRING, object.toString());
     }
 

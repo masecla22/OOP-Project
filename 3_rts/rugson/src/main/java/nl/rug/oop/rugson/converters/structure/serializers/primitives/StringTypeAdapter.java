@@ -35,6 +35,10 @@ public class StringTypeAdapter extends TypeAdapter<String> {
 
     @Override
     public JsonElement serialize(String object) {
+        if (object == null) {
+            return new JsonValue(JsonToken.NULL, null);
+        }
+
         return new JsonValue(JsonToken.STRING, object);
     }
 }

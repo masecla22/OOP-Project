@@ -125,6 +125,9 @@ public class JsonWriter {
     }
 
     private String escape(String s) {
+        if(s == null)
+            return null;
+
         // List of characters obtained from
         // https://stackoverflow.com/questions/2406121/how-do-i-escape-a-string-in-java
         return s.replace("\\", "\\\\")

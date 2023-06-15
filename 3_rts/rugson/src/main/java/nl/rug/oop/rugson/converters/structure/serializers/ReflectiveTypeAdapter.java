@@ -48,11 +48,11 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     @Override
     @SneakyThrows
     public JsonElement serialize(Object object) {
-        JsonObject jsonResult = new JsonObject();
         if (object == null) {
             return new JsonValue(JsonToken.NULL, null);
         }
 
+        JsonObject jsonResult = new JsonObject();
         Class<?> clazz = object.getClass();
 
         List<Field> fields = this.getFieldsFor(clazz);
@@ -67,6 +67,10 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     @Override
     @SneakyThrows
     public Object deserialize(JsonElement consumer, Class<Object> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return null;
+        }
+
         if (consumer.isJsonValue()) {
             JsonValue value = consumer.asJsonValue();
             if (value.getType().equals(JsonToken.NULL)) {

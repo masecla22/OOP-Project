@@ -35,6 +35,10 @@ public class BooleanTypeAdapter extends TypeAdapter<Boolean> {
 
     @Override
     public JsonElement serialize(Boolean object) {
+        if (object == null) {
+            return new JsonValue(JsonToken.NULL, null);
+        }
+
         return new JsonValue(JsonToken.BOOLEAN, object);
     }
 
