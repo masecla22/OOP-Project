@@ -3,11 +3,17 @@ package nl.rug.oop.rts.view.multiplayer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -17,12 +23,17 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
+import nl.rug.oop.rts.protocol.games.MultiplayerLobby;
+import nl.rug.oop.rts.protocol.listeners.AwaitPacketOnce;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
+import nl.rug.oop.rts.protocol.packet.Packet;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
@@ -36,6 +47,8 @@ public class MultiplayerView extends View implements Observer {
 
     private UnitFactory unitFactory;
     private EventFactory eventFactory;
+
+    private List<MultiplayerLobby> knownLobbies = new ArrayList<>();
 
     public MultiplayerView(Game game, SettingsController settingsController) {
         this.initializeRugson();
@@ -60,7 +73,6 @@ public class MultiplayerView extends View implements Observer {
 
     @Override
     public void onOpen() {
-        System.out.println("attemping login");
         this.attemptLogin();
     }
 
@@ -73,7 +85,7 @@ public class MultiplayerView extends View implements Observer {
 
             this.connectionController.ensureLogin().thenAccept(c -> {
                 if (c) {
-                    System.out.println("LOGIN SUCCESS " + this.connectionController.getUser().getName());
+                    SwingUtilities.invokeLater(this::handleLobbyView);
                 } else {
                     SwingUtilities.invokeLater(this::addLoginRegister);
                 }
@@ -83,6 +95,60 @@ public class MultiplayerView extends View implements Observer {
             SwingUtilities.invokeLater(this::addSomethingWrong);
             return;
         }
+    }
+
+    private void handleLobbyView() {
+        this.removeAll();
+        this.setLayout(new BorderLayout());
+
+        JPanel lobbyPanel = new JPanel();
+        lobbyPanel.setLayout(new BorderLayout());
+        lobbyPanel.add(new JLabel("Logged in as " + this.connectionController.getUser().getName(),
+                SwingConstants.CENTER), BorderLayout.PAGE_START);
+
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(e -> {
+            requestGames().thenAccept((v) -> SwingUtilities.invokeLater(this::handleLobbyView));
+        });
+
+        getLobbyList();
+
+        this.addBackButton();
+        this.update();
+    }
+
+    private JPanel getLobbyList() {
+        JPanel lobbyList = new JPanel();
+        lobbyList.setLayout(new BorderLayout());
+
+        String[] columnNames = { "Name", "Creator", "Map", "" };
+        Object[][] data = new Object[this.knownLobbies.size()][4];
+        for (int i = 0; i < this.knownLobbies.size(); i++) {
+            MultiplayerLobby lobby = this.knownLobbies.get(i);
+            data[i][0] = lobby.getName();
+            data[i][1] = lobby.getHost().getName();
+            data[i][2] = lobby.getMapName();
+
+            JButton button = new JButton("Join");
+            data[i][3] = button;
+            button.addActionListener(e -> {
+                this.handleJoinLobby(lobby.getLobbyId());
+            });
+        }
+
+        JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        lobbyList.add(scrollPane, BorderLayout.CENTER);
+
+        return lobbyList;
+    }
+
+    private void handleJoinLobby(UUID lobbyId) {
+        // TODO:
     }
 
     private void addLoading() {
@@ -109,19 +175,15 @@ public class MultiplayerView extends View implements Observer {
         userOptions.setLayout(new GridLayout(4, 2, 10, 20));
 
         this.add(userOptions, BorderLayout.CENTER);
-        addLayout(userOptions);
+
+        userOptions.add(new JLabel());
+        userOptions.add(new JLabel());
+
         addLoginButton(userOptions);
         addRegisterButton(userOptions);
 
         addBackButton();
         this.update();
-    }
-
-    private void addLayout(JPanel userOptions) {
-        JLabel layoutLabel1 = new JLabel();
-        JLabel layoutLabel2 = new JLabel();
-        userOptions.add(layoutLabel1);
-        userOptions.add(layoutLabel2);
     }
 
     private void addBackButton() {
@@ -172,6 +234,17 @@ public class MultiplayerView extends View implements Observer {
 
     private void handleLogin() {
         this.game.handleView(new LoginView(game, settingsController, connectionController));
+    }
+
+    private CompletableFuture<Void> requestGames() {
+        AwaitPacketOnce<Packet> awaitPacketOnce = new AwaitPacketOnce<>(LobbyListingResponse.class)
+                .bindTo(connectionController.getConnection());
+        this.connectionController.sendAuthenticatedPacket(new LobbyListingRequest());
+
+        return awaitPacketOnce.getAwaiting().thenAccept(c -> {
+            LobbyListingResponse response = (LobbyListingResponse) c;
+            this.knownLobbies = response.getLobbies();
+        });
     }
 
 }
