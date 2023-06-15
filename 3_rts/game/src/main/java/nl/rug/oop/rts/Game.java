@@ -98,7 +98,7 @@ public class Game {
         map.addEdge(ca);
 
         UnitFactory unitFactory = new UnitFactory((int) Instant.now().toEpochMilli());
-        EventFactory factory = new EventFactory();
+        EventFactory factory = new EventFactory(unitFactory);
 
         MapController spMapController = new SinglePlayerMapController(unitFactory, factory, map);
         MapSimulationController simulationController = new MapSimulationController(map);
