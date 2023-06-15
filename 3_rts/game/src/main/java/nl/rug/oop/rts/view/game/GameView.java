@@ -1,8 +1,10 @@
 package nl.rug.oop.rts.view.game;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -131,8 +133,24 @@ public class GameView extends JPanel implements Observer {
         simulateStep.addActionListener(e -> {
             this.simulationController.simulateStep();
         });
-
         topBar.add(simulateStep);
+
+        JButton exportToJson = new JButton("Export to JSON");
+        exportToJson.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Specify a file to save");
+            fileChooser.addActionListener((selected) -> {
+                if (selected.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
+                    try {
+                        this.mapController.exportToJson(fileChooser.getSelectedFile());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+            });
+
+            fileChooser.showOpenDialog(this);
+        });
+        topBar.add(exportToJson);
 
         return topBar;
     }
