@@ -16,5 +16,8 @@ public enum JsonToken {
 
     NUMBER,
     STRING,
+    
+    SKIP, // Used to skip value during ingestion
+
     EOF
 }

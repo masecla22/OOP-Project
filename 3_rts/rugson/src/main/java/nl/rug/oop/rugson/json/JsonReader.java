@@ -79,6 +79,10 @@ public class JsonReader {
         JsonValue nextValue;
         try {
             while ((nextValue = ingestNextValue()) != null) {
+                if (nextValue.getType().equals(JsonToken.SKIP)) {
+                    continue;
+                }
+
                 result.add(nextValue);
                 if (nextValue.getType().equals(JsonToken.EOF)) {
                     break;
@@ -87,6 +91,7 @@ public class JsonReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         return result;
     }
 
@@ -104,27 +109,6 @@ public class JsonReader {
             c = (char) inputStream.read();
         } while (Character.isWhitespace(c));
         return c;
-    }
-
-    private String nextFieldName(char initialChar) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        builder.append(initialChar);
-        while (true) {
-            initialChar = (char) inputStream.read();
-            if (Character.isLetterOrDigit(initialChar)) {
-                builder.append(initialChar);
-            } else {
-                break;
-            }
-        }
-
-        // Discard all whitespace and the :
-        do {
-            initialChar = (char) inputStream.read();
-        } while (Character.isWhitespace(initialChar) || initialChar == ':');
-        this.inputStream.unread(initialChar);
-
-        return builder.toString();
     }
 
     private void nextNull() throws IOException {
@@ -269,6 +253,9 @@ public class JsonReader {
             result = handleDigitOrMinus(c);
         } else if (c == '"') {
             result = handleQuote(c);
+        } else if (c == ':') {
+            handleColon();
+            return new JsonValue(JsonToken.SKIP);
         } else {
             throwInvalidCharacter(c);
         }
@@ -280,16 +267,28 @@ public class JsonReader {
         throw new IOException("Unexpected character " + c);
     }
 
+    private void handleColon() throws IOException {
+        if (lastValue == null || !lastValue.getType().equals(JsonToken.STRING)) {
+            throwInvalidCharacter(':');
+        }
+
+        if (lastValue.getType().equals(JsonToken.STRING)) {
+            lastValue.setType(JsonToken.NAME); // Retroactively change the type
+        }
+    }
+
     private JsonValue handleQuote(char c) throws IOException {
         if (lastValue != null) {
             if (!lastValue.getType().equals(JsonToken.NAME) &&
+                    !lastValue.getType().equals(JsonToken.START_OBJECT) &&
                     !lastValue.getType().equals(JsonToken.END_OBJECT) &&
                     !lastValue.getType().equals(JsonToken.END_ARRAY) &&
                     !lastValue.getType().equals(JsonToken.START_ARRAY) &&
                     !lastValue.getType().equals(JsonToken.STRING) &&
                     !lastValue.getType().equals(JsonToken.NULL) &&
                     !lastValue.getType().equals(JsonToken.BOOLEAN) &&
-                    !lastValue.getType().equals(JsonToken.NUMBER)) {
+                    !lastValue.getType().equals(JsonToken.NUMBER) &&
+                    !lastValue.getType().equals(JsonToken.NAME)) {
                 throwInvalidCharacter(c);
             }
         }
@@ -382,10 +381,8 @@ public class JsonReader {
             }
         }
 
-        String fieldName = nextFieldName(c);
-        JsonValue result = new JsonValue(JsonToken.NAME, fieldName);
-        lastValue = result;
-        return result;
+        throwInvalidCharacter(c);
+        return null;
     }
 
     private JsonValue handleClosingBracket() throws IOException {

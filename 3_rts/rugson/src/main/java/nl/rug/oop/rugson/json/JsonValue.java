@@ -1,9 +1,11 @@
 package nl.rug.oop.rugson.json;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
@@ -16,6 +18,7 @@ import nl.rug.oop.rugson.objects.JsonObject;
 @AllArgsConstructor
 public class JsonValue extends JsonElement {
     @NonNull
+    @Setter(AccessLevel.PROTECTED)
     private JsonToken type;
     private Object value;
 
