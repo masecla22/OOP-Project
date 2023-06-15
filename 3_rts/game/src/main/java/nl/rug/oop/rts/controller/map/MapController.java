@@ -13,6 +13,7 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.view.map.MapView;
 
 @RequiredArgsConstructor
 public abstract class MapController {
@@ -59,6 +60,16 @@ public abstract class MapController {
     }
 
     public void setOffset(Point offset) {
+        // Bind offset between 0
+        if (offset.x > 0)
+            offset.x = 0;
+        if (offset.y > 0)
+            offset.y = 0;
+        if (offset.x < -MapView.MAP_SIZE + 600)
+            offset.x = -MapView.MAP_SIZE + 600;
+        if (offset.y < -MapView.MAP_SIZE + 600)
+            offset.y = -MapView.MAP_SIZE + 600;
+
         map.setOffset(offset);
     }
 
