@@ -70,8 +70,6 @@ public class GameView extends JPanel implements Observer {
     private JButton addNodeButton = new JButton("Add Node");
     private JButton removeNodeButton = new JButton("Remove Node");
 
-    private JButton addArmyButton = new JButton("Add Army");
-
     private JPanel buildTopBar() {
         JPanel topBar = new JPanel();
 
