@@ -13,6 +13,8 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.model.events.Event;
+import nl.rug.oop.rts.model.events.EventType;
 import nl.rug.oop.rts.view.map.MapView;
 
 @RequiredArgsConstructor
@@ -32,11 +34,17 @@ public abstract class MapController {
 
     public abstract void removeEdge(Edge edge);
 
-    public abstract void runSimulationStep();
-
     public abstract void addArmy(Node node, Faction faction);
 
     public abstract void removeArmy(Node node, Army army);
+
+    public abstract void addEvent(Node node, EventType type);
+
+    public abstract void removeEvent(Node node, Event event);
+
+    public abstract void addEvent(Edge edge, EventType type);
+
+    public abstract void removeEvent(Edge edge, Event event);
 
     public void setSelection(Selectable selection) {
         if (selection == null) {
