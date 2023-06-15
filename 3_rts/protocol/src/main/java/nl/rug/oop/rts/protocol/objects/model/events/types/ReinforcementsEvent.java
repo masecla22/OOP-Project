@@ -18,8 +18,9 @@ public class ReinforcementsEvent extends Event {
     public void execute(Army army) {
         int amount = army.getUnits().size() / 2;
 
+        int size = army.getUnits().size();
         for (int i = 0; i < amount; i++) {
-            Unit unit = unitFactory.buildUnit(army.getFaction());
+            Unit unit = unitFactory.buildUnit(army.getFaction(), size + i);
             army.getUnits().add(unit);
         }
     }
