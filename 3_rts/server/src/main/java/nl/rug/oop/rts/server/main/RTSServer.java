@@ -98,8 +98,10 @@ public class RTSServer {
         logger.info("SQL connection established.");
     }
 
+    @SneakyThrows
     private void setupUserManager() {
         this.userManager = new UserManager(this.connection);
+        this.userManager.initialize();
         logger.info("User manager setup.");
     }
 
