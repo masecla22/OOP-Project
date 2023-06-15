@@ -6,4 +6,8 @@ public abstract class View extends JPanel {
     public void onClose() {
 
     }
+
+    public void onOpen() {
+        
+    }
 }
