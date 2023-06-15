@@ -12,13 +12,30 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
+import nl.rug.oop.rts.controller.settings.SettingsController;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.view.View;
 
-public class RegisterView extends View {
+public class RegisterView extends View implements Observer {
     private Game game;
 
-    public RegisterView(Game game) {
+    private SettingsController settingsController;
+    private MultiplayerConnectionController connectionController;
+
+    private JLabel errorLabel = new JLabel("", SwingConstants.CENTER);
+    private JLabel errorDescriptionLabel = new JLabel("", SwingConstants.CENTER);
+
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JPasswordField checkPasswordField;
+
+    public RegisterView(Game game, SettingsController settingsController,
+            MultiplayerConnectionController connectionController) {
         this.game = game;
+        this.settingsController = settingsController;
+        this.connectionController = connectionController;
+
         this.setLayout(new BorderLayout());
         JPanel registerOptions = new JPanel();
         registerOptions.setSize(10, 10);
@@ -27,7 +44,10 @@ public class RegisterView extends View {
         this.add(registerOptions, BorderLayout.CENTER);
 
         addBackButton();
-        addLayout(registerOptions);
+
+        registerOptions.add(errorLabel);
+        registerOptions.add(errorDescriptionLabel);
+
         addUsername(registerOptions);
         addPassword(registerOptions);
         checkPassword(registerOptions);
@@ -45,17 +65,16 @@ public class RegisterView extends View {
 
     }
 
-    private void addLayout(JPanel registerOptions) {
-        JLabel layoutLabel1 = new JLabel();
-        JLabel layoutLabel2 = new JLabel();
-        registerOptions.add(layoutLabel1);
-        registerOptions.add(layoutLabel2);
+    private void setError(String error) {
+        errorLabel.setText("Error");
+        errorDescriptionLabel.setText(error);
+        this.update();
     }
 
     private void addUsername(JPanel registerOptions) {
         // this adds a label and a text field
         JLabel usernameLabel = new JLabel("Username:", SwingConstants.CENTER);
-        JTextField usernameField = new JTextField();
+        usernameField = new JTextField();
 
         registerOptions.add(usernameLabel);
         registerOptions.add(usernameField);
@@ -64,7 +83,7 @@ public class RegisterView extends View {
     private void addPassword(JPanel registerOptions) {
         // this adds a label and a text field
         JLabel passwordLabel = new JLabel("Password:", SwingConstants.CENTER);
-        JPasswordField passwordField = new JPasswordField();
+        passwordField = new JPasswordField();
 
         registerOptions.add(passwordLabel);
         registerOptions.add(passwordField);
@@ -73,7 +92,7 @@ public class RegisterView extends View {
     private void checkPassword(JPanel registerOptions) {
         // this adds a label and a text field
         JLabel checkPasswordLabel = new JLabel("Verify Password:", SwingConstants.CENTER);
-        JPasswordField checkPasswordField = new JPasswordField();
+        checkPasswordField = new JPasswordField();
 
         registerOptions.add(checkPasswordLabel);
         registerOptions.add(checkPasswordField);
@@ -82,11 +101,44 @@ public class RegisterView extends View {
     private void addSubmitButton() {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            // this.game.handleSubmit();
+            attemptRegister();
         });
 
         submitButton.setPreferredSize(new Dimension(200, 50));
         this.add(submitButton, BorderLayout.PAGE_END);
+    }
+
+    private void attemptRegister() {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+        String checkPassword = new String(checkPasswordField.getPassword());
+
+        if (username == null || username.length() == 0 || password.length() == 0 || checkPassword.length() == 0) {
+            setError("Please fill in all fields");
+            return;
+        }
+
+        if (!password.equals(checkPassword)) {
+            setError("Passwords do not match");
+            return;
+        }
+
+        try {
+            this.connectionController.attemptRegister(username, password).thenAccept(c -> {
+                if (c.isSuccess()) {
+                    this.settingsController.setUsername(username);
+                    this.settingsController.setPassword(password);
+
+                    this.game.handleBack();
+                } else {
+                    setError(c.getError());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            setError(e.getMessage());
+            return;
+        }
 
     }
 }
