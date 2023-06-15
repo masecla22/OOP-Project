@@ -123,10 +123,19 @@ public class ObjectTreeSerializer {
         return converter.serialize(object);
     }
 
+    /**
+     * Serializes an object to a JsonElement.
+     * 
+     * @param object - The object to serialize.
+     * @param clazz  - The class of the object.
+     * @param <K>    - The type of the object.
+     * @return - The serialized JsonElement.
+     */
     @SuppressWarnings("unchecked")
     public <K> JsonElement toJson(K object, Class<?> clazz) {
-        if (object != null)
+        if (object != null){
             clazz = (Class<K>) object.getClass();
+        }
 
         TypeAdapter<K> converter = (TypeAdapter<K>) getConverter(clazz);
 
@@ -174,12 +183,28 @@ public class ObjectTreeSerializer {
         }
     }
 
+    /**
+     * Deserializes a JsonElement to an object.
+     * @param <K> - The type of the object.
+     * @param element - The JsonElement to deserialize.
+     * @param clazz - The class of the object.
+     * @param genericTypes - The generic types of the object.
+     * @return - The deserialized object.
+     */
     @SuppressWarnings("unchecked")
     public <K> K fromJson(JsonElement element, Class<?> clazz, List<Class<?>> genericTypes) {
         TypeAdapter<K> converter = (TypeAdapter<K>) getConverter(clazz);
         return converter.deserialize(element, (Class<K>) clazz, genericTypes);
     }
 
+    /**
+     * Deserializes a JsonElement to an object.
+     * @param <K> - The type of the object.
+     * @param element - The JsonElement to deserialize.
+     * @param clazz - The class of the object.
+     * @param genericTypes - The generic types of the object.
+     * @return - The deserialized object.
+     */
     @SuppressWarnings("unchecked")
     public <K> K fromJson(JsonElement element, Class<?> clazz, Class<?>... genericTypes) {
         return fromJson(element, (Class<K>) clazz, Arrays.asList(genericTypes));

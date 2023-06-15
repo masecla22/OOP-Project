@@ -7,14 +7,19 @@ import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
 import nl.rug.oop.rugson.objects.JsonElement;
 
+/**
+ * This class is responsible for serializing and deserializing booleans.
+ */
 public class BooleanTypeAdapter extends TypeAdapter<Boolean> {
 
     @Override
     public Boolean deserialize(JsonElement consumer, Class<Boolean> clazz, List<Class<?>> genericTypes) {
-        if (!consumer.isJsonValue())
+        if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
-        if (!consumer.asJsonValue().getType().equals(JsonToken.BOOLEAN))
+        }
+        if (!consumer.asJsonValue().getType().equals(JsonToken.BOOLEAN)) {
             throw new IllegalArgumentException("Expected JsonBoolean, got " + consumer.getClass().getSimpleName());
+        }
 
         return (boolean) consumer.asJsonValue().getValue();
     }

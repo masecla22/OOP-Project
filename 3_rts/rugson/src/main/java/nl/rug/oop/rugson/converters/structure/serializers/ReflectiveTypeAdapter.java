@@ -29,8 +29,9 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
 
     private List<Field> getFieldsFor(Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
-        for (Field cr : clazz.getDeclaredFields())
+        for (Field cr : clazz.getDeclaredFields()) {
             fields.add(cr);
+        }
 
         if (clazz.getSuperclass() != null) {
             fields.addAll(this.getFieldsFor(clazz.getSuperclass()));
@@ -48,8 +49,9 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     @SneakyThrows
     public JsonElement serialize(Object object) {
         JsonObject jsonResult = new JsonObject();
-        if (object == null)
+        if (object == null) {
             return new JsonValue(JsonToken.NULL, null);
+        }
 
         Class<?> clazz = object.getClass();
 
