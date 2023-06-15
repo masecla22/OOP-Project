@@ -1,13 +1,14 @@
 package nl.rug.oop.rts.util;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 /**
  * Class that can be used to load images from the resources folder.

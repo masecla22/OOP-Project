@@ -1,9 +1,17 @@
 package nl.rug.oop.rts.view.game;
 
-import nl.rug.oop.rts.Game;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import nl.rug.oop.rts.Game;
 
 public class RegisterView extends JPanel {
     private Game game;
