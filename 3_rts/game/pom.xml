@@ -50,5 +50,11 @@
             <artifactId>rugson</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>nl.rug.oop.rts</groupId>
+            <artifactId>protocol</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
