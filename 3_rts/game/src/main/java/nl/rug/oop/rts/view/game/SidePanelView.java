@@ -143,7 +143,6 @@ public class SidePanelView extends JPanel implements Observer {
                 nodeName.requestFocusInWindow();
             }
         });
-
     }
 
     private void showEdgeOptions() {

@@ -9,6 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rts.interfaces.Selectable;
 import nl.rug.oop.rts.model.armies.Army;
+import nl.rug.oop.rts.model.events.Event;
 
 @Data
 @EqualsAndHashCode(of = "id")
@@ -23,6 +24,7 @@ public class Edge implements Selectable {
     private Node pointB;
 
     private List<Army> armies = new ArrayList<>();
+    private List<Event> events = new ArrayList<>();
 
     public boolean isConnectedTo(Node node) {
         return pointA.equals(node) || pointB.equals(node);
@@ -34,6 +36,14 @@ public class Edge implements Selectable {
 
     public void removeArmy(Army army) {
         armies.remove(army);
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+    }
+
+    public void removeEvent(Event event) {
+        events.remove(event);
     }
 
     public Node getOtherNode(Node node) {
