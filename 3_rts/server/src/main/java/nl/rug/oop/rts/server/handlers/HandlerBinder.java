@@ -5,6 +5,7 @@ import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.server.handlers.authentication.AuthenticatedPacketHandler;
 import nl.rug.oop.rts.server.handlers.authentication.LoginHandler;
 import nl.rug.oop.rts.server.handlers.authentication.RegistrationHandler;
+import nl.rug.oop.rts.server.handlers.games.lobby.LobbyListingRequestHandler;
 import nl.rug.oop.rts.server.main.RTSServer;
 
 @AllArgsConstructor
@@ -21,5 +22,7 @@ public class HandlerBinder {
         connection.addListener(new RegistrationHandler(server.getUserManager()));
 
         connection.addListener(new AuthenticatedPacketHandler(server.getUserManager()));
+
+        connection.addListener(new LobbyListingRequestHandler(server.getGamesManager()));
     }
 }
