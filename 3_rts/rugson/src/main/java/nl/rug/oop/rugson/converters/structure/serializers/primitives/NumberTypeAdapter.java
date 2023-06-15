@@ -15,8 +15,9 @@ public class NumberTypeAdapter extends TypeAdapter<Number> {
 
     @Override
     public Number deserialize(JsonElement consumer, Class<Number> clazz, List<Class<?>> genericTypes) {
-        if (consumer == null)
+        if (consumer == null) {
             return 0;
+        }
 
         if (!consumer.isJsonValue()) {
             throw new IllegalArgumentException("Expected JsonValue, got " + consumer.getClass().getSimpleName());
