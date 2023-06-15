@@ -27,7 +27,6 @@ import nl.rug.oop.rugson.RugsonBuilder;
 
 public class MultiplayerView extends JPanel {
     private Game game;
-    private SettingsController settingsController;
 
     private Rugson rugson;
     private MultiplayerConnectionController connectionController;
@@ -39,7 +38,6 @@ public class MultiplayerView extends JPanel {
     public MultiplayerView(Game game, SettingsController settingsController) {
         this.initializeRugson();
 
-        this.settingsController = settingsController;
         this.unitFactory = new MultiPlayerUnitFactory();
         this.eventFactory = new EventFactory(unitFactory);
 
@@ -48,6 +46,43 @@ public class MultiplayerView extends JPanel {
         this.connectionController = new MultiplayerConnectionController(settingsController, rugson,
                 executorService, unitFactory, eventFactory);
 
+        addLoading();
+        attemptLogin();
+    }
+
+    private void attemptLogin() {
+        try {
+            this.connectionController.openConnection();
+            this.connectionController.ensureLogin().thenAccept(c -> {
+                if (c) {
+                    System.out.println("LOGIN SUCCESS");
+                } else {
+                    this.addLoginRegister();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            addSomethingWrong();
+            return;
+        }
+    }
+
+    private void addLoading() {
+        JLabel loadingLabel = new JLabel("Loading...", SwingConstants.CENTER);
+        this.add(loadingLabel, BorderLayout.CENTER);
+        addBackButton();
+    }
+
+    private void addSomethingWrong() {
+        this.removeAll();
+        this.setLayout(new BorderLayout());
+        JLabel somethingWrongLabel = new JLabel("Something went wrong, please try again", SwingConstants.CENTER);
+        this.add(somethingWrongLabel, BorderLayout.CENTER);
+        addBackButton();
+    }
+
+    private void addLoginRegister() {
+        this.removeAll();
         this.setLayout(new BorderLayout());
         JPanel userOptions = new JPanel();
         userOptions.setSize(10, 10);
