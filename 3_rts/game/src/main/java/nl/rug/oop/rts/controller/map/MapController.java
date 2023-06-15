@@ -93,8 +93,6 @@ public abstract class MapController {
             file = new File(file.getAbsolutePath() + ".json");
         }
 
-        System.out.println("Exporting to " + file.getAbsolutePath());
-
         String json = rugson.toJson(map);
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         fileOutputStream.write(json.getBytes());
