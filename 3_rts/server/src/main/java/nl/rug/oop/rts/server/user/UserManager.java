@@ -46,7 +46,12 @@ public class UserManager {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
-            return statement.executeQuery().getInt(1) > 0;
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return set.getInt(1) > 0;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -96,7 +101,7 @@ public class UserManager {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet set = statement.executeQuery();
-            if (set.first()) {
+            if (set.next()) {
                 return new User(set);
             } else {
                 return null;
@@ -127,7 +132,7 @@ public class UserManager {
 
             ResultSet set = statement.executeQuery();
 
-            if (set.first()) {
+            if (set.next()) {
                 User user = new User(set);
                 return login(user);
             } else {
