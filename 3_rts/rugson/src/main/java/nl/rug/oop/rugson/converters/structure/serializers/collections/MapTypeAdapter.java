@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
@@ -16,11 +15,7 @@ import nl.rug.oop.rugson.objects.JsonObject;
  * but that would be a lot of work for little gain. 
  */
 public class MapTypeAdapter extends TypeAdapter<Map<?, ?>> {
-
-    public MapTypeAdapter(ObjectTreeSerializer treeSerializer) {
-        super(treeSerializer);
-    }
-
+    
     @Override
     public Map<?, ?> deserialize(JsonElement consumer, Class<Map<?, ?>> clazz, List<Class<?>> genericTypes) {
         if (!consumer.isJsonObject()) {

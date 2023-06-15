@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.SneakyThrows;
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
@@ -25,10 +24,7 @@ import nl.rug.oop.rugson.objects.JsonObject;
  * - All fields from the class and all superclasses will be serialized.
  */
 public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
-    public ReflectiveTypeAdapter(ObjectTreeSerializer treeSerializer) {
-        super(treeSerializer);
-    }
-
+    
     private List<Field> getFieldsFor(Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
         for(Field cr : clazz.getDeclaredFields())

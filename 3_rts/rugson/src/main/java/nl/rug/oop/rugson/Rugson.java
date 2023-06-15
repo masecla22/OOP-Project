@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
 import nl.rug.oop.rugson.converters.structure.JsonTreeConverter;
 import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
@@ -20,6 +21,7 @@ import nl.rug.oop.rugson.objects.JsonElement;
  */
 public class Rugson {
 
+    @Getter
     private ObjectTreeSerializer treeSerializer;
     private JsonTreeConverter treeConverter;
 

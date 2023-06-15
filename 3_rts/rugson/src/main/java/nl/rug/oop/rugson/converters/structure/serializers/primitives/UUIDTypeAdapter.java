@@ -3,7 +3,6 @@ package nl.rug.oop.rugson.converters.structure.serializers.primitives;
 import java.util.List;
 import java.util.UUID;
 
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
@@ -16,11 +15,7 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * UUID.toString() method to serialize the UUID.
  */
 public class UUIDTypeAdapter extends TypeAdapter<UUID> {
-
-    public UUIDTypeAdapter(ObjectTreeSerializer treeSerializer) {
-        super(treeSerializer);
-    }
-
+    
     @Override
     public UUID deserialize(JsonElement consumer, Class<UUID> clazz, List<Class<?>> genericTypes) {
         if (!consumer.isJsonValue()) {

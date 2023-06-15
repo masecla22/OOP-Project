@@ -44,21 +44,22 @@ public class ObjectTreeSerializer {
     }
 
     private void registerDefaultConverters() {
-        this.defaultConverter = new ReflectiveTypeAdapter(this);
+        this.defaultConverter = new ReflectiveTypeAdapter();
+        this.defaultConverter.setTreeSerializer(this);
 
-        this.register(List.class, new ListTypeAdapter(this));
-        this.register(Map.class, new MapTypeAdapter(this));
-        this.register(Set.class, new SetTypeAdapter(this));
+        this.register(List.class, new ListTypeAdapter());
+        this.register(Map.class, new MapTypeAdapter());
+        this.register(Set.class, new SetTypeAdapter());
 
-        this.register(Number.class, new NumberTypeAdapter(this));
-        this.register(String.class, new StringTypeAdapter(this));
-        this.register(UUID.class, new UUIDTypeAdapter(this));
+        this.register(Number.class, new NumberTypeAdapter());
+        this.register(String.class, new StringTypeAdapter());
+        this.register(UUID.class, new UUIDTypeAdapter());
 
         Set<Class<?>> coveredByNumber = Set.of(byte.class, short.class, int.class, long.class, float.class,
                 double.class);
 
         for (Class<?> clazz : coveredByNumber) {
-            this.register(clazz, new NumberTypeAdapter(this));
+            this.register(clazz, new NumberTypeAdapter());
         }
     }
 
@@ -70,6 +71,7 @@ public class ObjectTreeSerializer {
      * @param <K>       - The type of the class.
      */
     public <K> void register(Class<K> clazz, TypeAdapter<?> converter) {
+        converter.setTreeSerializer(this);
         converters.put(clazz, converter);
     }
 

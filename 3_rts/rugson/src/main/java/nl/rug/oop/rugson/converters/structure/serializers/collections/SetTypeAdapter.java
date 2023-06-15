@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
@@ -13,16 +12,7 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * Type adapter for sets. Sets are serialized as arrays.
  */
 public class SetTypeAdapter extends TypeAdapter<Set<?>> {
-
-    /**
-     * Constructor for the set type adapter.
-     * 
-     * @param treeSerializer - The tree serializer.
-     */
-    public SetTypeAdapter(ObjectTreeSerializer treeSerializer) {
-        super(treeSerializer);
-    }
-
+    
     /**
      * Deserializes a set from a json element.
      * 

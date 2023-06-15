@@ -1,5 +1,6 @@
 package nl.rug.oop.rugson;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
@@ -9,7 +10,7 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
  */
 public class RugsonBuilder {
     private boolean prettyPrint;
-    private Map<Class<?>, TypeAdapter<?>> typeAdapters;
+    private Map<Class<?>, TypeAdapter<?>> typeAdapters = new HashMap<>();
 
     /**
      * Toggles pretty printing of JSON output.

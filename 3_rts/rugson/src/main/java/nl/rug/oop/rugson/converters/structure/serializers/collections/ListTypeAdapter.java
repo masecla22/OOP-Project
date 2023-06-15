@@ -3,7 +3,6 @@ package nl.rug.oop.rugson.converters.structure.serializers.collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
@@ -12,10 +11,6 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * Type adapter for lists. Lists are serialized as JsonArrays.
  */
 public class ListTypeAdapter extends TypeAdapter<List<?>> {
-
-    public ListTypeAdapter(ObjectTreeSerializer treeSerializer) {
-        super(treeSerializer);
-    }
 
     @Override
     public List<?> deserialize(JsonElement consumer, Class<List<?>> clazz, List<Class<?>> genericTypes) {

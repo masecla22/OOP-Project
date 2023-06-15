@@ -2,7 +2,6 @@ package nl.rug.oop.rugson.converters.structure.serializers.primitives;
 
 import java.util.List;
 
-import nl.rug.oop.rugson.converters.structure.ObjectTreeSerializer;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.json.JsonNumber;
 import nl.rug.oop.rugson.json.JsonToken;
@@ -13,10 +12,6 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * Type adapter for numbers. Will handle lazy parsing of numbers.
  */
 public class NumberTypeAdapter extends TypeAdapter<Number> {
-
-    public NumberTypeAdapter(ObjectTreeSerializer serializer) {
-        super(serializer);
-    }
 
     @Override
     public Number deserialize(JsonElement consumer, Class<Number> clazz, List<Class<?>> genericTypes) {

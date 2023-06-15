@@ -3,8 +3,8 @@ package nl.rug.oop.rugson.converters.structure;
 import java.util.List;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import nl.rug.oop.rugson.objects.JsonElement;
 
 /**
@@ -15,9 +15,9 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * 
  * @param <K> The type of the object that this adapter can convert.
  */
-@AllArgsConstructor
 public abstract class TypeAdapter<K> {
     @Getter(AccessLevel.PROTECTED)
+    @Setter(AccessLevel.PROTECTED)
     private ObjectTreeSerializer treeSerializer;
 
     /**
