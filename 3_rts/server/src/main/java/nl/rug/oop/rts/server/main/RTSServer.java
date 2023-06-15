@@ -13,9 +13,13 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import nl.rug.oop.rts.protocol.SocketConnection;
+import nl.rug.oop.rts.protocol.listeners.PacketListener;
+import nl.rug.oop.rts.protocol.packet.Packet;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
 import nl.rug.oop.rts.server.connection.ConnectionManager;
+import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.handlers.HandlerBinder;
 import nl.rug.oop.rts.server.logging.CustomFormatter;
 import nl.rug.oop.rts.server.logging.FileLogHandler;
@@ -37,6 +41,8 @@ public class RTSServer {
     private Connection connection;
     private UserManager userManager;
 
+    private GamesManager gamesManager;
+
     public RTSServer() {
         this.threadPool = Executors.newCachedThreadPool();
         this.logger = Logger.getLogger("RTS-Server");
@@ -54,6 +60,8 @@ public class RTSServer {
 
         this.setupSQLConnection();
         this.setupUserManager();
+
+        this.setupGameManager();
 
         this.setupConnectionManager();
     }
@@ -77,6 +85,11 @@ public class RTSServer {
         System.out.println("Setup Rugson instance!");
     }
 
+    private void setupGameManager() {
+        this.gamesManager = new GamesManager();
+        System.out.println("Setup GameManager instance!");
+    }
+
     private void setupConnectionManager() throws IOException {
         RTSPacketDictionary packetDictionary = new RTSPacketDictionary();
 
@@ -85,6 +98,16 @@ public class RTSServer {
 
         this.connectionManager.addConnectionHandler((connection) -> {
             // Register all listeners on the connection
+            System.out.println("New connection! " + connection.getSocket().getInetAddress().getHostAddress() + ":"
+                    + connection.getSocket().getPort());
+            connection.addListener(new PacketListener<>(Packet.class) {
+                @Override
+                protected boolean handlePacket(SocketConnection connection, Packet packet) {
+                    System.out.println("Received packet: " + packet);
+                    return true;
+                }
+            });
+
             HandlerBinder binder = new HandlerBinder(this, connection);
             binder.bind();
         });
