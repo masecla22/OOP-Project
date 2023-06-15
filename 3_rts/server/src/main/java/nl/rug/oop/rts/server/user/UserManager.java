@@ -28,7 +28,7 @@ public class UserManager {
     }
 
     private void ensureTable() throws SQLException {
-        String query = "CREATE TABLE `rts_users` (" +
+        String query = "CREATE TABLE IF NOT EXISTS `rts_users` (" +
                 "`id` INT NOT NULL AUTO_INCREMENT," +
                 "`username` TEXT NOT NULL," +
                 "`password` TEXT NOT NULL," +
