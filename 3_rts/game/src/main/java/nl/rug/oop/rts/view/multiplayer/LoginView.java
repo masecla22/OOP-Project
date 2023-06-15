@@ -10,15 +10,31 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
+import nl.rug.oop.rts.controller.settings.SettingsController;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.view.View;
 
-public class LoginView extends View {
+public class LoginView extends View implements Observer {
     private Game game;
 
-    public LoginView(Game game) {
+    private SettingsController settingsController;
+    private MultiplayerConnectionController connectionController;
+
+    private JLabel errorLabel = new JLabel("", SwingConstants.CENTER);
+    private JLabel errorDescriptionLabel = new JLabel("", SwingConstants.CENTER);
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
+    public LoginView(Game game, SettingsController settingsController,
+            MultiplayerConnectionController connectionController) {
         this.game = game;
+        this.settingsController = settingsController;
+        this.connectionController = connectionController;
+
         this.setLayout(new BorderLayout());
         JPanel loginOptions = new JPanel();
         loginOptions.setSize(10, 10);
@@ -30,7 +46,7 @@ public class LoginView extends View {
         addLayout(loginOptions);
         addUsername(loginOptions);
         addPassword(loginOptions);
-        addStartButton();
+        addLoginButton();
     }
 
     private void addBackButton() {
@@ -41,20 +57,17 @@ public class LoginView extends View {
 
         backButton.setPreferredSize(new Dimension(200, 50));
         this.add(backButton, BorderLayout.PAGE_START);
-
     }
 
     private void addLayout(JPanel loginOptions) {
-        JLabel layoutLabel1 = new JLabel();
-        JLabel layoutLabel2 = new JLabel();
-        loginOptions.add(layoutLabel1);
-        loginOptions.add(layoutLabel2);
+        loginOptions.add(errorLabel);
+        loginOptions.add(errorDescriptionLabel);
     }
 
     private void addUsername(JPanel loginOptions) {
         // this adds a label and a text field
         JLabel usernameLabel = new JLabel("Username:", SwingConstants.CENTER);
-        JTextField usernameField = new JTextField();
+        usernameField = new JTextField();
 
         loginOptions.add(usernameLabel);
         loginOptions.add(usernameField);
@@ -63,20 +76,49 @@ public class LoginView extends View {
     private void addPassword(JPanel loginOptions) {
         // this adds a label and a text field
         JLabel passwordLabel = new JLabel("Password:", SwingConstants.CENTER);
-        JPasswordField passwordField = new JPasswordField();
+        passwordField = new JPasswordField();
 
         loginOptions.add(passwordLabel);
         loginOptions.add(passwordField);
     }
 
-    private void addStartButton() {
-        JButton startButton = new JButton("Start game!");
+    private void addLoginButton() {
+        JButton startButton = new JButton("Login");
         startButton.addActionListener(e -> {
-            // this.game.handleStart();
+            String username = this.usernameField.getText();
+            String password = new String(this.passwordField.getPassword());
+
+            this.settingsController.setUsername(username);
+            this.settingsController.setPassword(password);
+            this.attemptLogin();
         });
 
         startButton.setPreferredSize(new Dimension(200, 50));
         this.add(startButton, BorderLayout.PAGE_END);
-
     }
+
+    private void attemptLogin() {
+        try {
+            this.connectionController.ensureLogin().thenAccept(c -> {
+                if (c) {
+                    SwingUtilities.invokeLater(() -> game.handleBack());
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        errorLabel.setText("Error:");
+                        errorDescriptionLabel.setText("Invalid username or password");
+                        update();
+                    });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            SwingUtilities.invokeLater(() -> {
+                errorLabel.setText("Error:");
+                errorDescriptionLabel.setText(e.getMessage());
+                update();
+            });
+            return;
+        }
+    }
+
 }
