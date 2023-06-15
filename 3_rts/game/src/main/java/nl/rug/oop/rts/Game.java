@@ -12,6 +12,7 @@ import nl.rug.oop.rts.controller.map.MapSimulationController;
 import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
@@ -67,6 +68,7 @@ public class Game {
                 .setPrettyPrint(true)
                 .addTypeAdapter(Unit.class, new UnitTypeAdapter())
                 .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
+                .addTypeAdapter(Map.class, new GameMapTypeAdapter())
                 .build();
     }
 
