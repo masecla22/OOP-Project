@@ -11,14 +11,15 @@ import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
+import nl.rug.oop.rugson.Rugson;
 
 public class SinglePlayerMapController extends MapController {
 
     private UnitFactory unitFactory;
     private EventFactory eventFactory;
 
-    public SinglePlayerMapController(UnitFactory unitFactory, EventFactory eventFactory, Map map) {
-        super(map);
+    public SinglePlayerMapController(Rugson rugson, UnitFactory unitFactory, EventFactory eventFactory, Map map) {
+        super(rugson, map);
         this.unitFactory = unitFactory;
         this.eventFactory = eventFactory;
     }

@@ -1,6 +1,9 @@
 package nl.rug.oop.rts.controller.map;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 import lombok.AccessLevel;
@@ -16,9 +19,13 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.view.map.MapView;
+import nl.rug.oop.rugson.Rugson;
 
 @RequiredArgsConstructor
 public abstract class MapController {
+    @NonNull
+    private Rugson rugson;
+
     @Getter(AccessLevel.PROTECTED)
     @NonNull
     private Map map;
@@ -79,6 +86,21 @@ public abstract class MapController {
             offset.y = -MapView.MAP_SIZE + 600;
 
         map.setOffset(offset);
+    }
+
+    public void exportToJson(File file) throws IOException {
+        if (!file.getName().endsWith(".json")) {
+            file = new File(file.getAbsolutePath() + ".json");
+        }
+
+        System.out.println("Exporting to " + file.getAbsolutePath());
+
+        String json = rugson.toJson(map);
+        System.out.println(json);
+
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        fileOutputStream.write(json.getBytes());
+        fileOutputStream.close();
     }
 
 }
