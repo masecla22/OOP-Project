@@ -32,7 +32,7 @@ public class MultiplayerConnectionController {
     private Rugson rugson;
 
     @NonNull
-    private ExecutorService threadPool;
+    private ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @NonNull
     private UnitFactory unitFactory;
