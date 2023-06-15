@@ -12,7 +12,7 @@ import nl.rug.oop.rts.protocol.user.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MultiplayerLobby {
-    private UUID lobbyUUID;
+    private UUID lobbyId;
 
     private Map map;
     private String mapName;
