@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
-import nl.rug.oop.rts.view.game.MultiplayerView;
 import nl.rug.oop.rts.view.game.SingleplayerMenuView;
+import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
 public class MainMenuClass extends JPanel {
     private Game game;

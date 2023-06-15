@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.MainMenuClass;
-import nl.rug.oop.rts.view.game.LoginView;
-import nl.rug.oop.rts.view.game.RegisterView;
+import nl.rug.oop.rts.view.multiplayer.LoginView;
+import nl.rug.oop.rts.view.multiplayer.RegisterView;
 import nl.rug.oop.rts.view.settings.SettingsView;
 
 public class Game {

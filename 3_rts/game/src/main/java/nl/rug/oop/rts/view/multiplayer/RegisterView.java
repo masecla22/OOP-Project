@@ -1,4 +1,4 @@
-package nl.rug.oop.rts.view.game;
+package nl.rug.oop.rts.view.multiplayer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

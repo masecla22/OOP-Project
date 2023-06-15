@@ -1,4 +1,4 @@
-package nl.rug.oop.rts.view.game;
+package nl.rug.oop.rts.view.multiplayer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,7 +11,6 @@ import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
 
-
 public class MultiplayerView extends JPanel {
 
     private Game game;
@@ -23,8 +22,6 @@ public class MultiplayerView extends JPanel {
         userOptions.setSize(10, 10);
         userOptions.setLayout(new GridLayout(4, 2, 10, 20));
 
-        /**addTitle();*/
-
         this.add(userOptions, BorderLayout.CENTER);
         addLayout(userOptions);
         addLoginButton(userOptions);
@@ -32,12 +29,6 @@ public class MultiplayerView extends JPanel {
 
         addBackButton();
     }
-
-    /**private void addTitle() {
-        JLabel titleLabel = new JLabel ("User options", SwingConstants.CENTER);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(64f));
-        this.add(titleLabel, BorderLayout.PAGE_START);
-    }*/
 
     private void addLayout(JPanel userOptions) {
         JLabel layoutLabel1 = new JLabel();
@@ -57,7 +48,7 @@ public class MultiplayerView extends JPanel {
 
     }
 
-    private void addLoginButton (JPanel userOptions) {
+    private void addLoginButton(JPanel userOptions) {
         JLabel loginLabel = new JLabel("Already have an account?", SwingConstants.CENTER);
         JButton loginButton = new JButton("Log In");
         loginButton.setPreferredSize(new Dimension(50, 26));
