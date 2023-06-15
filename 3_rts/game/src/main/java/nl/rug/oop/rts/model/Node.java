@@ -2,9 +2,7 @@ package nl.rug.oop.rts.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +27,7 @@ public class Node implements Selectable {
     @NonNull
     private String name;
 
-    private Set<Edge> edges = new HashSet<>();
+    private List<Edge> edges = new ArrayList<>();
 
     private List<Army> armies = new ArrayList<>();
 
