@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lombok.Getter;
 import lombok.NonNull;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.packet.Packet;
@@ -30,6 +31,7 @@ public class SocketConnection {
     private Rugson rugson;
 
     @NonNull
+    @Getter
     private Socket socket;
 
     @NonNull
