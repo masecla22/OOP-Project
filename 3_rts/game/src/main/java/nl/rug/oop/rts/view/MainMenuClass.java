@@ -11,7 +11,7 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
-public class MainMenuClass extends JPanel {
+public class MainMenuClass extends JPanel implements View {
     private Game game;
     private SettingsController settingsController;
 

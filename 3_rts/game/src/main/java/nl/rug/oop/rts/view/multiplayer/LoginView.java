@@ -12,8 +12,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.view.View;
 
-public class LoginView extends JPanel {
+public class LoginView extends JPanel implements View {
     private Game game;
 
     public LoginView(Game game) {
@@ -71,7 +72,7 @@ public class LoginView extends JPanel {
     private void addStartButton() {
         JButton startButton = new JButton("Start game!");
         startButton.addActionListener(e -> {
-            //this.game.handleStart();
+            // this.game.handleStart();
         });
 
         startButton.setPreferredSize(new Dimension(200, 50));

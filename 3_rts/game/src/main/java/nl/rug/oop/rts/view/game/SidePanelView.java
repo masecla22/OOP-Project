@@ -23,8 +23,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
+import nl.rug.oop.rts.view.View;
 
-public class SidePanelView extends JPanel implements Observer {
+public class SidePanelView extends JPanel implements Observer, View {
     private Map map;
 
     

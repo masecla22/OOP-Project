@@ -24,10 +24,11 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.SinglePlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
+import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
-public class SingleplayerMenuView extends JPanel {
+public class SingleplayerMenuView extends JPanel implements View {
     private Game game;
 
     private UnitFactory spUnitFactory;

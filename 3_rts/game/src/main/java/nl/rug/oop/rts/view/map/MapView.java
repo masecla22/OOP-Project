@@ -20,8 +20,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.util.TextureLoader;
+import nl.rug.oop.rts.view.View;
 
-public class MapView extends JPanel implements Observer {
+public class MapView extends JPanel implements Observer, View {
 
     public static final int MAP_SIZE = 2000;
 

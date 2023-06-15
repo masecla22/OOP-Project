@@ -12,8 +12,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.view.View;
 
-public class RegisterView extends JPanel {
+public class RegisterView extends JPanel implements View {
     private Game game;
 
     public RegisterView(Game game) {
@@ -81,7 +82,7 @@ public class RegisterView extends JPanel {
     private void addSubmitButton() {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            //this.game.handleSubmit();
+            // this.game.handleSubmit();
         });
 
         submitButton.setPreferredSize(new Dimension(200, 50));

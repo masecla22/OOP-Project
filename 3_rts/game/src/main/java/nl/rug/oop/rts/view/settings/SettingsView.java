@@ -12,8 +12,9 @@ import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
+import nl.rug.oop.rts.view.View;
 
-public class SettingsView extends JPanel {
+public class SettingsView extends JPanel implements View {
     private Game game;
 
     private SettingsController controller;
@@ -64,6 +65,7 @@ public class SettingsView extends JPanel {
         actualOptions.add(serverLabel);
         actualOptions.add(centralServer);
     }
+
     private void addLayout(JPanel actualOptions) {
         JLabel layoutLabel1 = new JLabel();
         JLabel layoutLabel2 = new JLabel();

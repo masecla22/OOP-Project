@@ -17,10 +17,11 @@ import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
+import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.map.MapView;
 
 @Getter(AccessLevel.PROTECTED)
-public class GameView extends JPanel implements Observer {
+public class GameView extends JPanel implements Observer, View {
     private Game game;
     private Map map;
 

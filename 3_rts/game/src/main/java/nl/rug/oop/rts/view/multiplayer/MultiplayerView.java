@@ -22,10 +22,11 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
+import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
-public class MultiplayerView extends JPanel {
+public class MultiplayerView extends JPanel implements View {
     private Game game;
 
     private Rugson rugson;
