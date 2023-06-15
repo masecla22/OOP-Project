@@ -19,8 +19,6 @@ public class GondorSoldier extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (this.getHealth() < unit.getHealth()) {
-            this.setHealth(unit.getHealth());
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

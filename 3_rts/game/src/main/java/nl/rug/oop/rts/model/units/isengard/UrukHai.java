@@ -18,10 +18,6 @@ public class UrukHai extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getName().equals("Hobo") && unit.getHealth() > this.getHealth()) {
-            double aux = this.getHealth();
-            this.setHealth(unit.getHealth());
-            unit.setHealth(aux);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

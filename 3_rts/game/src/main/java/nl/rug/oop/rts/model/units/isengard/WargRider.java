@@ -18,11 +18,6 @@ public class WargRider extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getName().equals("Cayus")) {
-            this.setHealth(this.getHealth() * 0.8);
-        }
-        if (unit.getType().equals(UnitType.PHALANX)) {
-            this.setHealth(50.0);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

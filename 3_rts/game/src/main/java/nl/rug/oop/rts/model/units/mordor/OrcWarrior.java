@@ -19,8 +19,6 @@ public class OrcWarrior extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getHealth() > this.getHealth() && damage > this.getDamage()) {
-            this.setHealth(this.getHealth() * 0.6);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

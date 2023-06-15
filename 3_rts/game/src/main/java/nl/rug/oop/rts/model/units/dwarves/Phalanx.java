@@ -15,7 +15,7 @@ public class Phalanx extends Unit {
             return this.getDamage() * 0.9;
         }
 
-        //very strong against Lorenzoios
+        // very strong against Lorenzoios
         if (unit.getName().equals("Lorenzoios")) {
             return this.getDamage() * 1.5;
         }
@@ -26,7 +26,11 @@ public class Phalanx extends Unit {
     @Override
     public void takeDamage(Unit unit, double damage) {
         if (unit.getType().getFaction().equals(Faction.ISENGARD)) {
-            this.setHealth(this.getHealth() * 0.5);
+            this.setHealth(this.getHealth() - damage * 0.5);
+        }
+        // interaction with any other unit results in normal damage
+        else {
+            this.setHealth(this.getHealth() - damage);
         }
     }
 }

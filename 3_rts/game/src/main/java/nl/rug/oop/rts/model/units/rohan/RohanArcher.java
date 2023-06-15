@@ -18,8 +18,6 @@ public class RohanArcher extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getType().equals(UnitType.GONDOR_SOLDIER)) {
-            this.setHealth(this.getHealth() * 0.6);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

@@ -19,10 +19,13 @@ public class UrukCrossbowman extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
+        // If the damage of the opponent is more than half of the damage of the unit,
+        // the unit's health is halved, it's doubled
         if (damage >= this.getDamage() / 2.0) {
-            this.setHealth(this.getHealth() / 2.0);
+            this.setHealth(this.getHealth() - damage * 2.0);
         }
 
+        // Normal damage
         else {
             unit.setHealth(unit.getHealth() / 2.0);
         }

@@ -15,16 +15,22 @@ public class MirkwoodArcher extends Unit {
             return this.getDamage() * 2.0;
         }
 
-        if (unit.getType().getFaction().equals(Faction.MORDOR)){
-            return this.getDamage()*1.2;
+        if (unit.getType().getFaction().equals(Faction.MORDOR)) {
+            return this.getDamage() * 1.2;
         }
+
         return this.getDamage();
     }
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getName().equals("Patricia")) {
-            this.setHealth(50.0);
+        // If the unit is a Mordor unit, the damage is halved
+        if (unit.getType().getFaction().equals(Faction.MORDOR)) {
+            this.setHealth(this.getHealth() - damage / 2.0);
+        }
+        // interaction with any other unit results in normal damage
+        else {
+            this.setHealth(this.getHealth() - damage);
         }
     }
 }

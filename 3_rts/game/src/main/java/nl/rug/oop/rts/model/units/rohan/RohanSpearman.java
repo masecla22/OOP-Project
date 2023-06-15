@@ -1,6 +1,5 @@
 package nl.rug.oop.rts.model.units.rohan;
 
-import nl.rug.oop.rts.model.armies.Faction;
 import nl.rug.oop.rts.model.units.Unit;
 import nl.rug.oop.rts.model.units.UnitType;
 
@@ -19,8 +18,6 @@ public class RohanSpearman extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getType().getFaction().equals(Faction.MEN)) {
-            this.setHealth(30.0);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

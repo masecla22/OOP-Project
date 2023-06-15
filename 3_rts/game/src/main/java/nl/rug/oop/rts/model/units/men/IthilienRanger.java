@@ -22,8 +22,6 @@ public class IthilienRanger extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getType().equals(Faction.MORDOR)) {
-            this.setHealth(this.getHealth() * 0.8);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

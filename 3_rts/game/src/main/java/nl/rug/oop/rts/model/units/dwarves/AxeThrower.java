@@ -13,33 +13,39 @@ public class AxeThrower extends Unit {
 
     @Override
     public double dealDamage(Unit unit) {
-        //not too strong against isengard
+        // not too strong against isengard
         if (unit.getType().getFaction().equals(ISENGARD)) {
             return this.getDamage() * 0.7;
         }
-        //gets stronger when health is minimal
+
+        // gets stronger when health is minimal
         if (this.getHealth() <= 60.0) {
             return this.getDamage() * 1.5;
         }
 
-        //weak against haradrim archers
-        if (unit.getType().equals(UnitType.HARADRIM_ARCHER)){
+        // weak against haradrim archers
+        if (unit.getType().equals(UnitType.HARADRIM_ARCHER)) {
             return this.getDamage() * 0.3;
         }
+
         return this.getDamage();
     }
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-
-        //interaction with Kyle (ORC_PIKEMAN) results in health reduced by 0.5
+        // interaction with Kyle results in great damage
         if (unit.getName().equals("Kyle")) {
-            this.setHealth(this.getHealth() * 0.5);
+            this.setHealth(this.getHealth() - damage * 1.5);
         }
 
-        //interaction with any URUK_HAI does not result in great damage
-        if (unit.getType().equals(URUK_HAI)) {
-            this.setHealth(this.getHealth() * 0.9);
+        // interaction with any URUK_HAI does not result in great damage
+        else if (unit.getType().equals(URUK_HAI)) {
+            this.setHealth(this.getHealth() - damage * 0.9);
+        }
+
+        // interaction with any other unit results in normal damage
+        else {
+            this.setHealth(this.getHealth() - damage);
         }
     }
 }

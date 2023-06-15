@@ -11,16 +11,15 @@ public class LorienWarrior extends Unit {
 
     @Override
     public double dealDamage(Unit unit) {
-        if (unit.getType().getFaction().equals(Faction.DWARVES))
+        if (unit.getType().getFaction().equals(Faction.DWARVES)) {
             return this.getDamage() * 1.5;
+        }
 
         return this.getDamage();
     }
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (damage < this.getDamage()) {
-            this.setHealth(unit.getHealth());
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

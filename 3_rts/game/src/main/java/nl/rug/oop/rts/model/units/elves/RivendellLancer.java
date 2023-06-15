@@ -13,13 +13,19 @@ public class RivendellLancer extends Unit {
         if (unit.getType().equals(UnitType.WARG_RIDER)) {
             this.setDamage(this.getDamage() * 0.5);
         }
+
         return this.getDamage();
     }
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getHealth()>this.getHealth()) {
-            this.setHealth(this.getHealth() * 0.5);
+        // If the unit has more health than the lancer, the lancer takes 10 less damage
+        if (unit.getHealth() > this.getHealth()) {
+            this.setHealth(this.getHealth() + 10 - damage);
+        }
+        // interaction with any other unit results in normal damage
+        else {
+            this.setHealth(this.getHealth() - damage);
         }
     }
 }

@@ -18,8 +18,6 @@ public class RohanSwordsman extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getHealth() < this.getHealth() && unit.getType().equals(UnitType.LORIEN_WARRIOR)) {
-            this.setHealth(this.getHealth() - 10.0);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

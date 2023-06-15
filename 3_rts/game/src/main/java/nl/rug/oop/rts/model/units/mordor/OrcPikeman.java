@@ -18,8 +18,6 @@ public class OrcPikeman extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (damage > this.getDamage()) {
-            this.setHealth(this.getHealth() * 0.9);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }

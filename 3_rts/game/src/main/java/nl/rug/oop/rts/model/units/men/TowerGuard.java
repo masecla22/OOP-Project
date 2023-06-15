@@ -19,8 +19,6 @@ public class TowerGuard extends Unit {
 
     @Override
     public void takeDamage(Unit unit, double damage) {
-        if (unit.getType().equals(UnitType.ORC_WARRIOR)) {
-            this.setHealth(50.0);
-        }
+        this.setHealth(this.getHealth() - damage);
     }
 }
