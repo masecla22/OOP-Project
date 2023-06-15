@@ -18,7 +18,9 @@ public enum Faction {
     MORDOR("Mordor", Team.TEAM_B, "factionMordor",
             List.of(UnitType.HARADRIM_ARCHER, UnitType.ORC_PIKEMAN, UnitType.ORC_WARRIOR)),
     ISENGARD("Isengard", Team.TEAM_B, "factionIsengard",
-            List.of(UnitType.URUK_CROSSBOW_MAN, UnitType.URUK_HAI, UnitType.WARG_RIDER));
+            List.of(UnitType.URUK_CROSSBOW_MAN, UnitType.URUK_HAI, UnitType.WARG_RIDER)),
+    ROHAN("Rohan", Team.TEAM_B, "factionRohan",
+            List.of(UnitType.ROHAN_ARCHER, UnitType.ROHAN_SPEARMAN, UnitType.ROHAN_SWORDSMAN));
 
     private String niceName;
     private Team team;
