@@ -10,7 +10,7 @@ public class ReinforcementsEvent extends Event {
     private UnitFactory unitFactory;
 
     public ReinforcementsEvent(UnitFactory unitFactory) {
-        super(EventType.NATURAL_DISASTER);
+        super(EventType.REINFORCEMENTS);
         this.unitFactory = unitFactory;
     }
 

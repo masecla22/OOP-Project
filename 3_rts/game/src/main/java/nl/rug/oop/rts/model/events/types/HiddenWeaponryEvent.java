@@ -6,7 +6,7 @@ import nl.rug.oop.rts.model.events.EventType;
 
 public class HiddenWeaponryEvent extends Event {
     public HiddenWeaponryEvent() {
-        super(EventType.NATURAL_DISASTER);
+        super(EventType.HIDDEN_WEAPONRY);
     }
 
     @Override
