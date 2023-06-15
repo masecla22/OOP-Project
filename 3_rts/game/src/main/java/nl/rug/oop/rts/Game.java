@@ -1,7 +1,6 @@
 package nl.rug.oop.rts;
 
 import java.awt.Point;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +11,14 @@ import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.map.MapSimulationController;
 import nl.rug.oop.rts.controller.map.SinglePlayerMapController;
 import nl.rug.oop.rts.controller.settings.SettingsController;
+import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
+import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
+import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
 import nl.rug.oop.rts.view.MainMenuClass;
 import nl.rug.oop.rts.view.game.GameView;
@@ -32,10 +35,14 @@ public class Game {
 
     private List<JPanel> accessedViews = new ArrayList<>();
 
+    private UnitFactory unitFactory;
+    private EventFactory eventFactory;
+
     /**
      * something
      */
     public void initialize() {
+        this.initializeFactories();
         this.initializeRugson();
 
         this.frame = new JFrame("RTS Game");
@@ -50,8 +57,17 @@ public class Game {
         this.frame.setVisible(true);
     }
 
+    private void initializeFactories() {
+        this.unitFactory = new UnitFactory(-1);
+        this.eventFactory = new EventFactory(unitFactory);
+    }
+
     private void initializeRugson() {
-        this.rugson = new RugsonBuilder().build();
+        this.rugson = new RugsonBuilder()
+                .setPrettyPrint(true)
+                .addTypeAdapter(Unit.class, new UnitTypeAdapter())
+                .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
+                .build();
     }
 
     public void handleQuitting() {
@@ -97,10 +113,7 @@ public class Game {
         map.addEdge(bc);
         map.addEdge(ca);
 
-        UnitFactory unitFactory = new UnitFactory((int) Instant.now().toEpochMilli());
-        EventFactory factory = new EventFactory(unitFactory);
-
-        MapController spMapController = new SinglePlayerMapController(unitFactory, factory, map);
+        MapController spMapController = new SinglePlayerMapController(rugson, unitFactory, eventFactory, map);
         MapSimulationController simulationController = new MapSimulationController(map);
 
         GameView view = new GameView(this, map, spMapController, simulationController);
