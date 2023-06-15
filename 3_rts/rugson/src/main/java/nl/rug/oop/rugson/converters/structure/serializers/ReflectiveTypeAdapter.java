@@ -7,6 +7,8 @@ import java.util.List;
 
 import lombok.SneakyThrows;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
+import nl.rug.oop.rugson.json.JsonToken;
+import nl.rug.oop.rugson.json.JsonValue;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
@@ -24,10 +26,10 @@ import nl.rug.oop.rugson.objects.JsonObject;
  * - All fields from the class and all superclasses will be serialized.
  */
 public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
-    
+
     private List<Field> getFieldsFor(Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
-        for(Field cr : clazz.getDeclaredFields())
+        for (Field cr : clazz.getDeclaredFields())
             fields.add(cr);
 
         if (clazz.getSuperclass() != null) {
@@ -44,15 +46,17 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
 
     @Override
     @SneakyThrows
-    public JsonObject serialize(Object object) {
+    public JsonElement serialize(Object object) {
         JsonObject jsonResult = new JsonObject();
+        if (object == null)
+            return new JsonValue(JsonToken.NULL, null);
 
         Class<?> clazz = object.getClass();
 
         List<Field> fields = this.getFieldsFor(clazz);
         for (Field field : fields) {
             field.setAccessible(true);
-            jsonResult.put(field.getName(), this.getTreeSerializer().toJson(field.get(object)));
+            jsonResult.put(field.getName(), this.getTreeSerializer().toJson(field.get(object), field.getType()));
         }
 
         return jsonResult;
@@ -61,6 +65,14 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
     @Override
     @SneakyThrows
     public Object deserialize(JsonElement consumer, Class<Object> clazz, List<Class<?>> genericTypes) {
+        if (consumer.isJsonValue()) {
+            JsonValue value = consumer.asJsonValue();
+            if (value.getType().equals(JsonToken.NULL)) {
+                return null;
+            }
+            throw new IllegalArgumentException("Expected JsonObject, got " + consumer.getClass().getSimpleName());
+        }
+
         if (!(consumer instanceof JsonObject)) {
             throw new IllegalArgumentException("Expected JsonObject, got " + consumer.getClass().getSimpleName());
         }
