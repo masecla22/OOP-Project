@@ -157,9 +157,13 @@ public class SocketConnection {
                 boolean shouldContinue = true;
                 List<PacketListener<?>> toInvoke = new ArrayList<>(this.packetListeners.get(packetClassToCheck));
                 for (PacketListener<?> packetListener : toInvoke) {
-                    shouldContinue = packetListener.onReceive(this, packet);
-                    if (!shouldContinue)
-                        break;
+                    try {
+                        shouldContinue = packetListener.onReceive(this, packet);
+                        if (!shouldContinue)
+                            break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if (!shouldContinue)
