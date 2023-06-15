@@ -46,17 +46,12 @@ public class AwaitPacketOnce<T extends Packet> {
         this.boundTo.addListener(new PacketListener<T>(packetWaiting) {
             @Override
             protected boolean handlePacket(SocketConnection endpoint, T packet) {
-                // Make sure the packet class matches
-                // Theoretically, this should already be handled by the PacketListener
-                // but this is a safety check
-                if (packet.getClass().equals(packetWaiting)) {
-                    // Make sure the packet is valid
-                    if (isValid.size() == 0 || isValid.stream().allMatch(c -> c.test(packet))) {
-                        // Unbind from the connection
-                        boundTo.removeListener(this);
-                        // Complete the future
-                        awaiting.complete(new SimpleEntry<>(boundTo, packet));
-                    }
+                // Make sure the packet is valid
+                if (isValid.size() == 0 || isValid.stream().allMatch(c -> c.test(packet))) {
+                    // Unbind from the connection
+                    boundTo.removeListener(this);
+                    // Complete the future
+                    awaiting.complete(new SimpleEntry<>(boundTo, packet));
                 }
 
                 return true;
