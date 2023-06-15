@@ -22,7 +22,7 @@ public class LoginHandler extends PacketListener<LoginRequest> {
 
     @Override
     @SneakyThrows
-    protected void handlePacket(SocketConnection connection, LoginRequest packet) {
+    protected boolean handlePacket(SocketConnection connection, LoginRequest packet) {
         String username = packet.getUsername();
         String password = packet.getPassword();
 
@@ -31,7 +31,7 @@ public class LoginHandler extends PacketListener<LoginRequest> {
             if (token == null) {
                 LoginResponse response = new LoginResponse(false, "Invalid Credentials", null, null);
                 connection.sendPacket(response);
-                return;
+                return true;
             }
 
             User user = this.userManager.getUser(token);
@@ -41,6 +41,8 @@ public class LoginHandler extends PacketListener<LoginRequest> {
             LoginResponse response = new LoginResponse(false, e.getMessage(), null, null);
             connection.sendPacket(response);
         }
+
+        return true;
     }
 
 }

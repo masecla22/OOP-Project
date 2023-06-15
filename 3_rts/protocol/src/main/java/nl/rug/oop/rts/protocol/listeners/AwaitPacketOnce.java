@@ -45,7 +45,7 @@ public class AwaitPacketOnce<T extends Packet> {
         this.awaiting = new CompletableFuture<>();
         this.boundTo.addListener(new PacketListener<T>(packetWaiting) {
             @Override
-            protected void handlePacket(SocketConnection endpoint, T packet) {
+            protected boolean handlePacket(SocketConnection endpoint, T packet) {
                 // Make sure the packet class matches
                 // Theoretically, this should already be handled by the PacketListener
                 // but this is a safety check
@@ -58,6 +58,8 @@ public class AwaitPacketOnce<T extends Packet> {
                         awaiting.complete(new SimpleEntry<>(boundTo, packet));
                     }
                 }
+
+                return true;
             }
 
         });

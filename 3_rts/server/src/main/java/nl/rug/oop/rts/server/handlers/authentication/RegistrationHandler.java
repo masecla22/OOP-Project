@@ -20,7 +20,7 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
 
     @Override
     @SneakyThrows
-    protected void handlePacket(SocketConnection connection, RegistrationRequest packet) {
+    protected boolean handlePacket(SocketConnection connection, RegistrationRequest packet) {
         String username = packet.getUsername();
         String password = packet.getPassword();
 
@@ -34,5 +34,7 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
             RegistrationResponse response = new RegistrationResponse(false, e.getMessage(), null);
             connection.sendPacket(response);
         }
+
+        return true;
     }
 }

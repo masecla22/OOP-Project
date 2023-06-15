@@ -13,13 +13,13 @@ public abstract class PacketListener<K> {
     private Class<?> packetClass;
 
     @SuppressWarnings("unchecked")
-    public void onReceive(SocketConnection connection, Packet packet) {
+    public boolean onReceive(SocketConnection connection, Packet packet) {
         if (packetClass.isInstance(packet)) {
-            this.handlePacket(connection, (K) packetClass.cast(packet));
+            return this.handlePacket(connection, (K) packetClass.cast(packet));
         } else {
             throw new IllegalArgumentException("Packet is not of type " + packetClass.getName());
         }
     }
 
-    protected abstract void handlePacket(SocketConnection connection, K packet);
+    protected abstract boolean handlePacket(SocketConnection connection, K packet);
 }

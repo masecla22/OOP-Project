@@ -133,15 +133,35 @@ public class SocketConnection {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleIncomingPacket(Packet packet) {
-        Class<? extends Packet> packetClass = packet.getClass();
-        if (!this.packetListeners.containsKey(packetClass)) {
-            return;
-        }
+        List<Class<? extends Packet>> packetClasses = new ArrayList<>();
 
-        for (PacketListener<?> packetListener : this.packetListeners.get(packetClass)) {
-            packetListener.onReceive(this, packet);
+        Class<? extends Packet> packetClass = packet.getClass();
+        while (packetClass != Packet.class) {
+            packetClasses.add(packetClass);
+            packetClass = (Class<? extends Packet>) packetClass.getSuperclass();
         }
+        packetClasses.add(Packet.class);
+
+        this.executorService.execute(() -> {
+            for (int i = packetClasses.size() - 1; i >= 0; i--) {
+                Class<?> packetClassToCheck = packetClasses.get(i);
+                if (!this.packetListeners.containsKey(packetClassToCheck)) {
+                    continue;
+                }
+
+                boolean shouldContinue = true;
+                for (PacketListener<?> packetListener : this.packetListeners.get(packetClassToCheck)) {
+                    shouldContinue = packetListener.onReceive(this, packet);
+                    if (!shouldContinue)
+                        break;
+                }
+
+                if (!shouldContinue)
+                    break;
+            }
+        });
     }
 
     public void closeConnection() throws IOException, InterruptedException {
