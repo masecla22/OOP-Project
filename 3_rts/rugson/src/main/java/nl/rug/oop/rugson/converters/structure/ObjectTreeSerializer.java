@@ -59,7 +59,9 @@ public class ObjectTreeSerializer {
         this.register(UUID.class, new UUIDTypeAdapter());
 
         this.register(Enum.class, new EnumTypeAdapter());
+
         this.register(Boolean.class, new BooleanTypeAdapter());
+        this.register(boolean.class, new BooleanTypeAdapter());
 
         Set<Class<?>> coveredByNumber = Set.of(byte.class, short.class, int.class, long.class, float.class,
                 double.class);
