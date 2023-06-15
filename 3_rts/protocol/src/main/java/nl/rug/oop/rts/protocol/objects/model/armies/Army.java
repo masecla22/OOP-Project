@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 
 @Data
+@NoArgsConstructor
 public class Army {
     private List<Unit> units = new ArrayList<>();
     private Faction faction;

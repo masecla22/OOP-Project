@@ -31,8 +31,8 @@ public class UnitTypeAdapter extends TypeAdapter<Unit> {
 
         UnitType type = UnitType.valueOf((String) object.get("type").asJsonValue().getValue());
         String name = (String) object.get("name").asJsonValue().getValue();
-        double damage = (double) object.get("damage").asJsonValue().getValue();
-        double health = (double) object.get("health").asJsonValue().getValue();
+        double damage = (double) object.get("damage").asJsonNumber().asDouble();
+        double health = (double) object.get("health").asJsonNumber().asDouble();
 
         return type.buildUnit(name, damage, health);
     }
