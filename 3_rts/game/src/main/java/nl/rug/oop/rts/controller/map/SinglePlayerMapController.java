@@ -7,15 +7,20 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Faction;
+import nl.rug.oop.rts.model.events.Event;
+import nl.rug.oop.rts.model.events.EventFactory;
+import nl.rug.oop.rts.model.events.EventType;
 import nl.rug.oop.rts.model.units.UnitFactory;
 
 public class SinglePlayerMapController extends MapController {
 
     private UnitFactory unitFactory;
+    private EventFactory eventFactory;
 
-    public SinglePlayerMapController(UnitFactory unitFactory, Map map) {
+    public SinglePlayerMapController(UnitFactory unitFactory, EventFactory eventFactory, Map map) {
         super(map);
         this.unitFactory = unitFactory;
+        this.eventFactory = eventFactory;
     }
 
     @Override
@@ -49,10 +54,6 @@ public class SinglePlayerMapController extends MapController {
     }
 
     @Override
-    public void runSimulationStep() {
-    }
-
-    @Override
     public void addArmy(Node node, Faction faction) {
         Army army = unitFactory.buildArmy(faction);
         node.addArmy(army);
@@ -64,4 +65,27 @@ public class SinglePlayerMapController extends MapController {
         node.removeArmy(army);
         this.getMap().update();
     }
+
+    @Override
+    public void addEvent(Node node, EventType type) {
+        Event event = eventFactory.build(type);
+        node.addEvent(event);
+    }
+
+    @Override
+    public void addEvent(Edge edge, EventType type) {
+        Event event = eventFactory.build(type);
+        edge.addEvent(event);
+    }
+
+    @Override
+    public void removeEvent(Node node, Event event) {
+        node.removeEvent(event);
+    }
+
+    @Override
+    public void removeEvent(Edge edge, Event event) {
+        edge.removeEvent(event);
+    }
+
 }

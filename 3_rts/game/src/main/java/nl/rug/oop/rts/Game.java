@@ -15,6 +15,7 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.model.Edge;
 import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.model.events.EventFactory;
 import nl.rug.oop.rts.model.units.UnitFactory;
 import nl.rug.oop.rts.view.MainMenuClass;
 import nl.rug.oop.rts.view.game.GameView;
@@ -97,7 +98,9 @@ public class Game {
         map.addEdge(ca);
 
         UnitFactory unitFactory = new UnitFactory((int) Instant.now().toEpochMilli());
-        MapController spMapController = new SinglePlayerMapController(unitFactory, map);
+        EventFactory factory = new EventFactory();
+
+        MapController spMapController = new SinglePlayerMapController(unitFactory, factory, map);
         MapSimulationController simulationController = new MapSimulationController(map);
 
         GameView view = new GameView(this, map, spMapController, simulationController);

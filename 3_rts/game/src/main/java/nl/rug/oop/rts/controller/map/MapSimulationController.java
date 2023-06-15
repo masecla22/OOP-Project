@@ -11,6 +11,7 @@ import nl.rug.oop.rts.model.Map;
 import nl.rug.oop.rts.model.Node;
 import nl.rug.oop.rts.model.armies.Army;
 import nl.rug.oop.rts.model.armies.Team;
+import nl.rug.oop.rts.model.events.Event;
 import nl.rug.oop.rts.model.units.Unit;
 
 @AllArgsConstructor
@@ -25,8 +26,10 @@ public class MapSimulationController {
         resolveAllBattles();
         moveNodeArmies();
         resolveAllBattles();
+        applyEvents();
         moveEdgeArmies();
         resolveAllBattles();
+        applyEvents();
 
         resetArmiesStatus();
         update();
@@ -54,6 +57,33 @@ public class MapSimulationController {
             }
 
             armies.removeAll(toRemove);
+        }
+    }
+
+    private void applyEvents() {
+        for (Node node : map.getNodes()) {
+            applyEvents(node.getArmies(), node.getEvents());
+        }
+
+        for (Edge edge : map.getEdges()) {
+            applyEvents(edge.getArmies(), edge.getEvents());
+        }
+    }
+
+    private void applyEvents(List<Army> armies, List<Event> events) {
+        // Check if events should be applied
+        if (Math.random() > 0.5) {
+            return;
+        }
+
+        if (events.size() == 0 || armies.size() == 0) {
+            return;
+        }
+
+        for (Army army : armies) {
+            for (Event event : events) {
+                event.execute(army);
+            }
         }
     }
 
