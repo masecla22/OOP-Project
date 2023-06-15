@@ -26,9 +26,10 @@ public class SettingsView extends JPanel {
 
         this.setLayout(new BorderLayout());
         JPanel actualOptions = new JPanel();
-        actualOptions.setLayout(new GridLayout(4, 2, 10, 20));
+        actualOptions.setLayout(new GridLayout(3, 2, 10, 20));
 
         addBackButton();
+        addLayout(actualOptions);
         addCentralServer(actualOptions);
         addSaveButton();
 
@@ -62,6 +63,12 @@ public class SettingsView extends JPanel {
 
         actualOptions.add(serverLabel);
         actualOptions.add(centralServer);
+    }
+    private void addLayout(JPanel actualOptions) {
+        JLabel layoutLabel1 = new JLabel();
+        JLabel layoutLabel2 = new JLabel();
+        actualOptions.add(layoutLabel1);
+        actualOptions.add(layoutLabel2);
     }
 
 }
