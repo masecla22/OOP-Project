@@ -177,6 +177,9 @@ public class SocketConnection {
         if (!this.isRunning.get())
             return;
 
+        this.packetListeners.values().forEach(List::clear);
+        this.packetListeners.clear();
+
         this.keepAliveSender.cancel();
         this.isRunning.set(false);
         this.pollingThread.interrupt();
