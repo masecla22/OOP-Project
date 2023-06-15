@@ -52,8 +52,6 @@ public class MapView extends JPanel implements Observer {
         g.drawImage(TextureLoader.getInstance().getTexture("mapTexture", MAP_SIZE, MAP_SIZE),
                 offset.x, offset.y, null);
 
-        System.out.println(offset);
-
         Graphics2D g2d = (Graphics2D) g;
 
         // Draw all the edges
@@ -75,6 +73,15 @@ public class MapView extends JPanel implements Observer {
         }
 
         map.getNodes().forEach((c) -> renderNode(g2d, c));
+    }
+
+    private boolean shouldRenderNode(Node node) {
+        Point position = node.getPosition();
+        position = map.addOffset(position);
+
+        Point viewportCenter = new Point(this.getWidth() / 2, this.getHeight() / 2);
+
+        return viewportCenter.distanceSq(position) < 250000;
     }
 
     private void renderEdge(Graphics2D g, Edge edge) {
@@ -111,6 +118,10 @@ public class MapView extends JPanel implements Observer {
     }
 
     private void renderNode(Graphics2D g, Node node) {
+        if (!shouldRenderNode(node)) {
+            return;
+        }
+
         if (map.getSelection() instanceof Node selectedNode && node.equals(selectedNode)) {
             Color toUse = Color.RED;
             if (mapController.isAddingEdge()) {
