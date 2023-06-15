@@ -7,14 +7,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nl.rug.oop.rts.interfaces.Selectable;
-import nl.rug.oop.rts.model.Edge;
-import nl.rug.oop.rts.model.Map;
-import nl.rug.oop.rts.model.Node;
-import nl.rug.oop.rts.model.armies.Army;
-import nl.rug.oop.rts.model.armies.Faction;
-import nl.rug.oop.rts.model.events.Event;
-import nl.rug.oop.rts.model.events.EventType;
+import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
+import nl.rug.oop.rts.protocol.objects.model.Edge;
+import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.objects.model.Node;
+import nl.rug.oop.rts.protocol.objects.model.armies.Army;
+import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
+import nl.rug.oop.rts.protocol.objects.model.events.Event;
+import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.view.map.MapView;
 
 @RequiredArgsConstructor

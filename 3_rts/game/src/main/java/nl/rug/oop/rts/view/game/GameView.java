@@ -11,10 +11,10 @@ import lombok.Getter;
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.map.MapController;
 import nl.rug.oop.rts.controller.map.MapSimulationController;
-import nl.rug.oop.rts.interfaces.observing.Observer;
-import nl.rug.oop.rts.model.Edge;
-import nl.rug.oop.rts.model.Map;
-import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
+import nl.rug.oop.rts.protocol.objects.model.Edge;
+import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.view.map.MapView;
 
 @Getter(AccessLevel.PROTECTED)

@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import nl.rug.oop.rts.model.Edge;
-import nl.rug.oop.rts.model.Map;
-import nl.rug.oop.rts.model.Node;
-import nl.rug.oop.rts.model.armies.Army;
-import nl.rug.oop.rts.model.armies.Team;
-import nl.rug.oop.rts.model.events.Event;
-import nl.rug.oop.rts.model.units.Unit;
+import nl.rug.oop.rts.protocol.objects.model.Edge;
+import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.objects.model.Node;
+import nl.rug.oop.rts.protocol.objects.model.armies.Army;
+import nl.rug.oop.rts.protocol.objects.model.armies.Team;
+import nl.rug.oop.rts.protocol.objects.model.events.Event;
+import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 
 @AllArgsConstructor
 public class MapSimulationController {

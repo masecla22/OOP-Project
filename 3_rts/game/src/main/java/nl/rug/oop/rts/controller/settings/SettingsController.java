@@ -2,7 +2,7 @@ package nl.rug.oop.rts.controller.settings;
 
 import java.io.File;
 
-import nl.rug.oop.rts.model.settings.GameSettings;
+import nl.rug.oop.rts.protocol.objects.model.settings.GameSettings;
 import nl.rug.oop.rugson.Rugson;
 
 public class SettingsController {

@@ -7,9 +7,9 @@ import java.awt.event.MouseEvent;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rts.controller.map.MapController;
-import nl.rug.oop.rts.interfaces.Selectable;
-import nl.rug.oop.rts.model.Map;
-import nl.rug.oop.rts.model.Node;
+import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
+import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.objects.model.Node;
 
 @RequiredArgsConstructor
 public class MapMouseHandler extends MouseAdapter {
