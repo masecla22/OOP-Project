@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import nl.rug.oop.rts.model.armies.Faction;
 import nl.rug.oop.rts.model.units.dwarves.AxeThrower;
 import nl.rug.oop.rts.model.units.dwarves.Guardian;
 import nl.rug.oop.rts.model.units.dwarves.Phalanx;
@@ -27,27 +28,44 @@ import nl.rug.oop.rts.model.units.mordor.OrcWarrior;
 @Getter
 @AllArgsConstructor
 public enum UnitType {
-    AXE_THROWER(AxeThrower.class, 10.0, 30.0, 60.0, 80.0, List.of("Ralph", "Mickey", "Bob")),
-    GUARDIAN(Guardian.class, 10.0, 20.0, 40.0, 60.0, List.of("Adolph", "Goofy", "Mario")),
-    PHALANX(Phalanx.class, 5.0, 10.0, 50.0, 60.0, List.of("Lorenzo", "Greg", "Gabby")),
+    AXE_THROWER(AxeThrower.class, Faction.DWARVES, 10.0, 30.0, 60.0, 80.0,
+            List.of("Ralph", "Mickey", "Bob")),
+    GUARDIAN(Guardian.class, Faction.DWARVES, 10.0, 20.0, 40.0, 60.0,
+            List.of("Adolph", "Goofy", "Mario")),
+    PHALANX(Phalanx.class, Faction.DWARVES, 5.0, 10.0, 50.0, 60.0,
+            List.of("Lorenzo", "Greg", "Gabby")),
 
-    LORIEN_WARRIOR(LorienWarrior.class, 15.0, 30.0, 60.0, 70.0, List.of("Fabiola", "Fernus", "Fabrizio")),
-    MIRKWOOD_ARCHER(MirkwoodArcher.class, 10.0, 30.0, 70.0, 80.0, List.of("Odobasian", "Roberta", "Paulo")),
-    RIVENDELL_LANCER(RivendellLancer.class, 10.0, 40.0, 70.0, 90.0, List.of("Maya", "Karina", "Sebastian")),
+    LORIEN_WARRIOR(LorienWarrior.class, Faction.ELVES, 15.0, 30.0, 60.0, 70.0,
+            List.of("Fabiola", "Fernus", "Fabrizio")),
+    MIRKWOOD_ARCHER(MirkwoodArcher.class, Faction.ELVES, 10.0, 30.0, 70.0, 80.0,
+            List.of("Odobasian", "Roberta", "Paulo")),
+    RIVENDELL_LANCER(RivendellLancer.class, Faction.ELVES, 10.0, 40.0, 70.0, 90.0,
+            List.of("Maya", "Karina", "Sebastian")),
 
-    URUK_CROSSBOW_MAN(UrukCrossbowman.class, 5.0, 40.0, 60.0, 90.0, List.of("Angelus", "Pablo", "Petrus")),
-    URUK_HAI(UrukHai.class, 10.0, 20.0, 40.0, 80.0, List.of("Lucretiu", "Feriga", "Don")),
-    WARG_RIDER(WargRider.class, 7.0, 25.0, 60.0, 90.0, List.of("Cici", "Souvlaki", "Couscous")),
+    URUK_CROSSBOW_MAN(UrukCrossbowman.class, Faction.ISENGARD, 5.0, 40.0, 60.0, 90.0,
+            List.of("Angelus", "Pablo", "Petrus")),
+    URUK_HAI(UrukHai.class, Faction.ISENGARD, 10.0, 20.0, 40.0, 80.0,
+            List.of("Lucretiu", "Feriga", "Don")),
+    WARG_RIDER(WargRider.class, Faction.ISENGARD, 7.0, 25.0, 60.0, 90.0,
+            List.of("Cici", "Souvlaki", "Couscous")),
 
-    GONDOR_SOLDIER(GondorSoldier.class, 10.0, 30.0, 80.0, 100.0, List.of("Cerasela", "Cayus", "Gordon")),
-    ITHILIEN_RANGER(IthilienRanger.class, 5.0, 40.0, 60.0, 75.0, List.of("Mathew", "Andrei", "Paprika")),
-    TOWER_GUARD(TowerGuard.class, 10.0, 35.0, 80.0, 90.0, List.of("Hobo", "Horatiu", "Lawrence")),
+    GONDOR_SOLDIER(GondorSoldier.class, Faction.MEN, 10.0, 30.0, 80.0, 100.0,
+            List.of("Cerasela", "Cayus", "Gordon")),
+    ITHILIEN_RANGER(IthilienRanger.class, Faction.MEN, 5.0, 40.0, 60.0, 75.0,
+            List.of("Mathew", "Andrei", "Paprika")),
+    TOWER_GUARD(TowerGuard.class, Faction.MEN, 10.0, 35.0, 80.0, 90.0,
+            List.of("Hobo", "Horatiu", "Lawrence")),
 
-    HARADRIM_ARCHER(HaradrimArcher.class, 30.0, 40.0, 50.0, 60.0, List.of("Hercules", "Ignatiu", "Chilli")),
-    ORC_PIKEMAN(OrcPikeman.class, 10.0, 20.0, 80.0, 110.0, List.of("Dove", "Kyle", "Karen")),
-    ORC_WARRIOR(OrcWarrior.class, 20.0, 30.0, 70.0, 90.0, List.of("Patricia", "Romin", "Goyle"));
+    HARADRIM_ARCHER(HaradrimArcher.class, Faction.MORDOR, 30.0, 40.0, 50.0, 60.0,
+            List.of("Hercules", "Ignatiu", "Chilli")),
+    ORC_PIKEMAN(OrcPikeman.class, Faction.MORDOR, 10.0, 20.0, 80.0, 110.0,
+            List.of("Dove", "Kyle", "Karen")),
+    ORC_WARRIOR(OrcWarrior.class, Faction.MORDOR, 20.0, 30.0, 70.0, 90.0,
+            List.of("Patricia", "Romin", "Goyle"));
 
     private Class<? extends Unit> unitClass;
+
+    private Faction faction;
 
     private double minDamage;
     private double maxDamage;
