@@ -3,8 +3,8 @@ package nl.rug.oop.rts.protocol.objects.model.events.types;
 import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
-import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
 
 public class ReinforcementsEvent extends Event {
     private UnitFactory unitFactory;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.model.events.types.HiddenWeaponryEvent;
 import nl.rug.oop.rts.protocol.objects.model.events.types.NaturalDisasterEvent;
 import nl.rug.oop.rts.protocol.objects.model.events.types.ReinforcementsEvent;
-import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 
 @AllArgsConstructor
 public class EventFactory {

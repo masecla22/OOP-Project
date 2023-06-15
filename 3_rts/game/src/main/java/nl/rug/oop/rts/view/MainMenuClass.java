@@ -7,15 +7,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
 public class MainMenuClass extends JPanel {
     private Game game;
+    private SettingsController settingsController;
 
-    public MainMenuClass(Game game) {
+    public MainMenuClass(Game game, SettingsController settingsController) {
         super();
         this.game = game;
+        this.settingsController = settingsController;
 
         GridLayout layout = new GridLayout(5, 0, 0, 20);
 
@@ -73,7 +76,7 @@ public class MainMenuClass extends JPanel {
     }
 
     private void handleMultiplayer() {
-        MultiplayerView multiplayerView = new MultiplayerView(game);
+        MultiplayerView multiplayerView = new MultiplayerView(game, this.settingsController);
         game.handleView(multiplayerView);
     }
 

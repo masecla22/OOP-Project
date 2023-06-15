@@ -21,8 +21,9 @@ import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.SinglePlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
-import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
@@ -37,7 +38,7 @@ public class SingleplayerMenuView extends JPanel {
         super();
         this.game = game;
 
-        this.spUnitFactory = new UnitFactory(-1);
+        this.spUnitFactory = new SinglePlayerUnitFactory(-1);
         this.spEventFactory = new EventFactory(spUnitFactory);
         this.initializeRugson();
 
@@ -77,8 +78,7 @@ public class SingleplayerMenuView extends JPanel {
     }
 
     private void loadMap(Map map) {
-        MapController spMapController = new SinglePlayerMapController(
-                rugson, spUnitFactory, spEventFactory, map);
+        MapController spMapController = new SinglePlayerMapController(rugson, spUnitFactory, spEventFactory, map);
         MapSimulationController simulationController = new MapSimulationController(map);
 
         GameView view = new GameView(game, map, spMapController, simulationController);

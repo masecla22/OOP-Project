@@ -17,10 +17,14 @@ public class Game {
 
     private List<JPanel> accessedViews = new ArrayList<>();
 
+    private SettingsController settingsController;
+
     /**
      * something
      */
     public void initialize() {
+        this.settingsController = new SettingsController();
+
         this.frame = new JFrame("RTS Game");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
@@ -28,7 +32,7 @@ public class Game {
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
 
-        this.handleView(new MainMenuClass(this));
+        this.handleView(new MainMenuClass(this, settingsController));
 
         this.frame.setVisible(true);
     }
@@ -59,7 +63,7 @@ public class Game {
     }
 
     public void openSettings() {
-        handleView(new SettingsView(this, new SettingsController()));
+        handleView(new SettingsView(this, this.settingsController));
     }
 
     public void handleLogin() {

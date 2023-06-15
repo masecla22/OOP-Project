@@ -3,6 +3,8 @@ package nl.rug.oop.rts.view.multiplayer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -10,13 +12,42 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import nl.rug.oop.rts.Game;
+import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
+import nl.rug.oop.rts.controller.settings.SettingsController;
+import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
+import nl.rug.oop.rts.protocol.objects.model.events.Event;
+import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.units.Unit;
+import nl.rug.oop.rugson.Rugson;
+import nl.rug.oop.rugson.RugsonBuilder;
 
 public class MultiplayerView extends JPanel {
-
     private Game game;
+    private SettingsController settingsController;
 
-    public MultiplayerView(Game game) {
+    private Rugson rugson;
+    private MultiplayerConnectionController connectionController;
+    private ExecutorService executorService;
+
+    private UnitFactory unitFactory;
+    private EventFactory eventFactory;
+
+    public MultiplayerView(Game game, SettingsController settingsController) {
+        this.initializeRugson();
+
+        this.settingsController = settingsController;
+        this.unitFactory = new MultiPlayerUnitFactory();
+        this.eventFactory = new EventFactory(unitFactory);
+
         this.game = game;
+
+        this.connectionController = new MultiplayerConnectionController(settingsController, rugson,
+                executorService, unitFactory, eventFactory);
+
         this.setLayout(new BorderLayout());
         JPanel userOptions = new JPanel();
         userOptions.setSize(10, 10);
@@ -68,6 +99,15 @@ public class MultiplayerView extends JPanel {
         });
         userOptions.add(registerLabel);
         userOptions.add(registerButton);
+    }
+
+    private void initializeRugson() {
+        this.rugson = new RugsonBuilder()
+                .setPrettyPrint(false)
+                .addTypeAdapter(Unit.class, new UnitTypeAdapter())
+                .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
+                .addTypeAdapter(Map.class, new GameMapTypeAdapter())
+                .build();
     }
 
 }

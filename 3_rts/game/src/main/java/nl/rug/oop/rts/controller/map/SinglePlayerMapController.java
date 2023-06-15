@@ -10,7 +10,7 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
-import nl.rug.oop.rts.protocol.objects.model.units.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rugson.Rugson;
 
 public class SinglePlayerMapController extends MapController {
