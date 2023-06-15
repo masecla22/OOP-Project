@@ -30,7 +30,15 @@ public class Map implements Observable {
     public void removeNode(Node node) {
         nodes.remove(node);
 
-        edges.removeIf(edge -> edge.isConnectedTo(node));
+        edges.removeIf(edge -> {
+            if (edge.isConnectedTo(node)) {
+                edge.getPointA().getEdges().remove(edge);
+                edge.getPointB().getEdges().remove(edge);
+                return true;
+            } else {
+                return false;
+            }
+        });
         this.update();
     }
 
@@ -62,6 +70,9 @@ public class Map implements Observable {
     }
 
     public void removeEdge(Edge edge) {
+        edge.getPointA().getEdges().remove(edge);
+        edge.getPointB().getEdges().remove(edge);
+
         edges.remove(edge);
 
         this.update();

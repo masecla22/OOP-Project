@@ -69,7 +69,6 @@ public class GameMapTypeAdapter extends TypeAdapter<Map> {
 
             int from = (int) edge.get("from").asJsonNumber().asInt();
             int to = (int) edge.get("to").asJsonNumber().asInt();
-
             int id = (int) edge.get("id").asJsonNumber().asInt();
 
             List<Army> armies = this.getTreeSerializer().fromJson(edge.get("armies"), List.class, Army.class);

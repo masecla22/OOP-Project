@@ -18,8 +18,8 @@ public class Army {
         this.faction = faction;
     }
 
-    private Node movingToNextStep;
-    private boolean moved = false;
+    private transient Node movingToNextStep;
+    private transient boolean moved = false;
 
     @Override
     public String toString() {
