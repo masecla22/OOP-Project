@@ -28,7 +28,7 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
-public class SingleplayerMenuView extends JPanel implements View {
+public class SingleplayerMenuView extends View {
     private Game game;
 
     private UnitFactory spUnitFactory;

@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.view.View;
 
-public class LoginView extends JPanel implements View {
+public class LoginView extends View {
     private Game game;
 
     public LoginView(Game game) {

@@ -21,7 +21,7 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.map.MapView;
 
 @Getter(AccessLevel.PROTECTED)
-public class GameView extends JPanel implements Observer, View {
+public class GameView extends View implements Observer {
     private Game game;
     private Map map;
 

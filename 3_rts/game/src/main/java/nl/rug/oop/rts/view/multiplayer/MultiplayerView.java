@@ -26,7 +26,7 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
-public class MultiplayerView extends JPanel implements View {
+public class MultiplayerView extends View {
     private Game game;
 
     private Rugson rugson;

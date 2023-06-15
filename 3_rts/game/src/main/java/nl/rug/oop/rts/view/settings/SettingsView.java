@@ -14,7 +14,7 @@ import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.View;
 
-public class SettingsView extends JPanel implements View {
+public class SettingsView extends View {
     private Game game;
 
     private SettingsController controller;

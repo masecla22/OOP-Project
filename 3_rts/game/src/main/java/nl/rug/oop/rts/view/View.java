@@ -1,6 +1,9 @@
 package nl.rug.oop.rts.view;
 
-public interface View {
-    public default void onClose() {
+import javax.swing.JPanel;
+
+public abstract class View extends JPanel {
+    public void onClose() {
+
     }
 }

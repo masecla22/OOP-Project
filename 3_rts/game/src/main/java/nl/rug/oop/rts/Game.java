@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.MainMenuClass;
+import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.multiplayer.LoginView;
 import nl.rug.oop.rts.view.multiplayer.RegisterView;
 import nl.rug.oop.rts.view.settings.SettingsView;
@@ -15,7 +16,7 @@ import nl.rug.oop.rts.view.settings.SettingsView;
 public class Game {
     private JFrame frame;
 
-    private List<JPanel> accessedViews = new ArrayList<>();
+    private List<View> accessedViews = new ArrayList<>();
 
     private SettingsController settingsController;
 

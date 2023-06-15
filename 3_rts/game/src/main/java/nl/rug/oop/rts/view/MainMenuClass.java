@@ -4,14 +4,13 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
-public class MainMenuClass extends JPanel implements View {
+public class MainMenuClass extends View {
     private Game game;
     private SettingsController settingsController;
 

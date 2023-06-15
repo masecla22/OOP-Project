@@ -25,7 +25,7 @@ import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.view.View;
 
-public class SidePanelView extends JPanel implements Observer, View {
+public class SidePanelView extends View implements Observer {
     private Map map;
 
     
