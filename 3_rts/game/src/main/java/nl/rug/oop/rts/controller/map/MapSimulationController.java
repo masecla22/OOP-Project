@@ -118,6 +118,9 @@ public class MapSimulationController {
                 }
 
                 Node nextNode = cr.getMovingToNextStep();
+                if (nextNode == null)
+                    nextNode = edge.getPointA();
+
                 nextNode.addArmy(cr);
 
                 cr.setMoved(true);
