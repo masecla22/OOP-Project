@@ -17,6 +17,9 @@ public class GameSettings {
 
     private String centralServer = "masecla.dev";
 
+    private String username;
+    private String password;
+
     public static GameSettings loadConfiguration(Rugson rugson, File file) {
         try {
             if (!file.exists()) {
