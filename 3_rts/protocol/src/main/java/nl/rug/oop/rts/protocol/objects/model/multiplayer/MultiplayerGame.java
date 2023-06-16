@@ -38,7 +38,7 @@ public class MultiplayerGame {
 
     private boolean isPlayerATurn;
 
-    private List<Node> goldGeneratingNodes;
+    private List<Node> goldGeneratingNodes = new ArrayList<>();
 
     public void initialize() {
         this.initializeStartingPosition();
