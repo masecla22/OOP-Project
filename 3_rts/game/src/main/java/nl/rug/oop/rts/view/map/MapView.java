@@ -121,13 +121,9 @@ public class MapView extends View implements Observer {
             return;
         }
 
-        if (map.getSelection() instanceof Node selectedNode && node.equals(selectedNode)) {
-            Color toUse = Color.RED;
-            if (mapController.isAddingEdge()) {
-                toUse = Color.BLUE;
-            }
-
-            g.setColor(toUse);
+        Color toHighlightAs = this.mapController.getColorForNode(node);
+        if (toHighlightAs != null) {
+            g.setColor(toHighlightAs);
             g.setStroke(new BasicStroke(3));
             Point position = node.getPosition();
             position = map.addOffset(position);
