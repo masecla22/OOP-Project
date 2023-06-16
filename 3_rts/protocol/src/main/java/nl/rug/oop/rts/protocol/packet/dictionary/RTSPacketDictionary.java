@@ -4,9 +4,11 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginRequ
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationResponse;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyDeletionRequest;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyJoiningRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 
@@ -26,6 +28,10 @@ public class RTSPacketDictionary extends PacketDictionary {
         this.registerPacket(LobbyDeletionRequest.class);
         this.registerPacket(LobbyListingRequest.class);
         this.registerPacket(LobbyListingResponse.class);
+        this.registerPacket(LobbyJoiningRequest.class);
+
+        // Game packets here
+        this.registerPacket(GameStartPacket.class);
     }
 
 }
