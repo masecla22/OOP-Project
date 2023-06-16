@@ -6,10 +6,12 @@ import java.sql.SQLException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "password") // To prevent logging the password
 public class User {
     private int id;
 
