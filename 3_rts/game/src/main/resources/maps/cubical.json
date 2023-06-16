@@ -1,0 +1,150 @@
+{
+    "nodes": [
+        {
+            "armies": [],
+            "name": "Down",
+            "id": 5,
+            "position": {
+                "x": 542,
+                "y": 386
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Choke",
+            "id": 6,
+            "position": {
+                "x": 385,
+                "y": 312
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Down",
+            "id": 7,
+            "position": {
+                "x": 227,
+                "y": 385
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Top",
+            "id": 1,
+            "position": {
+                "x": 380,
+                "y": 161
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Bottom",
+            "id": 2,
+            "position": {
+                "x": 380,
+                "y": 481
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Up",
+            "id": 3,
+            "position": {
+                "x": 229,
+                "y": 239
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "Up",
+            "id": 4,
+            "position": {
+                "x": 533,
+                "y": 243
+            },
+            "events": []
+        }
+    ],
+    "offset": {
+        "x": -88,
+        "y": -33
+    },
+    "edges": [
+        {
+            "armies": [],
+            "from": 3,
+            "to": 7,
+            "id": 5,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 4,
+            "to": 5,
+            "id": 6,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 1,
+            "to": 3,
+            "id": 7,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 1,
+            "to": 4,
+            "id": 8,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 7,
+            "to": 2,
+            "id": 9,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 2,
+            "to": 5,
+            "id": 10,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 3,
+            "to": 6,
+            "id": 1,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 6,
+            "to": 5,
+            "id": 2,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 6,
+            "to": 4,
+            "id": 3,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 6,
+            "to": 7,
+            "id": 4,
+            "events": []
+        }
+    ]
+}
