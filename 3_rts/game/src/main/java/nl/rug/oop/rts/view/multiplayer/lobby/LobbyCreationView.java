@@ -15,8 +15,13 @@ import javax.swing.JTextField;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
+import nl.rug.oop.rts.protocol.games.MultiplayerLobby;
+import nl.rug.oop.rts.protocol.listeners.AwaitPacketOnce;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.packet.Packet;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationRequest;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationResponse;
 import nl.rug.oop.rts.util.PredefinedMapLoader;
 import nl.rug.oop.rts.util.file.MapSaveJsonFilter;
 import nl.rug.oop.rts.view.View;
@@ -97,7 +102,12 @@ public class LobbyCreationView extends View implements Observer {
                 return;
             }
 
-            // this.connectionController.createLobby(lobbyName, this.selectedMap);
+            String mapName = this.selectedMapName;
+            if (mapName == null || mapName.isEmpty()) {
+                return;
+            }
+
+            this.createLobby(lobbyName, mapName, this.selectedMap);
         });
 
         createButton.setPreferredSize(new Dimension(200, 50));
@@ -139,7 +149,22 @@ public class LobbyCreationView extends View implements Observer {
         this.add(backButton, BorderLayout.PAGE_START);
     }
 
-    private void createMap(String mapName, Map map) {
+    private void createLobby(String name, String mapName, Map map) {
+        // Cleanup armies
+        // Will also be done on the server for anti-cheat reasons
+        // But we do it here too for performance reasons
+        map.removeAllArmies();
 
+        AwaitPacketOnce<Packet> awaiter = new AwaitPacketOnce<>(LobbyCreationResponse.class)
+                .bindTo(this.connectionController.getConnection());
+        this.connectionController.sendAuthenticatedPacket(new LobbyCreationRequest(name, mapName, map));
+
+        awaiter.getAwaiting().thenAccept(c -> {
+            LobbyCreationResponse response = (LobbyCreationResponse) c.getValue();
+
+            MultiplayerLobby lobby = response.getLobby();
+            LobbyWaitingView view = new LobbyWaitingView(game, lobby, connectionController);
+            game.handleView(view);
+        });
     }
 }
