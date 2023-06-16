@@ -12,6 +12,7 @@ import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.view.View;
+import nl.rug.oop.rts.view.game.SidePanelView;
 import nl.rug.oop.rts.view.map.MapView;
 
 public class MultiplayerGameView extends View implements Observer {
@@ -37,6 +38,7 @@ public class MultiplayerGameView extends View implements Observer {
         this.mapView = new MapView(multiGame.getMap(), this.mapController);
 
         this.add(this.mapView, BorderLayout.CENTER);
+        this.add(new SidePanelView(this.multiGame.getMap(), mapController), BorderLayout.LINE_START);
     }
 
     private JPanel buildTopBar() {
