@@ -2,6 +2,7 @@ package nl.rug.oop.rts.controller.map;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Set;
 
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
@@ -116,4 +117,28 @@ public class SinglePlayerMapController extends MapController {
         return null;
     }
 
+    @Override
+    public boolean allowEventModification() {
+        return true;
+    }
+
+    @Override
+    public boolean allowNodeRenaming() {
+        return true;
+    }
+
+    @Override
+    public String canPlaceArmy(Node node) {
+        return null;
+    }
+
+    @Override
+    public Set<Faction> getAllowedFactions() {
+        return Set.of(Faction.values());
+    }
+
+    @Override
+    public boolean showUnitCost() {
+        return false;
+    }
 }
