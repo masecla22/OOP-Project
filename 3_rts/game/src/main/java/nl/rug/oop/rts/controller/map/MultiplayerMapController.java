@@ -123,6 +123,10 @@ public class MultiplayerMapController extends MapController {
             }
         }
 
+        if(this.multiplayerGame.getGoldGeneratingNodes().contains(node)){
+            return Color.ORANGE;
+        }
+
         return null;
     }
 }
