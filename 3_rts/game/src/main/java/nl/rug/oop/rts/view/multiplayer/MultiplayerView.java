@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,6 +33,8 @@ import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.packet.Packet;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
+import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyJoiningRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 import nl.rug.oop.rts.view.View;
@@ -63,8 +64,8 @@ public class MultiplayerView extends View implements Observer {
 
         this.game = game;
 
-        this.connectionController = new MultiplayerConnectionController(settingsController, rugson, unitFactory,
-                eventFactory);
+        this.connectionController = new MultiplayerConnectionController(settingsController, rugson,
+                unitFactory, eventFactory, game);
 
         addLoading();
     }
@@ -179,7 +180,19 @@ public class MultiplayerView extends View implements Observer {
     }
 
     private void handleJoinLobby(UUID lobbyId) {
-        
+        LobbyJoiningRequest request = new LobbyJoiningRequest(lobbyId);
+
+        AwaitPacketOnce<Packet> await = new AwaitPacketOnce<>(GameStartPacket.class)
+                .bindTo(this.connectionController.getConnection());
+
+        this.connectionController.sendAuthenticatedPacket(request);
+
+        await.getAwaiting().thenAccept(c -> {
+            GameStartPacket packet = (GameStartPacket) c.getValue();
+            if (packet.isSuccess()) {
+                this.connectionController.handleGameStartPacket(packet);
+            }
+        });
     }
 
     private void addLoading() {
