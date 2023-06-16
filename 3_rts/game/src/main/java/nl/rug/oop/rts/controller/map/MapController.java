@@ -1,5 +1,6 @@
 package nl.rug.oop.rts.controller.map;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +10,6 @@ import java.util.concurrent.CompletableFuture;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
@@ -21,14 +21,17 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.view.map.MapView;
 import nl.rug.oop.rugson.Rugson;
 
-@RequiredArgsConstructor
 public abstract class MapController {
-    @NonNull
     private Rugson rugson;
 
     @Getter(AccessLevel.PROTECTED)
     @NonNull
     private Map map;
+
+    public MapController(Rugson rugson, @NonNull Map map) {
+        this.rugson = rugson;
+        this.map = map;
+    }
 
     @Getter
     private CompletableFuture<Node> addingEdge = null;
