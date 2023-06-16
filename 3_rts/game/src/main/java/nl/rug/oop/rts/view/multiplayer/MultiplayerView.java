@@ -255,7 +255,7 @@ public class MultiplayerView extends View implements Observer {
                 .setPrettyPrint(false)
                 .addTypeAdapter(Unit.class, new UnitTypeAdapter())
                 .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
-                .addTypeAdapter(Map.class, new GameMapTypeAdapter())
+                .addTypeAdapter(nl.rug.oop.rts.protocol.objects.model.Map.class, new GameMapTypeAdapter())
                 .build();
     }
 
