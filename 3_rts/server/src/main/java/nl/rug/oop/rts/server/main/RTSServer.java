@@ -113,7 +113,7 @@ public class RTSServer {
 
     private void setupGameManager() {
         this.gamesManager = new GamesManager();
-        System.out.println("Setup GameManager instance!");
+        logger.info("Setup GameManager instance!");
     }
 
     private void setupConnectionManager() throws IOException {
@@ -124,12 +124,12 @@ public class RTSServer {
 
         this.connectionManager.addConnectionHandler((connection) -> {
             // Register all listeners on the connection
-            System.out.println("New connection! " + connection.getSocket().getInetAddress().getHostAddress() + ":"
+            logger.info("New connection! " + connection.getSocket().getInetAddress().getHostAddress() + ":"
                     + connection.getSocket().getPort());
             connection.addListener(new PacketListener<>(Packet.class) {
                 @Override
                 protected boolean handlePacket(SocketConnection connection, Packet packet) {
-                    System.out.println("Received packet: " + packet);
+                    logger.info("Received packet: " + packet);
                     return true;
                 }
             });
