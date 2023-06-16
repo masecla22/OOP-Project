@@ -3,6 +3,8 @@ package nl.rug.oop.rts.view.multiplayer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import nl.rug.oop.rts.protocol.packet.Packet;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 import nl.rug.oop.rts.view.View;
+import nl.rug.oop.rts.view.multiplayer.lobby.LobbyCreationView;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
@@ -85,7 +88,7 @@ public class MultiplayerView extends View implements Observer {
 
             this.connectionController.ensureLogin().thenAccept(c -> {
                 if (c) {
-                    SwingUtilities.invokeLater(this::handleLobbyView);
+                    requestGames().thenAccept((v) -> SwingUtilities.invokeLater(this::handleLobbyView));
                 } else {
                     SwingUtilities.invokeLater(this::addLoginRegister);
                 }
@@ -106,15 +109,31 @@ public class MultiplayerView extends View implements Observer {
         lobbyPanel.add(new JLabel("Logged in as " + this.connectionController.getUser().getName(),
                 SwingConstants.CENTER), BorderLayout.PAGE_START);
 
+        JPanel lobbyButtons = new JPanel();
+        lobbyButtons.setLayout(new GridLayout(1, 2));
         JButton refresh = new JButton("Refresh");
         refresh.addActionListener(e -> {
             requestGames().thenAccept((v) -> SwingUtilities.invokeLater(this::handleLobbyView));
         });
+        lobbyButtons.add(refresh);
+        JButton create = new JButton("Create");
+        create.addActionListener(e -> {
+            handleLobbyCreate();
+        });
+        lobbyButtons.add(create);
 
-        getLobbyList();
+        lobbyPanel.add(lobbyButtons, BorderLayout.PAGE_END);
+        lobbyPanel.add(getLobbyList(), BorderLayout.CENTER);
+
+        this.add(lobbyPanel, BorderLayout.CENTER);
 
         this.addBackButton();
         this.update();
+    }
+
+    private void handleLobbyCreate() {
+        LobbyCreationView lobbyCreationView = new LobbyCreationView(game, this.connectionController, rugson);
+        this.game.handleView(lobbyCreationView);
     }
 
     private JPanel getLobbyList() {
@@ -128,18 +147,30 @@ public class MultiplayerView extends View implements Observer {
             data[i][0] = lobby.getName();
             data[i][1] = lobby.getHost().getName();
             data[i][2] = lobby.getMapName();
-
-            JButton button = new JButton("Join");
-            data[i][3] = button;
-            button.addActionListener(e -> {
-                this.handleJoinLobby(lobby.getLobbyId());
-            });
+            data[i][3] = "Join lobby!";
         }
 
-        JTable table = new JTable(data, columnNames);
+        JTable table = new JTable(data, columnNames) {
+            public boolean isCellEditable(int row, int column) {
+                return false; // Why do I have to override this?
+            };
+        };
+
         table.setFillsViewportHeight(true);
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
+
+                if (col == 3) {
+                    handleJoinLobby(knownLobbies.get(row).getLobbyId());
+                }
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane(table);
         lobbyList.add(scrollPane, BorderLayout.CENTER);
@@ -148,7 +179,7 @@ public class MultiplayerView extends View implements Observer {
     }
 
     private void handleJoinLobby(UUID lobbyId) {
-        // TODO:
+
     }
 
     private void addLoading() {
@@ -242,8 +273,12 @@ public class MultiplayerView extends View implements Observer {
         this.connectionController.sendAuthenticatedPacket(new LobbyListingRequest());
 
         return awaitPacketOnce.getAwaiting().thenAccept(c -> {
-            LobbyListingResponse response = (LobbyListingResponse) c;
-            this.knownLobbies = response.getLobbies();
+            try {
+                LobbyListingResponse response = (LobbyListingResponse) c.getValue();
+                this.knownLobbies = response.getLobbies();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
