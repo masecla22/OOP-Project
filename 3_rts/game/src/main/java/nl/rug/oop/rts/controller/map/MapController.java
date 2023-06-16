@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import lombok.AccessLevel;
@@ -59,6 +60,16 @@ public abstract class MapController {
     public abstract void setNodePosition(Node node, Point position);
 
     public abstract Color getColorForNode(Node node);
+
+    public abstract boolean allowEventModification();
+
+    public abstract boolean allowNodeRenaming();
+
+    public abstract String canPlaceArmy(Node node);
+
+    public abstract Set<Faction> getAllowedFactions();
+
+    public abstract boolean showUnitCost();
 
     public void setSelection(Selectable selection) {
         if (selection == null) {
