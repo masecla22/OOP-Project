@@ -95,6 +95,10 @@ public class SocketConnection {
         }
     }
 
+    public void removeListeners(Class<? extends Packet> packetClass) {
+        this.packetListeners.remove(packetClass);
+    }
+
     private int readInt(InputStream stream) throws IOException {
         byte[] bfs = new byte[4];
         stream.read(bfs);
