@@ -26,7 +26,7 @@ public class LobbyWaitingView extends View {
     private Game game;
     private MultiplayerLobby lobby;
     private MultiplayerLobbyConnectionController connectionController;
-    
+
     private JLabel lobbyNameLabel;
     private JLabel mapNameLabel;
     private JLabel numEdgesLabel;
@@ -82,6 +82,7 @@ public class LobbyWaitingView extends View {
             if (confirm == JOptionPane.YES_OPTION) {
                 // Send LobbyDeletionRequest
                 connectionController.sendLobbyPacket(new LobbyDeletionRequest());
+                connectionController.getConnection().removeListeners(GameStartPacket.class);
 
                 // Leave the lobby
                 game.handleBack();
@@ -97,9 +98,6 @@ public class LobbyWaitingView extends View {
                 .bindTo(connectionController.getConnection());
         packetListener.getAwaiting()
                 .thenApply(c -> (GameStartPacket) c.getValue())
-                .thenAccept(this::handleGameStartPacket);
-    }
-
-    private void handleGameStartPacket(GameStartPacket packetEntry) {
+                .thenAccept(this.connectionController.getConnectionController()::handleGameStartPacket);
     }
 }

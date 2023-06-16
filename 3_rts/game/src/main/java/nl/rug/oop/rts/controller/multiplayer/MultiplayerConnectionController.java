@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.AwaitPacketOnce;
@@ -24,9 +25,11 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginRequ
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationResponse;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
 import nl.rug.oop.rts.protocol.packet.dictionary.PacketDictionary;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.protocol.user.User;
+import nl.rug.oop.rts.view.multiplayer.MultiplayerGameView;
 import nl.rug.oop.rugson.Rugson;
 
 @RequiredArgsConstructor
@@ -48,6 +51,9 @@ public class MultiplayerConnectionController {
 
     @NonNull
     private EventFactory eventFactory;
+
+    @NonNull
+    private Game game;
 
     @Getter
     private UUID authToken = null;
@@ -172,5 +178,13 @@ public class MultiplayerConnectionController {
 
         packet.setSessionToken(authToken);
         sendPacket(packet);
+    }
+
+    public void handleGameStartPacket(GameStartPacket packet) {
+        if (!packet.isSuccess())
+            throw new IllegalStateException("GameStartPacket was not successful");
+
+        MultiplayerGameView view = new MultiplayerGameView(game, packet.getGame(), packet.getTeam());
+        game.handleView(view);
     }
 }
