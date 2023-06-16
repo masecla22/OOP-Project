@@ -56,6 +56,10 @@ public abstract class MapController {
 
     public abstract void removeEvent(Edge edge, Event event);
 
+    public abstract void setNodePosition(Node node, Point position);
+
+    public abstract Color getColorForNode(Node node);
+
     public void setSelection(Selectable selection) {
         if (selection == null) {
             this.addingEdge = null;
