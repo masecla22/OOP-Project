@@ -38,8 +38,7 @@ public class LobbyCreationRequestHandler extends PacketListener<LobbyCreationReq
         String mapName = packet.getMapName();
         String lobbyName = packet.getName();
 
-        MultiplayerLobby resultingLobby = this.gamesManager
-                .createLobby(user, lobbyName, map, mapName);
+        MultiplayerLobby resultingLobby = this.gamesManager.createLobby(user, lobbyName, map, mapName, connection);
         connection.sendPacket(new LobbyCreationResponse(true, resultingLobby));
         return true;
     }
