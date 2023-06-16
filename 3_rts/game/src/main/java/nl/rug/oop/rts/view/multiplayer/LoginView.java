@@ -90,6 +90,8 @@ public class LoginView extends View implements Observer {
 
             this.settingsController.setUsername(username);
             this.settingsController.setPassword(password);
+            this.settingsController.save();
+
             this.attemptLogin();
         });
 
