@@ -40,6 +40,9 @@ public class GamesManager {
         lobbies.remove(lobbyId);
     }
 
+    public MultiplayerLobby getLobby(UUID lobbyId) {
+        return this.lobbies.get(lobbyId);
+    }
     public MultiplayerGame createGame(MultiplayerLobby lobby, User otherUser, SocketConnection otherUserConnection) {
         UUID gameId = UUID.randomUUID();
 
