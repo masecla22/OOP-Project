@@ -168,7 +168,6 @@ public class UserManager {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
         String hashResult = bytesToHex(hash);
-        System.out.println(hashResult);
 
         return hashResult;
     }
