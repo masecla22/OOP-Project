@@ -12,7 +12,7 @@ import nl.rug.oop.rugson.objects.JsonElement;
  * Type adapter for sets. Sets are serialized as arrays.
  */
 public class SetTypeAdapter extends TypeAdapter<Set<?>> {
-    
+
     /**
      * Deserializes a set from a json element.
      * 
@@ -23,6 +23,10 @@ public class SetTypeAdapter extends TypeAdapter<Set<?>> {
      */
     @Override
     public Set<?> deserialize(JsonElement consumer, Class<Set<?>> clazz, List<Class<?>> genericTypes) {
+        if (consumer == null) {
+            return null;
+        }
+
         if (!consumer.isJsonArray()) {
             throw new IllegalArgumentException("Expected JsonArray, got " + consumer.getClass().getSimpleName());
         }
