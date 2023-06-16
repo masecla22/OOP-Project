@@ -153,7 +153,7 @@ public class MultiplayerView extends View implements Observer {
         JTable table = new JTable(data, columnNames) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Why do I have to override this?
-            };
+            }
         };
 
         table.setFillsViewportHeight(true);
@@ -179,7 +179,7 @@ public class MultiplayerView extends View implements Observer {
     }
 
     private void handleJoinLobby(UUID lobbyId) {
-
+        
     }
 
     private void addLoading() {

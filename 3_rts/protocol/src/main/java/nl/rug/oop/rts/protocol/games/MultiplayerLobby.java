@@ -5,6 +5,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.user.User;
 
@@ -20,4 +21,6 @@ public class MultiplayerLobby {
     private String name;
 
     private User host;
+
+    private transient SocketConnection connection;
 }
