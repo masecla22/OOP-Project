@@ -16,6 +16,9 @@ public class LobbyScopedHandler extends PacketListener<LobbyScopedPacket> {
 
     public LobbyScopedHandler(UserManager userManager, GamesManager gamesManager) {
         super(LobbyScopedPacket.class);
+
+        this.userManager = userManager;
+        this.gamesManager = gamesManager;
     }
 
     @Override
