@@ -111,7 +111,9 @@ public class GameView extends View implements Observer {
 
         topBar.add(addNodeButton);
         addNodeButton.addActionListener(e -> {
-            this.mapController.createNode(JOptionPane.showInputDialog("What is the name of the node?"));
+            String name = JOptionPane.showInputDialog("What is the name of the node?");
+            if (name != null)
+                this.mapController.createNode(name);
         });
 
         topBar.add(removeNodeButton);
