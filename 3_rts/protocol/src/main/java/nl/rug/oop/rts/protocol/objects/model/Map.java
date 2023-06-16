@@ -213,4 +213,19 @@ public class Map implements Observable {
 
         return maxId + 1;
     }
+
+    /**
+     * Removes all armies from the map
+     */
+    public void removeAllArmies() {
+        for (Node node : this.getNodes()) {
+            node.getArmies().clear();
+        }
+
+        for (Edge edge : this.getEdges()) {
+            edge.getArmies().clear();
+        }
+
+        this.update();
+    }
 }
