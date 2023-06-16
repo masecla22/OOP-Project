@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.NonNull;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
@@ -24,6 +28,7 @@ public class MultiplayerMapController extends MapController {
     public MultiplayerMapController(MultiplayerGame multiplayerGame, Team team, Rugson rugson, @NonNull Map map) {
         super(rugson, map);
         this.multiplayerGame = multiplayerGame;
+        this.team = team;
     }
 
     @Override
@@ -103,8 +108,10 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public Color getColorForNode(Node node) {
-        if (this.getMap().getSelection().equals(node)) {
-            return Color.RED;
+        if (this.getMap().getSelection() != null) {
+            if (this.getMap().getSelection().equals(node)) {
+                return Color.RED;
+            }
         }
 
         if (this.multiplayerGame.getPlayerA().getStartingNode().equals(node)) {
@@ -123,10 +130,49 @@ public class MultiplayerMapController extends MapController {
             }
         }
 
-        if(this.multiplayerGame.getGoldGeneratingNodes().contains(node)){
+        if (this.multiplayerGame.getGoldGeneratingNodes().contains(node)) {
             return Color.ORANGE;
         }
 
         return null;
+    }
+
+    @Override
+    public boolean allowEventModification() {
+        return false;
+    }
+
+    @Override
+    public boolean allowNodeRenaming() {
+        return false;
+    }
+
+    @Override
+    public String canPlaceArmy(Node node) {
+        if (multiplayerGame.getPlayerA().getStartingNode().equals(node) && team.equals(Team.TEAM_A))
+            return null;
+        if (multiplayerGame.getPlayerB().getStartingNode().equals(node) && team.equals(Team.TEAM_B))
+            return null;
+
+        List<Edge> edges = node.getEdges();
+        for (Edge cr : edges) {
+            if (cr.getOtherNode(node).getArmies().stream()
+                    .anyMatch(c -> c.getFaction().getTeam().equals(this.team)))
+                return null;
+        }
+
+        return "No friendlies nearby!";
+    }
+
+    @Override
+    public Set<Faction> getAllowedFactions() {
+        return Arrays.stream(Faction.values())
+                .filter(c -> c.getTeam().equals(this.team))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean showUnitCost() {
+        return true;
     }
 }
