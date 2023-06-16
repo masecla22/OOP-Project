@@ -77,72 +77,58 @@ public class SidePanelView extends View implements Observer {
         node.setPreferredSize(new Dimension(50, 30));
         nodeOptions.add(node);
 
+        addNodeNameField(selectedNode, nodeOptions);
+
+        // add buttons for adding/removing armies on/from selected node
+        createAddArmyButton(selectedNode, nodeOptions);
+        createAddEventButton(selectedNode, nodeOptions);
+        createRemoveArmyButton(selectedNode, nodeOptions);
+        createRemoveEventButton(selectedNode, nodeOptions);
+    }
+
+    private void createAddArmyButton(Node selectedNode, JPanel nodeOptions) {
+        JButton addArmy = new JButton("Add army");
+        nodeOptions.add(addArmy);
+
+        String possibleArmyReason = this.mapController.canPlaceArmy(selectedNode);
+
+        if (possibleArmyReason != null) {
+            addArmy.setEnabled(false);
+            addArmy.setText(possibleArmyReason);
+            return;
+        }
+
+        Faction[] factions = this.mapController.getAllowedFactions().toArray(new Faction[0]);
+
+        String[] options = new String[factions.length];
+        for (int i = 0; i < factions.length; i++) {
+            options[i] = factions[i].toString();
+            if (this.mapController.showUnitCost()) {
+                options[i] += " (" + factions[i].getCost() + ")";
+            }
+        }
+
+        addArmy.addActionListener(e -> {
+            int pickedOption = JOptionPane.showOptionDialog(null, "Which army would you like to add?",
+                    "Select a faction", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, options, null);
+
+            if (pickedOption != JOptionPane.CLOSED_OPTION) {
+                Faction faction = factions[pickedOption];
+                this.mapController.addArmy(selectedNode, faction);
+            }
+        });
+    }
+
+    private void addNodeNameField(Node selectedNode, JPanel nodeOptions) {
         JTextField nodeName = new JTextField(selectedNode.getName(), 10);
         nodeName.setPreferredSize(new Dimension(50, 30));
         nodeOptions.add(nodeName);
 
-        // add buttons for adding/removing armies on/from selected node
-        JButton addArmy = new JButton("Add army");
-
-        nodeOptions.add(addArmy);
-
-        addArmy.addActionListener(e -> {
-            int pickedOption = JOptionPane.showOptionDialog(null,
-                    "Which army would you like to add?",
-                    "Select a faction",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null, Faction.values(), null);
-
-            if (pickedOption != JOptionPane.CLOSED_OPTION) {
-                Faction faction = Faction.values()[pickedOption];
-                this.mapController.addArmy(selectedNode, faction);
-            }
-        });
-
-        JButton addEvent = new JButton("Add event");
-        addEvent.setPreferredSize(new Dimension(50, 30));
-        addEvent.addActionListener(e -> {
-            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
-                    "Which event would you like to add?",
-                    "Select an event",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, EventType.values(), null);
-
-            if (pickedOption != null) {
-                this.mapController.addEvent(selectedNode, pickedOption);
-            }
-        });
-        nodeOptions.add(addEvent);
-
-        JButton removeArmy = new JButton("Remove army");
-        removeArmy.setPreferredSize(new Dimension(50, 30));
-        removeArmy.addActionListener(e -> {
-            Army army = (Army) JOptionPane.showInputDialog(null,
-                    "Which army would you like to remove?",
-                    "Select an army",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, selectedNode.getArmies().toArray(), null);
-
-            if (army != null)
-                this.mapController.removeArmy(selectedNode, army);
-        });
-        nodeOptions.add(removeArmy);
-
-        JButton removeEvent = new JButton("Remove event");
-        removeEvent.setPreferredSize(new Dimension(50, 30));
-        removeEvent.addActionListener(e -> {
-            Event event = (Event) JOptionPane.showInputDialog(null,
-                    "Which event would you like to remove?",
-                    "Select an event",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, selectedNode.getEvents().toArray(), null);
-
-            if (event != null)
-                this.mapController.removeEvent(selectedNode, event);
-        });
-
-        nodeOptions.add(removeEvent);
+        if (!this.mapController.allowNodeRenaming()) {
+            nodeName.setEditable(false);
+            return;
+        }
 
         nodeName.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -169,6 +155,62 @@ public class SidePanelView extends View implements Observer {
         });
     }
 
+    private void createRemoveEventButton(Node selectedNode, JPanel nodeOptions) {
+        if (!this.mapController.allowEventModification())
+            return;
+
+        JButton removeEvent = new JButton("Remove event");
+        removeEvent.setPreferredSize(new Dimension(50, 30));
+        removeEvent.addActionListener(e -> {
+            Event event = (Event) JOptionPane.showInputDialog(null,
+                    "Which event would you like to remove?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, selectedNode.getEvents().toArray(), null);
+
+            if (event != null)
+                this.mapController.removeEvent(selectedNode, event);
+        });
+
+        nodeOptions.add(removeEvent);
+    }
+
+    private void createRemoveArmyButton(Node selectedNode, JPanel nodeOptions) {
+        JButton removeArmy = new JButton("Remove army");
+        removeArmy.setPreferredSize(new Dimension(50, 30));
+        removeArmy.addActionListener(e -> {
+            Army army = (Army) JOptionPane.showInputDialog(null,
+                    "Which army would you like to remove?",
+                    "Select an army",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, selectedNode.getArmies().toArray(), null);
+
+            if (army != null)
+                this.mapController.removeArmy(selectedNode, army);
+        });
+        nodeOptions.add(removeArmy);
+    }
+
+    private void createAddEventButton(Node selectedNode, JPanel nodeOptions) {
+        if (!this.mapController.allowEventModification())
+            return;
+
+        JButton addEvent = new JButton("Add event");
+        addEvent.setPreferredSize(new Dimension(50, 30));
+        addEvent.addActionListener(e -> {
+            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
+                    "Which event would you like to add?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, EventType.values(), null);
+
+            if (pickedOption != null) {
+                this.mapController.addEvent(selectedNode, pickedOption);
+            }
+        });
+        nodeOptions.add(addEvent);
+    }
+
     private void showEdgeOptions() {
         if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection()))
             return;
@@ -186,20 +228,13 @@ public class SidePanelView extends View implements Observer {
         edgeOptions.add(new JLabel("Edge connects \n"));
         edgeOptions.add(new JLabel(selectedEdge.getPointA().getName() + " - " + selectedEdge.getPointB().getName()));
 
-        JButton addEvent = new JButton("Add event");
-        addEvent.setPreferredSize(new Dimension(50, 30));
-        addEvent.addActionListener(e -> {
-            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
-                    "Which event would you like to add?",
-                    "Select an event",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, EventType.values(), null);
+        createEdgeAddEventButton(edgeOptions, selectedEdge);
+        createEdgeRemoveEventButton(edgeOptions, selectedEdge);
+    }
 
-            if (pickedOption != null) {
-                this.mapController.addEvent(selectedEdge, pickedOption);
-            }
-        });
-        edgeOptions.add(addEvent);
+    private void createEdgeRemoveEventButton(JPanel edgeOptions, Edge selectedEdge) {
+        if (!this.mapController.allowEventModification())
+            return;
 
         JButton removeEvent = new JButton("Remove event");
         removeEvent.setPreferredSize(new Dimension(50, 30));
@@ -214,6 +249,26 @@ public class SidePanelView extends View implements Observer {
                 this.mapController.removeEvent(selectedEdge, event);
         });
         edgeOptions.add(removeEvent);
+    }
+
+    private void createEdgeAddEventButton(JPanel edgeOptions, Edge selectedEdge) {
+        if (!this.mapController.allowEventModification())
+            return;
+
+        JButton addEvent = new JButton("Add event");
+        addEvent.setPreferredSize(new Dimension(50, 30));
+        addEvent.addActionListener(e -> {
+            EventType pickedOption = (EventType) JOptionPane.showInputDialog(null,
+                    "Which event would you like to add?",
+                    "Select an event",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, EventType.values(), null);
+
+            if (pickedOption != null) {
+                this.mapController.addEvent(selectedEdge, pickedOption);
+            }
+        });
+        edgeOptions.add(addEvent);
     }
 
     private void showNoNodeSelected(boolean ignoreSelection) {
