@@ -11,5 +11,7 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.AuthenticatedPa
 @EqualsAndHashCode(callSuper = true)
 public class LobbyCreationRequest extends AuthenticatedPacket {
     private String name;
+    private String mapName;
+    
     private Map map;
 }
