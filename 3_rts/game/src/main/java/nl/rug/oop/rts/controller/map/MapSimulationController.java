@@ -165,10 +165,11 @@ public class MapSimulationController {
         List<Army> teamB = new ArrayList<>();
 
         for (Army cr : armies) {
-            if (cr.getFaction().getTeam() == Team.TEAM_A)
+            if (cr.getFaction().getTeam() == Team.TEAM_A) {
                 teamA.add(cr);
-            else
+            } else {
                 teamB.add(cr);
+            }
         }
 
         while (teamA.size() > 0 && teamB.size() > 0) {

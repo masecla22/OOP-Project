@@ -28,7 +28,6 @@ import nl.rug.oop.rts.view.View;
 public class SidePanelView extends View implements Observer {
     private Map map;
 
-    
     private Selectable showingOptionsFor;
     private MapController mapController;
 
@@ -49,12 +48,13 @@ public class SidePanelView extends View implements Observer {
 
     @Override
     public void update() {
-        if (this.map.getSelection() == null)
+        if (this.map.getSelection() == null) {
             this.showNoNodeSelected(false);
-        else if (this.map.getSelection() instanceof Node)
+        } else if (this.map.getSelection() instanceof Node) {
             this.showNodeOptions();
-        else if (this.map.getSelection() instanceof Edge)
+        } else if (this.map.getSelection() instanceof Edge) {
             this.showEdgeOptions();
+        }
 
         Observer.super.update();
     }

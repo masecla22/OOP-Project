@@ -57,10 +57,11 @@ public class MultiplayerConnectionController {
 
     public boolean openConnection() throws IOException {
         if (connection != null) {
-            if (!connection.getSocket().isConnected())
+            if (!connection.getSocket().isConnected()) {
                 connection = null;
-            else
+            } else {
                 return true;
+            }
         }
 
         try {

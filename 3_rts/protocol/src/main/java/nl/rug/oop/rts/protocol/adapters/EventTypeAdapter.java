@@ -9,10 +9,18 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * Adapter for serializing and deserializing Event objects.
+ */
 public class EventTypeAdapter extends TypeAdapter<Event> {
 
     private EventFactory eventFactory;
 
+    /**
+     * Constructor for EventTypeAdapter
+     * 
+     * @param eventFactory - EventFactory to use for building Event objects
+     */
     public EventTypeAdapter(EventFactory eventFactory) {
         this.eventFactory = eventFactory;
     }

@@ -3,7 +3,17 @@ package nl.rug.oop.rts.protocol.objects.model.units.rohan;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Rohan Swordsman unit.
+ */
 public class RohanSwordsman extends Unit {
+    /**
+     * Constructor for the Rohan Swordsman unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public RohanSwordsman(String name, double damage, double health) {
         super(UnitType.ROHAN_SWORDSMAN, name, damage, health);
     }

@@ -9,18 +9,25 @@ import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class is responsible for creating armies and units for the multi player
+ * mode.
+ */
 public class MultiPlayerUnitFactory extends UnitFactory {
 
+    @Override
     public Army buildArmy(Faction faction) {
         int unitCount = 20;
         List<Unit> units = new ArrayList<>();
-        for (int i = 0; i < unitCount; i++)
+        for (int i = 0; i < unitCount; i++) {
             units.add(buildUnit(faction, i));
+        }
 
         Army army = new Army(units, faction);
         return army;
     }
 
+    @Override
     public Unit buildUnit(Faction faction, int index) {
         List<UnitType> types = faction.getAvailableUnits();
         UnitType type = types.get(index % types.size());

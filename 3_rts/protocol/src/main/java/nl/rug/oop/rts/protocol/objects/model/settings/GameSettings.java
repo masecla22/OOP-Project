@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class represents the game settings. It is used to store different
+ * aspects of the game.
+ */
 @Data
 @NoArgsConstructor
 public class GameSettings {
@@ -20,6 +24,15 @@ public class GameSettings {
     private String username;
     private String password;
 
+    /**
+     * Loads the configuration from the given file. If the file does not exist, it
+     * will be created
+     * with default values.
+     * 
+     * @param rugson - Rugson instance
+     * @param file   - File to load from
+     * @return The loaded configuration
+     */
     public static GameSettings loadConfiguration(Rugson rugson, File file) {
         try {
             if (!file.exists()) {
@@ -46,7 +59,7 @@ public class GameSettings {
             config.setRugson(rugson);
 
             return config;
-        } catch (Exception e) {
+        } catch (IOException | NullPointerException | IllegalStateException e) {
             e.printStackTrace();
             return null;
         }
@@ -60,7 +73,7 @@ public class GameSettings {
         try (FileOutputStream stream = new FileOutputStream(file)) {
             String json = this.rugson.toJson(this);
             stream.write(json.getBytes());
-        } catch (Exception e) {
+        } catch (IOException | NullPointerException | IllegalStateException e) {
             e.printStackTrace();
         }
     }

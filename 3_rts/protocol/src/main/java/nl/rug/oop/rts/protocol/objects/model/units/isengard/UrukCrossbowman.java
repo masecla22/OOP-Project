@@ -4,7 +4,17 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Uruk Crossbow Man unit.
+ */
 public class UrukCrossbowman extends Unit {
+    /**
+     * Constructor for the Uruk Crossbow Man unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public UrukCrossbowman(String name, double damage, double health) {
         super(UnitType.URUK_CROSSBOW_MAN, name, damage, health);
     }

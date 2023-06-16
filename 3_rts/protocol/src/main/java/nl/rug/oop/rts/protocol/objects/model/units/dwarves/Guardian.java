@@ -3,7 +3,17 @@ package nl.rug.oop.rts.protocol.objects.model.units.dwarves;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Guardian unit.
+ */
 public class Guardian extends Unit {
+    /**
+     * Constructor for the Guardian unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public Guardian(String name, double damage, double health) {
         super(UnitType.GUARDIAN, name, damage, health);
     }
@@ -28,15 +38,9 @@ public class Guardian extends Unit {
         // if he deals with a stronger opponent, he takes less damage
         if (damage > this.getDamage()) {
             this.setHealth(this.getHealth() - damage * 0.8);
-        }
-
-        // has a weakness for orc warriors
-        else if (unit.getType().equals(UnitType.ORC_WARRIOR)) {
+        } else if (unit.getType().equals(UnitType.ORC_WARRIOR)) {
             this.setHealth(this.getHealth() - damage * 1.2);
-        }
-
-        // interaction with any other unit results in normal damage
-        else {
+        } else {
             this.setHealth(this.getHealth() - damage);
         }
     }

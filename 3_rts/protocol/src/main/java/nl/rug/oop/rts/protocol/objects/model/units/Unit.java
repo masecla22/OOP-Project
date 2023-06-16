@@ -16,5 +16,6 @@ public abstract class Unit {
     private double health;
 
     public abstract double dealDamage(Unit unit);
+    
     public abstract void takeDamage(Unit unit, double damage);
 }

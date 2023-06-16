@@ -3,7 +3,17 @@ package nl.rug.oop.rts.protocol.objects.model.units.isengard;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Warg Rider unit.
+ */
 public class WargRider extends Unit {
+    /**
+     * Constructor for the Warg Rider unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public WargRider(String name, double damage, double health) {
         super(UnitType.WARG_RIDER, name, damage, health);
     }

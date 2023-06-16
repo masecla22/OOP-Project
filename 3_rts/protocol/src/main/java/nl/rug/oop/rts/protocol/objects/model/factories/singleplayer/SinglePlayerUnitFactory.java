@@ -10,12 +10,21 @@ import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class is responsible for creating armies and units for the single player
+ * mode.
+ */
 public class SinglePlayerUnitFactory extends UnitFactory {
     private int minArmySize;
     private int maxArmySize;
 
     private Random random;
 
+    /**
+     * Creates a new SinglePlayerUnitFactory.
+     * 
+     * @param seed The seed to use for the random number generator.
+     */
     public SinglePlayerUnitFactory(int seed) {
         random = new Random(seed);
 
@@ -23,18 +32,21 @@ public class SinglePlayerUnitFactory extends UnitFactory {
         this.maxArmySize = 50;
     }
 
+    @Override
     public Army buildArmy(Faction faction) {
         // We use 51
         int unitCount = random.nextInt(minArmySize, maxArmySize + 1);
 
         List<Unit> units = new ArrayList<>();
-        for (int i = 0; i < unitCount; i++)
+        for (int i = 0; i < unitCount; i++) {
             units.add(buildUnit(faction, i));
+        }
 
         Army army = new Army(units, faction);
         return army;
     }
 
+    @Override
     public Unit buildUnit(Faction faction, int unit) {
         List<UnitType> types = faction.getAvailableUnits();
         UnitType type = types.get(random.nextInt(types.size()));

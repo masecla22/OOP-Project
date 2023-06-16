@@ -4,7 +4,17 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Tower Guard unit.
+ */
 public class TowerGuard extends Unit {
+    /**
+     * Constructor for the Tower Guard unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public TowerGuard(String name, double damage, double health) {
         super(UnitType.TOWER_GUARD, name, damage, health);
     }

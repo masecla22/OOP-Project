@@ -4,7 +4,17 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Lorien Warrior unit.
+ */
 public class LorienWarrior extends Unit {
+    /**
+     * Constructor for the Lorien Warrior unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public LorienWarrior(String name, double damage, double health) {
         super(UnitType.LORIEN_WARRIOR, name, damage, health);
     }

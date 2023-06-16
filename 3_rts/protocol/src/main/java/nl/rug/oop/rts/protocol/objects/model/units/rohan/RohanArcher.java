@@ -3,7 +3,17 @@ package nl.rug.oop.rts.protocol.objects.model.units.rohan;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * This class represents the Rohan Archer unit.
+ */
 public class RohanArcher extends Unit {
+    /**
+     * Constructor for the Rohan Archer unit.
+     * 
+     * @param name   - name
+     * @param damage - damage
+     * @param health - health
+     */
     public RohanArcher(String name, double damage, double health) {
         super(UnitType.ROHAN_ARCHER, name, damage, health);
     }
