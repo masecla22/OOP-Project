@@ -1,0 +1,95 @@
+{
+    "nodes": [
+        {
+            "armies": [],
+            "name": "E",
+            "id": 5,
+            "position": {
+                "x": 331,
+                "y": 471
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "A",
+            "id": 1,
+            "position": {
+                "x": 428,
+                "y": 160
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "B",
+            "id": 2,
+            "position": {
+                "x": 596,
+                "y": 269
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "C",
+            "id": 3,
+            "position": {
+                "x": 261,
+                "y": 270
+            },
+            "events": []
+        },
+        {
+            "armies": [],
+            "name": "D",
+            "id": 4,
+            "position": {
+                "x": 528,
+                "y": 465
+            },
+            "events": []
+        }
+    ],
+    "offset": {
+        "x": -132,
+        "y": -30
+    },
+    "edges": [
+        {
+            "armies": [],
+            "from": 4,
+            "to": 3,
+            "id": 5,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 3,
+            "to": 2,
+            "id": 1,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 2,
+            "to": 5,
+            "id": 2,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 5,
+            "to": 1,
+            "id": 3,
+            "events": []
+        },
+        {
+            "armies": [],
+            "from": 1,
+            "to": 4,
+            "id": 4,
+            "events": []
+        }
+    ]
+}
