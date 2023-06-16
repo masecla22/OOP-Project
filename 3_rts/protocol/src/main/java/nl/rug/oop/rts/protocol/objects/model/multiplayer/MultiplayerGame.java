@@ -2,10 +2,12 @@ package nl.rug.oop.rts.protocol.objects.model.multiplayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,6 +16,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observable;
+import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
@@ -23,7 +27,7 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class MultiplayerGame {
+public class MultiplayerGame implements Observable {
     @NonNull
     private UUID gameId;
 
@@ -39,6 +43,8 @@ public class MultiplayerGame {
     private boolean isPlayerATurn;
 
     private List<Node> goldGeneratingNodes = new ArrayList<>();
+
+    private Set<Observer> observers = new HashSet<>();
 
     public void initialize() {
         this.initializeStartingPosition();
@@ -139,5 +145,15 @@ public class MultiplayerGame {
             }
         }
         return distances;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        this.observers.remove(observer);
     }
 }
