@@ -29,7 +29,11 @@ public class PacketDictionary {
     }
 
     public int getPacketId(Class<? extends Packet> packetClass) {
-        return packetIdDictionary.get(packetClass);
+        Integer result = packetIdDictionary.get(packetClass);
+        if (result == null) {
+            throw new IllegalArgumentException("Packet class " + packetClass.getName() + " is not registered");
+        }
+        return result;
     }
 
     public int getPacketId(Packet object) {
