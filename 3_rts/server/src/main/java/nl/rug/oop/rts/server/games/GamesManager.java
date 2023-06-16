@@ -43,6 +43,11 @@ public class GamesManager {
     public MultiplayerLobby getLobby(UUID lobbyId) {
         return this.lobbies.get(lobbyId);
     }
+
+    public boolean canJoin(MultiplayerLobby lobby, User user) {
+        return true;
+    }
+
     public MultiplayerGame createGame(MultiplayerLobby lobby, User otherUser, SocketConnection otherUserConnection) {
         UUID gameId = UUID.randomUUID();
 
