@@ -1,5 +1,6 @@
 package nl.rug.oop.rts.controller.map;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import nl.rug.oop.rts.protocol.objects.model.Edge;
@@ -45,6 +46,12 @@ public class SinglePlayerMapController extends MapController {
     }
 
     @Override
+    public void setNodePosition(Node node, Point position) {
+        node.setPosition(position);
+        this.getMap().update();
+    }
+
+    @Override
     public void removeEdge(Edge edge) {
         this.getMap().removeEdge(edge);
     }
@@ -87,6 +94,26 @@ public class SinglePlayerMapController extends MapController {
     @Override
     public void removeEvent(Edge edge, Event event) {
         edge.removeEvent(event);
+    }
+
+    @Override
+    public Color getColorForNode(Node node) {
+        if (this.getMap().getSelection() == null)
+            return null;
+        if (!(this.getMap().getSelection() instanceof Node))
+            return null;
+
+        Node selectedNode = (Node) this.getMap().getSelection();
+
+        if (selectedNode.equals(node)) {
+            if (this.isAddingEdge()) {
+                return Color.BLUE;
+            } else {
+                return Color.RED;
+            }
+        }
+
+        return null;
     }
 
 }
