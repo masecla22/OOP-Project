@@ -31,6 +31,8 @@ public interface Observable {
      * Notify all observers of the observable object.
      */
     default void update() {
+        if (getObservers() == null)
+            return;
         for (Observer observer : getObservers()) {
             observer.update();
         }
