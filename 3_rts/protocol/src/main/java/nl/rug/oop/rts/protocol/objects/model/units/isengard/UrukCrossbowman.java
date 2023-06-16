@@ -23,10 +23,7 @@ public class UrukCrossbowman extends Unit {
         // the unit's health is halved, it's doubled
         if (damage >= this.getDamage() / 2.0) {
             this.setHealth(this.getHealth() - damage * 2.0);
-        }
-
-        // Normal damage
-        else {
+        } else {
             unit.setHealth(unit.getHealth() / 2.0);
         }
     }
