@@ -15,7 +15,7 @@ import nl.rug.oop.rts.protocol.objects.model.Node;
 public class MapMouseHandler extends MouseAdapter {
     @NonNull
     private Map map;
-    
+
     @NonNull
     private MapController mapController;
 
@@ -54,7 +54,8 @@ public class MapMouseHandler extends MouseAdapter {
             Selectable selection = map.getSelection();
 
             if (selection instanceof Node node) {
-                node.setPosition(new Point(node.getPosition().x + delta.x, node.getPosition().y + delta.y));
+                Point newPosition = new Point(node.getPosition().x + delta.x, node.getPosition().y + delta.y);
+                mapController.setNodePosition(node, newPosition);
                 map.update();
             }
         }
