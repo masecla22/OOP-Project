@@ -14,7 +14,16 @@ import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.SocketConnection;
+import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
+import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
+import nl.rug.oop.rts.protocol.objects.model.Map;
+import nl.rug.oop.rts.protocol.objects.model.events.Event;
+import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 import nl.rug.oop.rts.protocol.packet.Packet;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
@@ -43,6 +52,9 @@ public class RTSServer {
 
     private GamesManager gamesManager;
 
+    private UnitFactory unitFactory;
+    private EventFactory eventFactory;
+
     public RTSServer() {
         this.threadPool = Executors.newCachedThreadPool();
         this.logger = Logger.getLogger("RTS-Server");
@@ -56,6 +68,8 @@ public class RTSServer {
         logger.info("");
 
         this.setupConfiguration();
+        this.setupFactories();
+
         this.setupRugson();
 
         this.setupSQLConnection();
@@ -80,9 +94,21 @@ public class RTSServer {
         logger.info("Loaded and setup configuration for the server.");
     }
 
+    private void setupFactories() {
+        this.unitFactory = new MultiPlayerUnitFactory();
+        this.eventFactory = new EventFactory(this.unitFactory);
+
+        logger.info("Setup factories!");
+    }
+
     private void setupRugson() {
-        this.rugson = new RugsonBuilder().setPrettyPrint(false).build();
-        System.out.println("Setup Rugson instance!");
+        this.rugson = new RugsonBuilder()
+                .setPrettyPrint(true)
+                .addTypeAdapter(Unit.class, new UnitTypeAdapter())
+                .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
+                .addTypeAdapter(Map.class, new GameMapTypeAdapter())
+                .build();
+        logger.info("Setup Rugson instance!");
     }
 
     private void setupGameManager() {
