@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
@@ -31,7 +32,8 @@ public class LobbyCreationView extends View implements Observer {
     private Map selectedMap = null;
     private String selectedMapName = null;
 
-    private JLabel mapName;
+    private JLabel mapName = new JLabel();
+    private JTextField lobbyNameField = new JTextField();
 
     public LobbyCreationView(Game game, MultiplayerConnectionController connectionController, Rugson rugson) {
         this.game = game;
@@ -45,19 +47,23 @@ public class LobbyCreationView extends View implements Observer {
         JPanel lobbyOptions = new JPanel();
 
         this.add(lobbyOptions, BorderLayout.CENTER);
-        addMapSelector();
+        addLobbyProperties();
         addBack();
+        addCreateButton();
     }
 
-    private void addMapSelector() {
+    private void addLobbyProperties() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1, 2));
+        panel.setLayout(new GridLayout(3, 2));
+
+        panel.add(new JLabel("Map: "));
+        panel.add(this.mapName);
 
         JComboBox<String> mapSelector = new JComboBox<>(mapLoader.getPredefinedMapNames().toArray(new String[0]));
         mapSelector.addActionListener(e -> {
             String mapName = (String) mapSelector.getSelectedItem();
-            this.selectedMapName = mapName;
-            this.selectedMap = mapLoader.getMap(mapName);
+            Map map = mapLoader.getMap(mapName);
+            setMap(mapName, map);
         });
 
         JButton customMapButton = new JButton("Custom Map");
@@ -71,7 +77,31 @@ public class LobbyCreationView extends View implements Observer {
             fileChooser.setMultiSelectionEnabled(false);
 
             fileChooser.addActionListener(this::handleMapSelection);
+            fileChooser.showOpenDialog(this);
         });
+
+        panel.add(new JLabel("Lobby name: "));
+        panel.add(this.lobbyNameField);
+
+        panel.add(mapSelector);
+        panel.add(customMapButton);
+
+        this.add(panel, BorderLayout.CENTER);
+    }
+
+    private void addCreateButton() {
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(e -> {
+            String lobbyName = this.lobbyNameField.getText();
+            if (lobbyName == null || lobbyName.isEmpty()) {
+                return;
+            }
+
+            // this.connectionController.createLobby(lobbyName, this.selectedMap);
+        });
+
+        createButton.setPreferredSize(new Dimension(200, 50));
+        this.add(createButton, BorderLayout.PAGE_END);
     }
 
     private void handleMapSelection(ActionEvent event) {
@@ -80,10 +110,9 @@ public class LobbyCreationView extends View implements Observer {
             if (event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
                 String mapName = fileChooser.getSelectedFile().getName();
 
-                this.selectedMapName = mapName;
-
                 FileInputStream stream = new FileInputStream(fileChooser.getSelectedFile());
-                this.selectedMap = rugson.fromJson(stream, Map.class);
+                Map map = rugson.fromJson(stream, Map.class);
+                setMap(mapName, map);
                 stream.close();
             }
         } catch (Exception e) {
@@ -91,6 +120,13 @@ public class LobbyCreationView extends View implements Observer {
             this.selectedMapName = "Something went wrong";
             this.selectedMap = null;
         }
+    }
+
+    private void setMap(String mapName, Map map) {
+        this.selectedMapName = mapName;
+        this.selectedMap = map;
+
+        this.mapName.setText(mapName);
     }
 
     private void addBack() {
@@ -101,5 +137,9 @@ public class LobbyCreationView extends View implements Observer {
 
         backButton.setPreferredSize(new Dimension(200, 50));
         this.add(backButton, BorderLayout.PAGE_START);
+    }
+
+    private void createMap(String mapName, Map map) {
+
     }
 }
