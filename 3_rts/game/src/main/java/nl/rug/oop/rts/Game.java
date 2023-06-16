@@ -61,6 +61,11 @@ public class Game {
     }
 
     public void handleView(View panel) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> handleView(panel));
+            return;
+        }
+
         this.accessedViews.add(panel);
         this.frame.setContentPane(panel);
 
