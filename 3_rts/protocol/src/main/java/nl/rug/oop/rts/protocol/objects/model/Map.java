@@ -4,8 +4,7 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observable;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
@@ -13,8 +12,7 @@ import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 /**
  * This class represents the map of the game.
  */
-@Getter
-@Setter
+@Data
 public class Map implements Observable {
     private Point offset = new Point(0, 0);
 

@@ -56,7 +56,6 @@ public class AwaitPacketOnce<T extends Packet> {
 
                 return true;
             }
-
         });
         return this;
     }
