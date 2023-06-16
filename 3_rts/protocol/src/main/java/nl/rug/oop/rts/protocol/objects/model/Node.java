@@ -20,6 +20,7 @@ import nl.rug.oop.rts.protocol.objects.model.events.Event;
 @NoArgsConstructor
 @ToString(of = { "id", "name" })
 public class Node implements Selectable {
+    /** The size of a node. */
     public static final int NODE_SIZE = 64;
 
     private int id;
