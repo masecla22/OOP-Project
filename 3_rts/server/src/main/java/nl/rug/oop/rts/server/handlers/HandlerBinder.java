@@ -30,7 +30,6 @@ public class HandlerBinder {
         connection.addListener(new RegistrationHandler(userManager));
 
         connection.addListener(new AuthenticatedPacketHandler(userManager));
-        
 
         connection.addListener(new LobbyScopedHandler(userManager, gamesManager));
         connection.addListener(new LobbyListingRequestHandler(gamesManager));
