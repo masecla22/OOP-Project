@@ -90,8 +90,6 @@ public class ObjectTreeSerializer {
 
         TypeAdapter<?> converter = converters.get(clazz);
         if (converter != null) {
-            // System.out.println("Found converter for " + clazz + " (" +
-            // converter.getClass() + ")");
             return converter;
         }
 
@@ -99,14 +97,10 @@ public class ObjectTreeSerializer {
         for (Class<?> available : converters.keySet()) {
             if (available.isAssignableFrom(clazz)) {
                 TypeAdapter<?> availableConverter = converters.get(available);
-                // System.out.println("Found converter for " + clazz + " (" +
-                // availableConverter.getClass() + ")");
                 return availableConverter;
             }
         }
 
-        // System.out.println("No converter found for " + clazz + ", using default
-        // converter");
         return defaultConverter;
     }
 
@@ -135,7 +129,7 @@ public class ObjectTreeSerializer {
      */
     @SuppressWarnings("unchecked")
     public <K> JsonElement toJson(K object, Class<?> clazz) {
-        if (object != null){
+        if (object != null) {
             clazz = (Class<K>) object.getClass();
         }
 
@@ -187,9 +181,10 @@ public class ObjectTreeSerializer {
 
     /**
      * Deserializes a JsonElement to an object.
-     * @param <K> - The type of the object.
-     * @param element - The JsonElement to deserialize.
-     * @param clazz - The class of the object.
+     * 
+     * @param <K>          - The type of the object.
+     * @param element      - The JsonElement to deserialize.
+     * @param clazz        - The class of the object.
      * @param genericTypes - The generic types of the object.
      * @return - The deserialized object.
      */
@@ -201,9 +196,10 @@ public class ObjectTreeSerializer {
 
     /**
      * Deserializes a JsonElement to an object.
-     * @param <K> - The type of the object.
-     * @param element - The JsonElement to deserialize.
-     * @param clazz - The class of the object.
+     * 
+     * @param <K>          - The type of the object.
+     * @param element      - The JsonElement to deserialize.
+     * @param clazz        - The class of the object.
      * @param genericTypes - The generic types of the object.
      * @return - The deserialized object.
      */
