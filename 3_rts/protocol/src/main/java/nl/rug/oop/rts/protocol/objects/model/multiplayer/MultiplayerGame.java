@@ -156,6 +156,8 @@ public class MultiplayerGame implements Observable {
 
     @Override
     public void addObserver(Observer observer) {
+        if (observers == null)
+            observers = new HashSet<>();
         this.observers.add(observer);
     }
 
