@@ -5,6 +5,8 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResp
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
+import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListConfirm;
+import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyDeletionRequest;
@@ -32,6 +34,8 @@ public class RTSPacketDictionary extends PacketDictionary {
 
         // Game packets here
         this.registerPacket(GameStartPacket.class);
+        this.registerPacket(GameChangeListPacket.class);
+        this.registerPacket(GameChangeListConfirm.class);
     }
 
 }
