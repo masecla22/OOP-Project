@@ -24,6 +24,7 @@ import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GameChange;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GamePlayer;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameUpdatePacket;
 import nl.rug.oop.rugson.Rugson;
 
 public class MultiplayerMapController extends MapController {
@@ -200,5 +201,22 @@ public class MultiplayerMapController extends MapController {
     @Override
     public boolean showUnitCost() {
         return true;
+    }
+
+    public void ingestMapUpdate(GameUpdatePacket packet) {
+        this.changes.clear();
+
+        // Update gold
+        MultiplayerGame game = packet.getCurrentGame();
+
+        multiplayerGame.getPlayerA().setGold(game.getPlayerA().getGold());
+        multiplayerGame.getPlayerB().setGold(game.getPlayerB().getGold());
+        multiplayerGame.setPlayerATurn(game.isPlayerATurn());
+
+        multiplayerGame.getMap().setNodes(game.getMap().getNodes());
+        multiplayerGame.getMap().setEdges(game.getMap().getEdges());
+
+        multiplayerGame.getMap().update();
+        multiplayerGame.update();
     }
 }
