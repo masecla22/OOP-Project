@@ -2,11 +2,13 @@ package nl.rug.oop.rts.server.handlers;
 
 import lombok.AllArgsConstructor;
 import nl.rug.oop.rts.protocol.SocketConnection;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.handlers.authentication.AuthenticatedPacketHandler;
 import nl.rug.oop.rts.server.handlers.authentication.LoginHandler;
 import nl.rug.oop.rts.server.handlers.authentication.RegistrationHandler;
 import nl.rug.oop.rts.server.handlers.games.GameScopedHandler;
+import nl.rug.oop.rts.server.handlers.games.changes.GameChangeHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyCreationRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyDeletionRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyJoinRequestHandler;
@@ -41,6 +43,9 @@ public class HandlerBinder {
         connection.addListener(new LobbyJoinRequestHandler(gamesManager, userManager));
 
         // Game listeners
+        UnitFactory unitFactory = server.getUnitFactory();
+
         connection.addListener(new GameScopedHandler(userManager, gamesManager));
+        connection.addListener(new GameChangeHandler(userManager, gamesManager, unitFactory));
     }
 }
