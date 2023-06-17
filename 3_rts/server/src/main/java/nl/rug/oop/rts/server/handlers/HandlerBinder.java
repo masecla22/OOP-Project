@@ -6,6 +6,7 @@ import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.handlers.authentication.AuthenticatedPacketHandler;
 import nl.rug.oop.rts.server.handlers.authentication.LoginHandler;
 import nl.rug.oop.rts.server.handlers.authentication.RegistrationHandler;
+import nl.rug.oop.rts.server.handlers.games.GameScopedHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyCreationRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyDeletionRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyJoinRequestHandler;
@@ -32,10 +33,14 @@ public class HandlerBinder {
 
         connection.addListener(new AuthenticatedPacketHandler(userManager));
 
+        // Lobby listeners
         connection.addListener(new LobbyScopedHandler(userManager, gamesManager));
         connection.addListener(new LobbyListingRequestHandler(gamesManager));
         connection.addListener(new LobbyCreationRequestHandler(gamesManager, userManager));
         connection.addListener(new LobbyDeletionRequestHandler(gamesManager));
         connection.addListener(new LobbyJoinRequestHandler(gamesManager, userManager));
+
+        // Game listeners
+        connection.addListener(new GameScopedHandler(userManager, gamesManager));
     }
 }
