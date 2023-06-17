@@ -167,6 +167,10 @@ public class MultiplayerView extends View implements Observer {
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
 
+                if (row < 0 || col < 0) {
+                    return;
+                }
+
                 if (col == 3) {
                     handleJoinLobby(knownLobbies.get(row).getLobbyId());
                 }
