@@ -66,4 +66,11 @@ public class GamesManager {
     public MultiplayerGame getGame(UUID gameId) {
         return games.get(gameId);
     }
+
+    public void handleFinishedGame(MultiplayerGame game, GamePlayer winner) {
+        games.remove(game.getGameId());
+
+        this.handleFinishedGame(game, winner);
+
+    }
 }
