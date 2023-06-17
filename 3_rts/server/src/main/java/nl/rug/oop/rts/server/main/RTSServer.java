@@ -112,7 +112,7 @@ public class RTSServer {
     }
 
     private void setupGameManager() {
-        this.gamesManager = new GamesManager();
+        this.gamesManager = new GamesManager(userManager);
         logger.info("Setup GameManager instance!");
     }
 
