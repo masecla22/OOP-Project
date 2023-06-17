@@ -22,7 +22,7 @@ import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
-import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
+import nl.rug.oop.rts.protocol.user.User;
 
 @Data
 @NoArgsConstructor
@@ -52,6 +52,11 @@ public class MultiplayerGame implements Observable {
         this.initializeGoldNodes();
 
         this.isPlayerATurn = true;
+    }
+
+    public boolean isPartOf(User user) {
+        return playerA.getUser().getName().equals(user.getName()) ||
+                playerB.getUser().getName().equals(user.getName());
     }
 
     private void initializeStartingPosition() {
