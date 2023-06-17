@@ -22,6 +22,7 @@ import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
+import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
 
 @Data
 @NoArgsConstructor
@@ -156,4 +157,21 @@ public class MultiplayerGame implements Observable {
     public void removeObserver(Observer observer) {
         this.observers.remove(observer);
     }
+
+    public boolean isMyTurn(Team team) {
+        if (team == Team.TEAM_A) {
+            return isPlayerATurn;
+        } else {
+            return !isPlayerATurn;
+        }
+    }
+
+    public GamePlayer getGamePlayer(Team team) {
+        if (team == Team.TEAM_A) {
+            return playerA;
+        } else {
+            return playerB;
+        }
+    }
+
 }
