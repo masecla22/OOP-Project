@@ -93,8 +93,9 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
             field.setAccessible(true);
             Object value = this.getTreeSerializer().fromJson(json.get(field.getName()), field);
 
-            if (value != null)
+            if (value != null) {
                 field.set(result, value);
+            }
         }
 
         return result;
