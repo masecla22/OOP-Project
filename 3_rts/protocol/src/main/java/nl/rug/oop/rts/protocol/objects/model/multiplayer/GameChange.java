@@ -10,6 +10,12 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GameChange {
-    private Node node;
-    private Faction factionAdded;
+    private int nodeId;
+
+    private Faction faction;
+
+    public GameChange(Node node, Faction faction) {
+        this.nodeId = node.getId();
+        this.faction = faction;
+    }
 }
