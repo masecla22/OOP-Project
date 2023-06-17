@@ -44,7 +44,7 @@ public class MultiplayerGame implements Observable {
 
     private List<Node> goldGeneratingNodes = new ArrayList<>();
 
-    private Set<Observer> observers = new HashSet<>();
+    private transient Set<Observer> observers = new HashSet<>();
 
     public void initialize() {
         this.initializeStartingPosition();
