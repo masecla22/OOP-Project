@@ -62,4 +62,8 @@ public class GamesManager {
 
         return game;
     }
+
+    public MultiplayerGame getGame(UUID gameId) {
+        return games.get(gameId);
+    }
 }
