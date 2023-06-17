@@ -81,6 +81,9 @@ public class ServerGameSimulator {
             node.addArmy(unitFactory.buildArmy(change.getFaction()));
         }
 
+        // Switch game turn
+        game.setPlayerATurn(!game.isPlayerATurn());
+
         game.update();
     }
 
