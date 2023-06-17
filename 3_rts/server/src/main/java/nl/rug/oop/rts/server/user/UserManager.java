@@ -172,4 +172,36 @@ public class UserManager {
         return hashResult;
     }
 
+    private double calculateEloProbability(double rating1, double rating2) {
+        return 1.0 / (1.0 + Math.pow(10, (rating2 - rating1) / 400.0));
+    }
+
+    public void updateRatings(User winner, User looser) {
+        int eloConstant = 32;
+
+        double winnerRating = winner.getElo();
+        double looserRating = looser.getElo();
+
+        double winnerProbability = calculateEloProbability(winnerRating, looserRating);
+        double looserProbability = calculateEloProbability(looserRating, winnerRating);
+
+        double winnerNewRating = winnerRating + eloConstant * (1 - winnerProbability);
+        double looserNewRating = looserRating + eloConstant * (0 - looserProbability);
+
+        winner.setElo((int) winnerNewRating);
+        looser.setElo((int) looserNewRating);
+
+        try {
+            this.setElo(winner, (int) winnerNewRating);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.setElo(looser, (int) looserNewRating);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
