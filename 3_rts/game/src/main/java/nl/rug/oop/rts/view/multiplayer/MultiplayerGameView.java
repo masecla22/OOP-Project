@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.map.MultiplayerMapController;
@@ -100,8 +101,12 @@ public class MultiplayerGameView extends View implements Observer {
 
     @Override
     public void update() {
-        System.out.println("UPDATE CALLED");
-        System.out.println(this.multiGame.getMap());
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(this::update);
+            return;
+        }
+
+        System.out.println("UPDATE CALLED " + this.multiGame.isMyTurn(team));
 
         this.buildTopBar();
 
