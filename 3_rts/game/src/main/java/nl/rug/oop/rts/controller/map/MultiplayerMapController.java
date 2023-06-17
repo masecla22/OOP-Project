@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import lombok.NonNull;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
@@ -18,6 +20,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
+import nl.rug.oop.rts.protocol.objects.model.multiplayer.GameChange;
+import nl.rug.oop.rts.protocol.objects.model.multiplayer.GamePlayer;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rugson.Rugson;
 
@@ -30,15 +35,31 @@ public class MultiplayerMapController extends MapController {
     @Getter
     private List<GameChange> changes = new ArrayList<>();
 
-    public MultiplayerMapController(MultiplayerGame multiplayerGame, Team team, Rugson rugson, @NonNull Map map) {
+    public MultiplayerMapController(MultiplayerGame multiplayerGame, Team team, Rugson rugson,
+            @NonNull Map map, UnitFactory unitFactory) {
         super(rugson, map);
         this.multiplayerGame = multiplayerGame;
         this.team = team;
+        this.unitFactory = unitFactory;
     }
 
     @Override
     public void addArmy(Node node, Faction faction) {
-        System.out.println("Adding army!");
+        GamePlayer player = this.multiplayerGame.getGamePlayer(team);
+        int gold = player.getGold();
+        if (gold < faction.getCost()) {
+            return;
+        }
+
+        Army army = unitFactory.buildArmy(faction);
+        node.addArmy(army);
+
+        this.changes.add(new GameChange(node, faction));
+
+        player.setGold(gold - faction.getCost());
+
+        this.getMap().update();
+        this.multiplayerGame.update();
     }
 
     @Override
