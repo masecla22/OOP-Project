@@ -11,13 +11,18 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GamePlayer;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.protocol.user.User;
+import nl.rug.oop.rts.server.user.UserManager;
 
+@RequiredArgsConstructor
 public class GamesManager {
     @Getter
     private java.util.Map<UUID, MultiplayerLobby> lobbies = new HashMap<>();
 
     @Getter
     private java.util.Map<UUID, MultiplayerGame> games = new HashMap<>();
+
+    @NonNull
+    private UserManager userManager;
 
     public MultiplayerLobby getByUser(User user) {
         for (MultiplayerLobby lobby : lobbies.values()) {
