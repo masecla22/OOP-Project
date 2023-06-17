@@ -29,32 +29,49 @@ public class MultiplayerGameView extends View implements Observer {
     private MultiplayerGameConnectionController connectionController;
 
     public MultiplayerGameView(Game game, MultiplayerGame multiGame,
-            MultiplayerConnectionController connectionController, Team team,
-            UnitFactory unitFactory) {
+            MultiplayerConnectionController connectionController, Team team, UnitFactory unitFactory) {
         this.game = game;
         this.multiGame = multiGame;
         this.team = team;
 
         this.multiGame.addObserver(this);
+        this.multiGame.getMap().addObserver(this);
+
+        this.mapController = new MultiplayerMapController(multiGame, team, null, multiGame.getMap(), unitFactory);
 
         this.connectionController = new MultiplayerGameConnectionController(mapController,
                 connectionController, multiGame);
 
         this.setLayout(new BorderLayout());
 
-        this.mapController = new MultiplayerMapController(multiGame, team, null, multiGame.getMap(), unitFactory);
+        this.buildTopBar();
+
         this.mapView = new MapView(multiGame.getMap(), this.mapController);
 
         this.add(this.mapView, BorderLayout.CENTER);
         this.add(new SidePanelView(this.multiGame.getMap(), mapController), BorderLayout.LINE_START);
+
+        this.connectionController.bindGameChangeListener();
     }
 
+    @Override
+    public void onClose() {
+        this.connectionController.unbindGameChangeListener();
+    }
+
+    private JPanel topBar = null;
+
     private void buildTopBar() {
-        JPanel topBar = new JPanel();
+        if (topBar == null) {
+            topBar = new JPanel();
+            this.add(topBar, BorderLayout.PAGE_START);
+        }
+
+        topBar.removeAll();
 
         if (!this.multiGame.isMyTurn(team)) {
-            topBar.add(new JLabel("Waiting for other player... Gold: " + this.multiGame.getGamePlayer(team).getGold()));
-            this.add(topBar, BorderLayout.PAGE_START);
+            topBar.add(new JLabel(
+                    "Waiting for other player... Gold: " + this.multiGame.getGamePlayer(team).getGold()));
             return;
         }
 
@@ -83,8 +100,13 @@ public class MultiplayerGameView extends View implements Observer {
 
     @Override
     public void update() {
+        System.out.println("UPDATE CALLED");
+        System.out.println(this.multiGame.getMap());
+
         this.buildTopBar();
-        Observer.super.update();
+
+        this.revalidate();
+        this.repaint();
     }
 
     private void handleBack() {
