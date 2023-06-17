@@ -23,7 +23,7 @@ public class GameScopedHandler extends PacketListener<GameScopedPacket> {
     @Override
     protected boolean handlePacket(SocketConnection connection, GameScopedPacket packet) throws Exception {
         // Get the user from the connection
-        User user = userManager.getUser(packet.getGameId());
+        User user = userManager.getUser(packet.getSessionToken());
         if (user == null) {
             return false;
         }
