@@ -8,8 +8,11 @@ import javax.swing.JPanel;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.map.MultiplayerMapController;
+import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
+import nl.rug.oop.rts.controller.multiplayer.MultiplayerGameConnectionController;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
+import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.game.SidePanelView;
@@ -23,17 +26,23 @@ public class MultiplayerGameView extends View implements Observer {
 
     private MapView mapView;
     private MultiplayerMapController mapController;
+    private MultiplayerGameConnectionController connectionController;
 
-    public MultiplayerGameView(Game game, MultiplayerGame multiGame, Team team) {
+    public MultiplayerGameView(Game game, MultiplayerGame multiGame,
+            MultiplayerConnectionController connectionController, Team team,
+            UnitFactory unitFactory) {
         this.game = game;
         this.multiGame = multiGame;
         this.team = team;
 
         this.multiGame.addObserver(this);
 
+        this.connectionController = new MultiplayerGameConnectionController(mapController,
+                connectionController, multiGame);
+
         this.setLayout(new BorderLayout());
 
-        this.mapController = new MultiplayerMapController(multiGame, team, null, multiGame.getMap());
+        this.mapController = new MultiplayerMapController(multiGame, team, null, multiGame.getMap(), unitFactory);
         this.mapView = new MapView(multiGame.getMap(), this.mapController);
 
         this.add(this.mapView, BorderLayout.CENTER);
@@ -60,7 +69,9 @@ public class MultiplayerGameView extends View implements Observer {
 
         JButton markAsReady = new JButton("Finish turn");
         markAsReady.addActionListener(e -> {
-            this.mapController.commitChanges(team);
+            markAsReady.setEnabled(false);
+            markAsReady.setText("Loading...");
+            this.connectionController.commitChanges();
         });
 
         int gold = this.multiGame.getGamePlayer(team).getGold();

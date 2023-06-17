@@ -184,7 +184,8 @@ public class MultiplayerConnectionController {
         if (!packet.isSuccess())
             throw new IllegalStateException("GameStartPacket was not successful");
 
-        MultiplayerGameView view = new MultiplayerGameView(game, packet.getGame(), packet.getTeam());
+        MultiplayerGameView view = new MultiplayerGameView(game, packet.getGame(),
+                this, packet.getTeam(), unitFactory);
         game.handleView(view);
     }
 }
