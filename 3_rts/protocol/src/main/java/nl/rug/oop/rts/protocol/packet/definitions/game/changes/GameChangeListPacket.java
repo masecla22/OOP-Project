@@ -1,4 +1,4 @@
-package nl.rug.oop.rts.protocol.packet.definitions.game;
+package nl.rug.oop.rts.protocol.packet.definitions.game.changes;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GameChange;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameScopedPacket;
 
 @Data
 @NoArgsConstructor
