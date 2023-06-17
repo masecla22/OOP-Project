@@ -52,7 +52,7 @@ public class GamesManager {
         UUID gameId = UUID.randomUUID();
 
         GamePlayer player = new GamePlayer(lobby.getHost(), 400, Team.TEAM_A, null, lobby.getConnection());
-        GamePlayer otherPlayer = new GamePlayer(otherUser, 400, Team.TEAM_B, null, otherUserConnection);
+        GamePlayer otherPlayer = new GamePlayer(otherUser, 600, Team.TEAM_B, null, otherUserConnection);
 
         MultiplayerGame game = new MultiplayerGame(gameId, lobby.getMap(), player, otherPlayer);
         game.initialize();
