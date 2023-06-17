@@ -45,6 +45,13 @@ public class ServerGameSimulator {
             }
         }
 
+        // Make sure the armies he places are part of his own team
+        for (GameChange change : changes) {
+            if (change.getFaction().getTeam() != team) {
+                return false;
+            }
+        }
+
         // Make sure the player was allowed to place armies on the nodes it places them
         // on
         for (GameChange change : changes) {
