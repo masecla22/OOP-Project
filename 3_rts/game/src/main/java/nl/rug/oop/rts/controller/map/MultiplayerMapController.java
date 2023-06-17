@@ -38,7 +38,7 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public void removeArmy(Node node, Army army) {
-        System.out.println("Removing army!");
+        throw new UnsupportedOperationException("You cannot remove armies in MP!");
     }
 
     @Override
