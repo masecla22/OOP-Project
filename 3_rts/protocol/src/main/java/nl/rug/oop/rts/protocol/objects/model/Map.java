@@ -19,9 +19,9 @@ public class Map implements Observable {
     private Set<Node> nodes = new HashSet<>();
     private Set<Edge> edges = new HashSet<>();
 
-    private Set<Observer> observers = new HashSet<>();
+    private transient Set<Observer> observers = new HashSet<>();
 
-    private Selectable selection;
+    private transient Selectable selection;
 
     /**
      * Adds a node to the map.
@@ -111,6 +111,8 @@ public class Map implements Observable {
 
     @Override
     public void addObserver(Observer observer) {
+        if (observers == null)
+            observers = new HashSet<>();
         observers.add(observer);
     }
 
