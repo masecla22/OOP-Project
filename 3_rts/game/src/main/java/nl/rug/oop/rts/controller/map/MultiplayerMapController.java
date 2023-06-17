@@ -25,6 +25,11 @@ public class MultiplayerMapController extends MapController {
     private Team team;
     private MultiplayerGame multiplayerGame;
 
+    private UnitFactory unitFactory;
+
+    @Getter
+    private List<GameChange> changes = new ArrayList<>();
+
     public MultiplayerMapController(MultiplayerGame multiplayerGame, Team team, Rugson rugson, @NonNull Map map) {
         super(rugson, map);
         this.multiplayerGame = multiplayerGame;
