@@ -60,12 +60,34 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
 
         simulator.simulateStep();
 
+        GameChangeListConfirm confirm = new GameChangeListConfirm(true);
+        connection.sendPacket(confirm);
+
+        sendGameUpdates(game);
+
         return true;
     }
 
     private void sendFailurePacket(SocketConnection socketConnection) throws IOException {
         GameChangeListConfirm confirm = new GameChangeListConfirm(false);
         socketConnection.sendPacket(confirm);
+    }
+
+    private void sendGameUpdates(MultiplayerGame game) {
+        GameUpdatePacket packet = new GameUpdatePacket(game);
+
+        try {
+            game.getPlayerA().getConnection().sendPacket(packet);
+            game.getPlayerB().getConnection().sendPacket(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Team possibleWinner = game.checkWinner();
+        if (possibleWinner != null) {
+            this.gamesManager.handleFinishedGame(game,
+                    possibleWinner == Team.TEAM_A ? game.getPlayerA() : game.getPlayerB());
+        }
     }
 
 }
