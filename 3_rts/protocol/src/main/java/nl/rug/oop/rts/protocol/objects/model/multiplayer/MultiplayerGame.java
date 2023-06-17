@@ -179,4 +179,14 @@ public class MultiplayerGame implements Observable {
         }
     }
 
+    public Team getTeam(User user) {
+        if (playerA.getUser().getName().equals(user.getName())) {
+            return Team.TEAM_A;
+        } else if (playerB.getUser().getName().equals(user.getName())) {
+            return Team.TEAM_B;
+        } else {
+            return null;
+        }
+    }
+
 }
