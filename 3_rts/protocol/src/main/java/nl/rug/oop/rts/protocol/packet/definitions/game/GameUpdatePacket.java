@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import nl.rug.oop.rts.protocol.objects.model.armies.Team;
+import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class GameUpdatePacket extends GameScopedPacket {
-    private Team nextTurn;
-
-    private boolean gameOver;
-    private Team winner;
+    private MultiplayerGame currentGame;
 }
