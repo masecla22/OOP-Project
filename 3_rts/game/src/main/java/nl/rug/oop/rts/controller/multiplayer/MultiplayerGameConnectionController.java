@@ -28,11 +28,12 @@ public class MultiplayerGameConnectionController {
 
         AwaitPacketOnce<Packet> awaiter = new AwaitPacketOnce<>(GameChangeListConfirm.class)
                 .bindTo(connectionController.getConnection());
+
         sendGamePacket(packet);
 
         awaiter.getAwaiting().thenAccept(c -> {
             mapController.getChanges().clear();
-            game.setPlayerATurn(!game.isPlayerATurn());
+            // game.setPlayerATurn(!game.isPlayerATurn());
             game.update();
         });
     }
@@ -41,6 +42,7 @@ public class MultiplayerGameConnectionController {
         connectionController.getConnection().addListener(new PacketListener<GameUpdatePacket>(GameUpdatePacket.class) {
             @Override
             protected boolean handlePacket(SocketConnection connection, GameUpdatePacket packet) throws Exception {
+                System.out.println("Received game update packet");
                 mapController.ingestMapUpdate(packet);
                 return true;
             }
