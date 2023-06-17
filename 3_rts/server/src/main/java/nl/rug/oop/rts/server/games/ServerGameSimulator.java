@@ -111,14 +111,20 @@ public class ServerGameSimulator {
     }
 
     private void giveGold() {
+        int goldForTeamA = 0;
+        int goldForTeamB = 0;
         for (Node node : game.getGoldGeneratingNodes()) {
             for (Army army : node.getArmies()) {
-                if (army.getFaction().getTeam().equals(node.getOwner())) {
-                    game.getGamePlayer(node.getOwner())
-                        .setGold(game.getGamePlayer(node.getOwner()).getGold() + 50);
+                if (army.getFaction().getTeam().equals(Team.TEAM_A)) {
+                    goldForTeamA += 50;
+                } else {
+                    goldForTeamB += 50;
                 }
             }
         }
+
+        game.getPlayerA().setGold(game.getPlayerA().getGold() + goldForTeamA);
+        game.getPlayerB().setGold(game.getPlayerB().getGold() + goldForTeamB);
     }
 
     private void moveNodeArmies() {
