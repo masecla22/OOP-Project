@@ -21,6 +21,7 @@ import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
+import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.user.User;
 
@@ -187,6 +188,24 @@ public class MultiplayerGame implements Observable {
         } else {
             return null;
         }
+    }
+
+    public Team checkWinner() {
+        Node startingNodeTeamA = getPlayerA().getStartingNode();
+        // Check if the starting node has any armies from the other team
+        for (Army cr : startingNodeTeamA.getArmies()) {
+            if (cr.getFaction().getTeam() != Team.TEAM_A)
+                return Team.TEAM_B;
+        }
+
+        Node startingNodeTeamB = getPlayerB().getStartingNode();
+        // Check if the starting node has any armies from the other team
+        for (Army cr : startingNodeTeamB.getArmies()) {
+            if (cr.getFaction().getTeam() != Team.TEAM_B)
+                return Team.TEAM_A;
+        }
+
+        return null;
     }
 
 }
