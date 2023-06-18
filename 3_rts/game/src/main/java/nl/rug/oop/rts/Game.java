@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import nl.rug.oop.rts.controller.settings.SettingsController;
-import nl.rug.oop.rts.view.MainMenuClass;
+import nl.rug.oop.rts.view.MainMenuView;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.settings.SettingsView;
 
@@ -31,7 +31,7 @@ public class Game {
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
 
-        this.handleView(new MainMenuClass(this, settingsController));
+        this.handleView(new MainMenuView(this, settingsController));
 
         this.frame.setVisible(true);
     }

@@ -14,7 +14,7 @@ import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
  * This class is respoinsible for presenting the main menu of the game to the
  * user.
  */
-public class MainMenuClass extends View {
+public class MainMenuView extends View {
     private Game game;
     private SettingsController settingsController;
 
@@ -24,7 +24,7 @@ public class MainMenuClass extends View {
      * @param game               - the game
      * @param settingsController - the settings controller
      */
-    public MainMenuClass(Game game, SettingsController settingsController) {
+    public MainMenuView(Game game, SettingsController settingsController) {
         super();
         this.game = game;
         this.settingsController = settingsController;
