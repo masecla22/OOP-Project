@@ -75,7 +75,25 @@ public class GamesManager {
     public void handleFinishedGame(MultiplayerGame game, GamePlayer winner) {
         games.remove(game.getGameId());
 
-        this.handleFinishedGame(game, winner);
+        GamePlayer loser = game.getOtherPlayer(winner);
 
+        User winningUser = winner.getUser();
+        User losingUser = loser.getUser();
+
+        this.userManager.updateRatings(winningUser, losingUser);
+
+        try {
+            GameEndPacket packet = new GameEndPacket(true, winningUser.getElo());
+            winner.getConnection().sendPacket(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            GameEndPacket packet = new GameEndPacket(false, losingUser.getElo());
+            loser.getConnection().sendPacket(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
