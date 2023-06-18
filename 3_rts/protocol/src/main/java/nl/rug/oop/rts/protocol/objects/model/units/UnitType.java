@@ -28,6 +28,9 @@ import nl.rug.oop.rts.protocol.objects.model.units.rohan.RohanArcher;
 import nl.rug.oop.rts.protocol.objects.model.units.rohan.RohanSpearman;
 import nl.rug.oop.rts.protocol.objects.model.units.rohan.RohanSwordsman;
 
+/**
+ * The type of a unit.
+ */
 @Getter
 @AllArgsConstructor
 public enum UnitType {
@@ -85,6 +88,14 @@ public enum UnitType {
 
     private static Map<UnitType, Constructor<? extends Unit>> cachedConstructors = new HashMap<>();
 
+    /**
+     * Build a unit of this type.
+     * 
+     * @param name - the name of the unit
+     * @param damage - the damage of the unit
+     * @param health - the health of the unit
+     * @return - the built unit
+     */
     @SneakyThrows
     public Unit buildUnit(String name, double damage, double health) {
         return getConstructor().newInstance(name, damage, health);
@@ -102,6 +113,11 @@ public enum UnitType {
         return constructor;
     }
 
+    /**
+     * Get the faction of this unit type.
+     * 
+     * @return - the faction of this unit type
+     */
     public Faction getFaction() {
         switch (this) {
             case AXE_THROWER:
