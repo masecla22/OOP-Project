@@ -9,6 +9,9 @@ import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.user.User;
 
+/**
+ * Represents a multiplayer lobby. 
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
