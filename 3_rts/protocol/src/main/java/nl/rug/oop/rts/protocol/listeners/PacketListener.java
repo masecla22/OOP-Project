@@ -13,7 +13,7 @@ public abstract class PacketListener<K> {
     private Class<?> packetClass;
 
     @SuppressWarnings("unchecked")
-    public boolean onReceive(SocketConnection connection, Packet packet) throws Exception {
+    public boolean onReceive(SocketConnection connection, Packet packet) throws IOException, SQLException {
         if (packetClass.isInstance(packet)) {
             return this.handlePacket(connection, (K) packetClass.cast(packet));
         } else {
@@ -21,5 +21,5 @@ public abstract class PacketListener<K> {
         }
     }
 
-    protected abstract boolean handlePacket(SocketConnection connection, K packet) throws Exception;
+    protected abstract boolean handlePacket(SocketConnection connection, K packet) throws IOException, SQLException;
 }
