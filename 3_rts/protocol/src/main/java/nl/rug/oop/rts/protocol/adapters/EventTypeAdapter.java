@@ -2,6 +2,8 @@ package nl.rug.oop.rts.protocol.adapters;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
@@ -12,18 +14,11 @@ import nl.rug.oop.rugson.objects.JsonObject;
 /**
  * Adapter for serializing and deserializing Event objects.
  */
+@AllArgsConstructor
 public class EventTypeAdapter extends TypeAdapter<Event> {
 
+    @NonNull
     private EventFactory eventFactory;
-
-    /**
-     * Constructor for EventTypeAdapter.
-     * 
-     * @param eventFactory - EventFactory to use for building Event objects
-     */
-    public EventTypeAdapter(EventFactory eventFactory) {
-        this.eventFactory = eventFactory;
-    }
 
     @Override
     public JsonElement serialize(Event object) {
