@@ -11,15 +11,19 @@ import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
 /**
- * This class is respoinsible for presenting the main menu of the game to the user.
+ * This class is respoinsible for presenting the main menu of the game to the
+ * user.
  */
 public class MainMenuClass extends View {
     private Game game;
-    /**
-     *
-     */
     private SettingsController settingsController;
 
+    /**
+     * Constructor for the main menu.
+     * 
+     * @param game               - the game
+     * @param settingsController - the settings controller
+     */
     public MainMenuClass(Game game, SettingsController settingsController) {
         super();
         this.game = game;
