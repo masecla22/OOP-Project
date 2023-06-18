@@ -111,8 +111,9 @@ public class Map implements Observable {
 
     @Override
     public void addObserver(Observer observer) {
-        if (observers == null)
+        if (observers == null) {
             observers = new HashSet<>();
+        }
         observers.add(observer);
     }
 
@@ -215,7 +216,7 @@ public class Map implements Observable {
     }
 
     /**
-     * Removes all armies from the map
+     * Removes all armies from the map.
      */
     public void removeAllArmies() {
         for (Node node : this.getNodes()) {
