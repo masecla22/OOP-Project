@@ -24,6 +24,12 @@ public class SettingsView extends View {
 
     private JTextField centralServer;
 
+    /**
+     * Constructor for the settings view.
+     * 
+     * @param game       - the game
+     * @param controller - the settings controller
+     */
     public SettingsView(Game game, SettingsController controller) {
         this.game = game;
         this.controller = controller;
