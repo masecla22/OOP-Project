@@ -4,6 +4,9 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+/**
+ * File filter which only allows JSON files to go through.
+ */
 public class MapSaveJsonFilter extends FileFilter {
 
     @Override
