@@ -6,9 +6,17 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 
+/**
+ * Reinforcements event.
+ */
 public class ReinforcementsEvent extends Event {
     private UnitFactory unitFactory;
 
+    /**
+     * Constructor for ReinforcementsEvent.
+     * 
+     * @param unitFactory - the unit factory
+     */
     public ReinforcementsEvent(UnitFactory unitFactory) {
         super(EventType.REINFORCEMENTS);
         this.unitFactory = unitFactory;
