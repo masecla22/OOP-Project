@@ -1,5 +1,7 @@
 package nl.rug.oop.rts.controller.multiplayer;
 
+import java.io.IOException;
+
 import javax.swing.JOptionPane;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +50,7 @@ public class MultiplayerGameConnectionController {
     public void bindGameChangeListener() {
         connectionController.getConnection().addListener(new PacketListener<GameUpdatePacket>(GameUpdatePacket.class) {
             @Override
-            protected boolean handlePacket(SocketConnection connection, GameUpdatePacket packet) throws Exception {
+            protected boolean handlePacket(SocketConnection connection, GameUpdatePacket packet) throws IOException {
                 System.out.println("Received game update packet");
                 mapController.ingestMapUpdate(packet);
                 return true;
@@ -59,7 +61,7 @@ public class MultiplayerGameConnectionController {
     public void bindGameEndListener() {
         connectionController.getConnection().addListener(new PacketListener<GameEndPacket>(GameEndPacket.class) {
             @Override
-            protected boolean handlePacket(SocketConnection connection, GameEndPacket packet) throws Exception {
+            protected boolean handlePacket(SocketConnection connection, GameEndPacket packet) throws IOException {
                 showGameEnding(packet.isWinner(), packet.getNewElo());
                 return true;
             }
