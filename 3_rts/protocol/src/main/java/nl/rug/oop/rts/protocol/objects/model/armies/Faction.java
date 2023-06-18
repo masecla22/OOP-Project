@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import nl.rug.oop.rts.protocol.objects.model.units.UnitType;
 
+/**
+ * The factions in the game.
+ */
 @Getter
 @AllArgsConstructor
 public enum Faction {
@@ -36,6 +39,10 @@ public enum Faction {
         return niceName;
     }
 
+    /**
+     * Returns the smallest cost of all factions. 
+     * @return - the smallest cost of all factions
+     */
     public static int getSmallestCost() {
         int smallestCost = Integer.MAX_VALUE;
         for (Faction faction : Faction.values()) {
