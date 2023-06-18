@@ -5,6 +5,9 @@ import java.io.File;
 import nl.rug.oop.rts.protocol.objects.model.settings.GameSettings;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class is responsible for managing the settings of the game.
+ */
 public class SettingsController {
     private GameSettings settings;
 
