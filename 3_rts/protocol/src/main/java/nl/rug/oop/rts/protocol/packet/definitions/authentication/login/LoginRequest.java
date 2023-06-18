@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * Request to login.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
