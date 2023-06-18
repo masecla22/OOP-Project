@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.protocol.objects.model.armies.Faction;
 
+/**
+ * Represents a change in the game state.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
