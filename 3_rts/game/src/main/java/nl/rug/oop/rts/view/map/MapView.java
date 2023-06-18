@@ -25,11 +25,18 @@ import nl.rug.oop.rts.view.View;
  */
 public class MapView extends View implements Observer {
 
+    /** The size of the map. */
     public static final int MAP_SIZE = 2000;
 
     private Map map;
     private MapController mapController;
 
+    /**
+     * Constructor for the map view.
+     * 
+     * @param map           - the map
+     * @param mapController - the map controller
+     */
     public MapView(Map map, MapController mapController) {
         this.map = map;
         this.mapController = mapController;
