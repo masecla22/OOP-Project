@@ -236,6 +236,12 @@ public class UserManager {
         return 1.0 / (1.0 + Math.pow(10, (rating2 - rating1) / 400.0));
     }
 
+    /**
+     * Updates the ELO of the given users based on the result of a game.
+     * 
+     * @param winner - The winner
+     * @param looser - The looser
+     */
     public void updateRatings(User winner, User looser) {
         int eloConstant = 32;
 
@@ -264,6 +270,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Gets the leaderboard.
+     * 
+     * @return - The leaderboard
+     * @throws SQLException - If an error occurs while getting the leaderboard
+     */
     public List<Entry<String, Integer>> getLeaderboard() throws SQLException {
         String query = "SELECT * FROM `rts_users` ORDER BY `elo` DESC LIMIT 10;";
 
