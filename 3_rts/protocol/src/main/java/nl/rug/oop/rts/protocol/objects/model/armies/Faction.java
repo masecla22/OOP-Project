@@ -35,4 +35,14 @@ public enum Faction {
     public String toString() {
         return niceName;
     }
+
+    public static int getSmallestCost() {
+        int smallestCost = Integer.MAX_VALUE;
+        for (Faction faction : Faction.values()) {
+            if (faction.getCost() < smallestCost) {
+                smallestCost = faction.getCost();
+            }
+        }
+        return smallestCost;
+    }
 }
