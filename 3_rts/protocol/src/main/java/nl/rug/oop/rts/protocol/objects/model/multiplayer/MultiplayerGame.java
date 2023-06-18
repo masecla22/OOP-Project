@@ -210,4 +210,11 @@ public class MultiplayerGame implements Observable {
         return null;
     }
 
+    public GamePlayer getOtherPlayer(GamePlayer player) {
+        if (player == playerA) {
+            return playerB;
+        } else {
+            return playerA;
+        }
+    }
 }
