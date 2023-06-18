@@ -11,6 +11,9 @@ import nl.rug.oop.rts.view.MainMenuView;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.settings.SettingsView;
 
+/**
+ * This class is responsible for the game itself.
+ */
 public class Game {
     private JFrame frame;
 
@@ -19,7 +22,7 @@ public class Game {
     private SettingsController settingsController;
 
     /**
-     * something
+     * Handles the initialization of the game.
      */
     public void initialize() {
         this.settingsController = new SettingsController();
@@ -36,11 +39,17 @@ public class Game {
         this.frame.setVisible(true);
     }
 
+    /**
+     * Handles the quitting of the game.
+     */
     public void handleQuitting() {
         this.frame.dispose();
         System.exit(0);
     }
 
+    /**
+     * Handles the back button.
+     */
     public void handleBack() {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(this::handleBack);
@@ -60,6 +69,11 @@ public class Game {
         this.frame.repaint();
     }
 
+    /**
+     * Handles going back up to a certain view.
+     *
+     * @param view - the class of the view to go back up to
+     */
     public void handleBackUpTo(Class<? extends View> view) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> handleBackUpTo(view));
@@ -84,6 +98,11 @@ public class Game {
         this.frame.repaint();
     }
 
+    /**
+     * Handles opening a view.
+     * 
+     * @param panel - the view to open
+     */
     public void handleView(View panel) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> handleView(panel));
@@ -98,6 +117,9 @@ public class Game {
         this.frame.repaint();
     }
 
+    /**
+     * Handles opening the settings.
+     */
     public void openSettings() {
         handleView(new SettingsView(this, this.settingsController));
     }
