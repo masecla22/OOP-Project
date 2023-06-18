@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -43,6 +44,13 @@ public class LobbyCreationView extends View implements Observer {
     private JLabel mapName = new JLabel();
     private JTextField lobbyNameField = new JTextField();
 
+    /**
+     * Constructor for the lobby creation view.
+     * 
+     * @param game                 - the game
+     * @param connectionController - the connection controller
+     * @param rugson               - the rugson instance
+     */
     public LobbyCreationView(Game game, MultiplayerConnectionController connectionController, Rugson rugson) {
         this.game = game;
         this.connectionController = connectionController;
@@ -130,7 +138,7 @@ public class LobbyCreationView extends View implements Observer {
                 setMap(mapName, map);
                 stream.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             this.selectedMapName = "Something went wrong";
             this.selectedMap = null;
