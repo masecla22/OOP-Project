@@ -8,6 +8,9 @@ import java.util.Set;
 
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class allows loading of default maps.
+ */
 public class PredefinedMapLoader {
     private static final String MAP_DIR = "maps";
 
@@ -16,6 +19,11 @@ public class PredefinedMapLoader {
 
     private Rugson rugson;
 
+    /**
+     * Creates a new PredefinedMapLoader.
+     *
+     * @param rugson - The rugson instance
+     */
     public PredefinedMapLoader(Rugson rugson) {
         this.rugson = rugson;
 
@@ -48,6 +56,11 @@ public class PredefinedMapLoader {
         textures.put("romania", getResourceFromPath(MAP_DIR, "romania.json"));
     }
 
+    /**
+     *
+     * @param mapName
+     * @return
+     */
     public nl.rug.oop.rts.protocol.objects.model.Map getMap(String mapName) {
         if (cachedMaps.containsKey(mapName)) {
             return cachedMaps.get(mapName);
