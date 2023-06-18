@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * Confirmation of a list of changes.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
