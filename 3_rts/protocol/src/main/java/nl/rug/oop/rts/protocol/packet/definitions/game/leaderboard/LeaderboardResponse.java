@@ -10,6 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * Response to a leaderboard request.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +21,11 @@ public class LeaderboardResponse extends Packet {
     private List<String> usernames;
     private List<Integer> scores;
 
+    /**
+     * Create a new leaderboard response.
+     * 
+     * @param leaderboard - the leaderboard
+     */
     public LeaderboardResponse(List<Entry<String, Integer>> leaderboard) {
         usernames = new ArrayList<>();
         scores = new ArrayList<>();
