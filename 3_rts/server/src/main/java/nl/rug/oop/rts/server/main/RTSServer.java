@@ -81,8 +81,6 @@ public class RTSServer {
     }
 
     private void setupConfiguration() {
-        this.rugson = new RugsonBuilder().setPrettyPrint(false).build();
-
         // We want the configuration Rugson to print pretty so the config can be edited
         // by hand
         Rugson configurationRugson = new RugsonBuilder().setPrettyPrint(true).build();
@@ -103,7 +101,7 @@ public class RTSServer {
 
     private void setupRugson() {
         this.rugson = new RugsonBuilder()
-                .setPrettyPrint(true)
+                .setPrettyPrint(false)
                 .addTypeAdapter(Unit.class, new UnitTypeAdapter())
                 .addTypeAdapter(Event.class, new EventTypeAdapter(eventFactory))
                 .addTypeAdapter(Map.class, new GameMapTypeAdapter())
