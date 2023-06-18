@@ -19,6 +19,9 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.leaderboard.LeaderboardRe
 import nl.rug.oop.rts.protocol.packet.definitions.game.leaderboard.LeaderboardResponse;
 import nl.rug.oop.rts.view.View;
 
+/**
+ * This class is responsible for presenting the leaderboard to the user.
+ */
 public class LeaderboardView extends View implements Observer {
     private Game game;
     private MultiplayerConnectionController connectionController;
