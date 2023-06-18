@@ -16,12 +16,23 @@ import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.games.ServerGameSimulator;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This handler is responsible for handling game change packets.
+ * It will also run the simulation of the game and will send out updates.
+ */
 public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
 
     private UserManager userManager;
     private GamesManager gamesManager;
     private UnitFactory unitFactory;
 
+    /**
+     * Create a new GameChangeHandler.
+     * 
+     * @param userManager  - The user manager
+     * @param gamesManager - The games manager
+     * @param unitFactory  - The unit factory
+     */
     public GameChangeHandler(UserManager userManager, GamesManager gamesManager, UnitFactory unitFactory) {
         super(GameChangeListPacket.class);
 
@@ -32,54 +43,39 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
 
     @Override
     protected boolean handlePacket(SocketConnection connection, GameChangeListPacket packet) throws IOException {
-        try {
-            // Get the user from the connection
-            User user = userManager.getUser(packet.getSessionToken());
-            if (user == null) {
-                System.out.println("No user found");
-                sendFailurePacket(connection);
-                return false;
-            }
-
-            // Get the game out of the packet
-            MultiplayerGame game = gamesManager.getGame(packet.getGameId());
-            if (game == null) {
-                System.out.println("No game found");
-                sendFailurePacket(connection);
-                return false;
-            }
-
-            // Setup a disposable ServerGameSimulator
-            ServerGameSimulator simulator = new ServerGameSimulator(unitFactory, game);
-            Team team = game.isPlayerATurn() ? game.getPlayerA().getTeam() : game.getPlayerB().getTeam();
-
-            // Make sure the packet is from the correct team
-            GamePlayer player = game.isPlayerATurn() ? game.getPlayerA() : game.getPlayerB();
-            if (!player.getUser().equals(user)) {
-                System.out.println("Wrong user");
-                sendFailurePacket(connection);
-                return false;
-            }
-
-            if (!simulator.canDoChanges(packet.getChanges(), team)) {
-                System.out.println("Can't do changes");
-                sendFailurePacket(connection);
-                return false;
-            }
-
-            simulator.applyChanges(packet.getChanges(), team);
-            simulator.simulateStep();
-
-            GameChangeListConfirm confirm = new GameChangeListConfirm(true);
-            connection.sendPacket(confirm);
-
-            sendGameUpdates(game);
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        User user = userManager.getUser(packet.getSessionToken());
+        if (user == null) {
+            sendFailurePacket(connection);
             return false;
         }
+        MultiplayerGame game = gamesManager.getGame(packet.getGameId());
+        if (game == null) {
+            sendFailurePacket(connection);
+            return false;
+        }
+
+        Team team = game.isPlayerATurn() ? game.getPlayerA().getTeam() : game.getPlayerB().getTeam();
+        GamePlayer player = game.isPlayerATurn() ? game.getPlayerA() : game.getPlayerB();
+        if (!player.getUser().equals(user)) {
+            sendFailurePacket(connection);
+            return false;
+        }
+
+        // Setup a disposable ServerGameSimulator
+        ServerGameSimulator simulator = new ServerGameSimulator(unitFactory, game);
+        if (!simulator.canDoChanges(packet.getChanges(), team)) {
+            sendFailurePacket(connection);
+            return false;
+        }
+
+        simulator.applyChanges(packet.getChanges(), team);
+        simulator.simulateStep();
+
+        GameChangeListConfirm confirm = new GameChangeListConfirm(true);
+        connection.sendPacket(confirm);
+        sendGameUpdates(game);
+
+        return true;
     }
 
     private void sendFailurePacket(SocketConnection socketConnection) throws IOException {
@@ -90,13 +86,13 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
     private void sendGameUpdates(MultiplayerGame game) {
         System.out.println("Sending game updates");
         GameUpdatePacket packet = new GameUpdatePacket(game);
-        
+
         try {
             System.out.println("Sending game updates");
             game.getPlayerA().getConnection().sendPacket(packet);
             System.out.println("Sending game updates");
             game.getPlayerB().getConnection().sendPacket(packet);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
