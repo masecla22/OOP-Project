@@ -14,6 +14,7 @@ import nl.rug.oop.rts.server.handlers.games.lobby.LobbyDeletionRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyJoinRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyListingRequestHandler;
 import nl.rug.oop.rts.server.handlers.games.lobby.LobbyScopedHandler;
+import nl.rug.oop.rts.server.handlers.leaderboard.LeaderboardRequestHandler;
 import nl.rug.oop.rts.server.main.RTSServer;
 import nl.rug.oop.rts.server.user.UserManager;
 
@@ -47,5 +48,7 @@ public class HandlerBinder {
 
         connection.addListener(new GameScopedHandler(userManager, gamesManager));
         connection.addListener(new GameChangeHandler(userManager, gamesManager, unitFactory));
+
+        connection.addListener(new LeaderboardRequestHandler(userManager));
     }
 }
