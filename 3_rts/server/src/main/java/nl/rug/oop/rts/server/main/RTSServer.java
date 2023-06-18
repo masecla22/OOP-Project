@@ -37,6 +37,9 @@ import nl.rug.oop.rts.server.user.UserManager;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
+/**
+ * This class represents the RTS-Server.
+ */
 @Getter
 public class RTSServer {
     private ExecutorService threadPool;
@@ -55,11 +58,19 @@ public class RTSServer {
     private UnitFactory unitFactory;
     private EventFactory eventFactory;
 
+    /**
+     * Create a new RTS-Server.
+     */
     public RTSServer() {
         this.threadPool = Executors.newCachedThreadPool();
         this.logger = Logger.getLogger("RTS-Server");
     }
 
+    /**
+     * Starts the server.
+     * 
+     * @throws IOException - When the server could not be started
+     */
     public void start() throws IOException {
         this.setupLogging();
 
@@ -159,8 +170,9 @@ public class RTSServer {
         ConsoleHandler consoleHandler = new ConsoleHandler() {
             @Override
             public void publish(LogRecord record) {
-                if (record == null)
+                if (record == null) {
                     return;
+                }
                 super.publish(record);
             }
         };
