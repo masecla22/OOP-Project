@@ -1,5 +1,6 @@
 package nl.rug.oop.rts.server.handlers.games.lobby;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import nl.rug.oop.rts.protocol.SocketConnection;
@@ -18,7 +19,7 @@ public class LobbyDeletionRequestHandler extends PacketListener<LobbyDeletionReq
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, LobbyDeletionRequest packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, LobbyDeletionRequest packet) throws IOException {
         UUID lobbyId = packet.getLobbyId();
         this.gamesManager.removeLobby(lobbyId);
 
