@@ -14,22 +14,23 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class LoggingOutputStream extends OutputStream {
-	@NonNull
-	private Logger logger;
-	@NonNull
-	private Level level;
-	private StringBuilder stringBuilder = new StringBuilder();
+    @NonNull
+    private Logger logger;
+    
+    @NonNull
+    private Level level;
+    private StringBuilder stringBuilder = new StringBuilder();
 
-	@Override
-	public final void write(int i) throws IOException {
-		char c = (char) i;
-		if (c == '\r' || c == '\n') {
-			if (stringBuilder.length() > 0) {
-				logger.log(level, stringBuilder.toString());
-				stringBuilder = new StringBuilder();
-			}
-		} else {
-			stringBuilder.append(c);
-		}
-	}
+    @Override
+    public final void write(int i) throws IOException {
+        char c = (char) i;
+        if (c == '\r' || c == '\n') {
+            if (stringBuilder.length() > 0) {
+                logger.log(level, stringBuilder.toString());
+                stringBuilder = new StringBuilder();
+            }
+        } else {
+            stringBuilder.append(c);
+        }
+    }
 }
