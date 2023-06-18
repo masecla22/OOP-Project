@@ -176,6 +176,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void createRemoveArmyButton(Node selectedNode, JPanel nodeOptions) {
+        if (!this.mapController.allowArmyRemoval())
+            return;
+
         JButton removeArmy = new JButton("Remove army");
         removeArmy.setPreferredSize(new Dimension(50, 30));
         removeArmy.addActionListener(e -> {
