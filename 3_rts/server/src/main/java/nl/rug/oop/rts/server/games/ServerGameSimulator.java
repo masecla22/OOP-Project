@@ -19,11 +19,22 @@ import nl.rug.oop.rts.protocol.objects.model.multiplayer.GamePlayer;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 
+/**
+ * This class handles all of the game logic on the server.
+ * It is used in order to validate changes and apply them to the game.
+ */
 @AllArgsConstructor
 public class ServerGameSimulator {
     private UnitFactory unitFactory;
     private MultiplayerGame game;
 
+    /**
+     * Applies a list of changes to the game.
+     * 
+     * @param changes - the changes to apply
+     * @param team    - the team that is applying the changes
+     * @return - whether the changes were applied successfully
+     */
     public boolean canDoChanges(List<GameChange> changes, Team team) {
         int totalCost = changes.stream().mapToInt(change -> change.getFaction().getCost()).sum();
 
@@ -106,8 +117,9 @@ public class ServerGameSimulator {
 
         List<Edge> edges = node.getEdges();
         for (Edge cr : edges) {
-            if (cr.getArmies().stream().anyMatch(c -> c.getFaction().getTeam().equals(team)))
+            if (cr.getArmies().stream().anyMatch(c -> c.getFaction().getTeam().equals(team))) {
                 return true;
+            }
         }
 
         return false;
@@ -226,8 +238,9 @@ public class ServerGameSimulator {
                 }
 
                 Node nextNode = cr.getMovingToNextStep();
-                if (nextNode == null)
+                if (nextNode == null) {
                     nextNode = edge.getPointA();
+                }
 
                 nextNode.addArmy(cr);
 
@@ -242,10 +255,12 @@ public class ServerGameSimulator {
 
     private void resetArmiesStatus() {
         List<Army> toChange = new ArrayList<>();
-        for (Node node : game.getMap().getNodes())
+        for (Node node : game.getMap().getNodes()) {
             toChange.addAll(node.getArmies());
-        for (Edge edge : game.getMap().getEdges())
+        }
+        for (Edge edge : game.getMap().getEdges()) {
             toChange.addAll(edge.getArmies());
+        }
 
         for (Army cr : toChange) {
             cr.setMoved(false);
@@ -254,16 +269,18 @@ public class ServerGameSimulator {
 
     private boolean shouldBattleHappen(Node node) {
         Set<Team> teams = new HashSet<>();
-        for (Army cr : node.getArmies())
+        for (Army cr : node.getArmies()) {
             teams.add(cr.getFaction().getTeam());
+        }
 
         return teams.size() > 1;
     }
 
     private boolean shouldBattleHappen(Edge edge) {
         Set<Team> teams = new HashSet<>();
-        for (Army cr : edge.getArmies())
+        for (Army cr : edge.getArmies()) {
             teams.add(cr.getFaction().getTeam());
+        }
 
         return teams.size() > 1;
     }
@@ -285,10 +302,12 @@ public class ServerGameSimulator {
             Army bArmy = teamB.get(0);
 
             resolveSingleArmy(aArmy, bArmy);
-            if (aArmy.getUnits().size() == 0)
+            if (aArmy.getUnits().size() == 0) {
                 teamA.remove(aArmy);
-            if (bArmy.getUnits().size() == 0)
+            }
+            if (bArmy.getUnits().size() == 0) {
                 teamB.remove(bArmy);
+            }
         }
 
         armies.removeIf(cr -> cr.getUnits().size() == 0);
@@ -303,10 +322,12 @@ public class ServerGameSimulator {
             Unit bUnit = bUnits.get(0);
 
             resolveSingleUnitBattle(aUnit, bUnit);
-            if (aUnit.getHealth() <= 0)
+            if (aUnit.getHealth() <= 0) {
                 aUnits.remove(aUnit);
-            if (bUnit.getHealth() <= 0)
+            }
+            if (bUnit.getHealth() <= 0) {
                 bUnits.remove(bUnit);
+            }
         }
     }
 
@@ -315,14 +336,16 @@ public class ServerGameSimulator {
             double damage = a.dealDamage(b);
             b.takeDamage(b, damage);
 
-            if (b.getHealth() <= 0)
+            if (b.getHealth() <= 0) {
                 break;
+            }
 
             damage = b.dealDamage(a);
             a.takeDamage(a, damage);
 
-            if (a.getHealth() <= 0)
+            if (a.getHealth() <= 0) {
                 break;
+            }
         }
     }
 }
