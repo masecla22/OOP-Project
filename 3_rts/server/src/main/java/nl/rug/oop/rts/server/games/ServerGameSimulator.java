@@ -136,9 +136,9 @@ public class ServerGameSimulator {
         for (Node node : game.getGoldGeneratingNodes()) {
             for (Army army : node.getArmies()) {
                 if (army.getFaction().getTeam().equals(Team.TEAM_A)) {
-                    goldForTeamA += 50;
+                    goldForTeamA += 75;
                 } else {
-                    goldForTeamB += 50;
+                    goldForTeamB += 75;
                 }
             }
         }
