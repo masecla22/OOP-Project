@@ -19,6 +19,9 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListCon
 import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
+/**
+ * This class manages the connection to the central server during a game.
+ */
 @AllArgsConstructor
 public class MultiplayerGameConnectionController {
 
@@ -27,11 +30,19 @@ public class MultiplayerGameConnectionController {
     private MultiplayerGame multiGame;
     private Game game;
 
+    /**
+     * Sends a packet to the server. It will automatically set the game id.
+     * 
+     * @param packet - the packet to send
+     */
     public void sendGamePacket(GameScopedPacket packet) {
         packet.setGameId(multiGame.getGameId());
         this.connectionController.sendAuthenticatedPacket(packet);
     }
 
+    /**
+     * Commits the changes to the server.
+     */
     public void commitChanges() {
         GameChangeListPacket packet = new GameChangeListPacket(mapController.getChanges());
 
@@ -47,6 +58,9 @@ public class MultiplayerGameConnectionController {
         });
     }
 
+    /**
+     * Binds the game change listener.
+     */
     public void bindGameChangeListener() {
         connectionController.getConnection().addListener(new PacketListener<GameUpdatePacket>(GameUpdatePacket.class) {
             @Override
@@ -58,6 +72,9 @@ public class MultiplayerGameConnectionController {
         });
     }
 
+    /**
+     * Binds the game end listener.
+     */
     public void bindGameEndListener() {
         connectionController.getConnection().addListener(new PacketListener<GameEndPacket>(GameEndPacket.class) {
             @Override
@@ -68,14 +85,26 @@ public class MultiplayerGameConnectionController {
         });
     }
 
+    /**
+     * Unbinds the game change listener.
+     */
     public void unbindGameChangeListener() {
         connectionController.getConnection().removeListeners(GameUpdatePacket.class);
     }
 
+    /**
+     * Unbinds the game end listener.
+     */
     public void unbindGameEndListener() {
         connectionController.getConnection().removeListeners(GameEndPacket.class);
     }
 
+    /**
+     * Shows the game ending dialog.
+     * 
+     * @param won - whether the player won or not
+     * @param elo - the new elo of the player
+     */
     public void showGameEnding(boolean won, int elo) {
         JOptionPane.showMessageDialog(null,
                 "Game ended. You " + (won ? "won" : "lost") + "! You now have " + elo + " ELO");
