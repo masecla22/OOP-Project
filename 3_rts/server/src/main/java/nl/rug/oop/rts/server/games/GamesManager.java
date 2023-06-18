@@ -88,7 +88,7 @@ public class GamesManager {
      * Checks if the user can join the lobby.
      * 
      * @param lobby - The lobby to check.
-     * @param user - The user to check.
+     * @param user  - The user to check.
      * @return - True if the user can join the lobby, false otherwise.
      */
     public boolean canJoin(MultiplayerLobby lobby, User user) {
@@ -118,8 +118,8 @@ public class GamesManager {
     /**
      * Creates a game from the given lobby.
      * 
-     * @param lobby - The lobby to create the game from.
-     * @param otherUser - The user to play against.
+     * @param lobby               - The lobby to create the game from.
+     * @param otherUser           - The user to play against.
      * @param otherUserConnection - The connection of the user to play against.
      * @return - The created game.
      */
@@ -151,10 +151,10 @@ public class GamesManager {
     /**
      * Handles a finished game.
      * 
-     * @param game - The game that finished.
+     * @param game   - The game that finished.
      * @param winner - The winner of the game.
      */
-    public void handleFinishedGame(MultiplayerGame game, GamePlayer winner) {
+    public void handleFinishedGame(MultiplayerGame game, GamePlayer winner, boolean disconnected) {
         games.remove(game.getGameId());
 
         GamePlayer loser = game.getOtherPlayer(winner);
@@ -171,11 +171,18 @@ public class GamesManager {
             e.printStackTrace();
         }
 
-        try {
-            GameEndPacket packet = new GameEndPacket(false, losingUser.getElo());
-            loser.getConnection().sendPacket(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
+        // If the game end was caused due to a disconnect, no need to send the packet
+        // to the other player!
+        if (!disconnected) {
+            try {
+                GameEndPacket packet = new GameEndPacket(false, losingUser.getElo());
+                loser.getConnection().sendPacket(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Handles a disconnect from a socket.
      * 
