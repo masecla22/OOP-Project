@@ -11,9 +11,18 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 import nl.rug.oop.rts.server.games.GamesManager;
 
+/**
+ * This class handles a lobby listing request, and sends back a response with
+ * all the lobbies.
+ */
 public class LobbyListingRequestHandler extends PacketListener<LobbyListingRequest> {
     private GamesManager gamesManager;
 
+    /**
+     * Create a new LobbyListingRequestHandler.
+     * 
+     * @param gamesManager - The games manager
+     */
     public LobbyListingRequestHandler(GamesManager gamesManager) {
         super(LobbyListingRequest.class);
         this.gamesManager = gamesManager;
