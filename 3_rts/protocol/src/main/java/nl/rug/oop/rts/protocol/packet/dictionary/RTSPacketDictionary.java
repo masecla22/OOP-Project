@@ -18,10 +18,15 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyJoiningRequest
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyListingResponse;
 
+/**
+ * Dictionary for the RTS protocol.
+ */
 public class RTSPacketDictionary extends PacketDictionary {
-    public RTSPacketDictionary() {
-        super();
 
+    /**
+     * Create a new dictionary and registers all packets.
+     */
+    public RTSPacketDictionary() {
         // Register packets here
         this.registerPacket(LoginRequest.class);
         this.registerPacket(LoginResponse.class);
