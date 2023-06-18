@@ -1,5 +1,7 @@
 package nl.rug.oop.rts.server.handlers.leaderboard;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -19,7 +21,7 @@ public class LeaderboardRequestHandler extends PacketListener<LeaderboardRequest
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, LeaderboardRequest packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, LeaderboardRequest packet) throws IOException, SQLException {
         List<Entry<String, Integer>> leaderboard = userManager.getLeaderboard();
 
         LeaderboardResponse response = new LeaderboardResponse(leaderboard);
