@@ -28,6 +28,12 @@ public class LeaderboardView extends View implements Observer {
 
     private JPanel userPanel;
 
+    /**
+     * Constructor for the leaderboard view.
+     * 
+     * @param game                 - the game
+     * @param connectionController - the connection controller
+     */
     public LeaderboardView(Game game, MultiplayerConnectionController connectionController) {
         this.game = game;
         this.connectionController = connectionController;
