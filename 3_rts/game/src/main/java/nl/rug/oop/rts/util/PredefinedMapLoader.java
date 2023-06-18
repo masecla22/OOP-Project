@@ -57,9 +57,10 @@ public class PredefinedMapLoader {
     }
 
     /**
-     *
-     * @param mapName
-     * @return
+     * Loads a map from the given file.
+     * 
+     * @param mapName - the name of the map
+     * @return - the map
      */
     public nl.rug.oop.rts.protocol.objects.model.Map getMap(String mapName) {
         if (cachedMaps.containsKey(mapName)) {
@@ -77,6 +78,11 @@ public class PredefinedMapLoader {
         return map;
     }
 
+    /**
+     * Get the names of all predefined maps.
+     * 
+     * @return - the names of all predefined maps
+     */
     public Set<String> getPredefinedMapNames() {
         return textures.keySet();
     }
