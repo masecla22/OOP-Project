@@ -15,6 +15,9 @@ import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.packet.dictionary.PacketDictionary;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class manages all connections to the server.
+ */
 @RequiredArgsConstructor
 public class ConnectionManager {
     @NonNull
@@ -32,6 +35,12 @@ public class ConnectionManager {
     private List<Consumer<SocketConnection>> connectionHandlers = new ArrayList<>();
     private List<SocketConnection> connections = new ArrayList<>();
 
+    /**
+     * Starts the connection manager.
+     * 
+     * @param port - The port to listen on
+     * @throws IOException - When the socket cannot be created
+     */
     public void start(int port) throws IOException {
         this.socket = new ServerSocket(port);
         this.socket.setReuseAddress(true);
@@ -40,16 +49,28 @@ public class ConnectionManager {
         threadPool.submit(this::handleConnections);
     }
 
+    /**
+     * Add a connection handler. This is called when a new connection is opened.
+     * 
+     * @param handler - The handler
+     */
     public void addConnectionHandler(Consumer<SocketConnection> handler) {
         connectionHandlers.add(handler);
     }
 
+    /**
+     * Stop the connection manager.
+     * 
+     * @throws IOException          - When the socket cannot be closed
+     * @throws InterruptedException - When the thread is interrupted
+     */
     public void stop() throws IOException, InterruptedException {
         running.set(false);
 
         // Close all connections
-        for (SocketConnection connection : connections)
+        for (SocketConnection connection : connections) {
             connection.closeConnection();
+        }
 
         socket.close();
     }
