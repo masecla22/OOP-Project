@@ -189,6 +189,10 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public String canPlaceArmy(Node node) {
+        if (!multiplayerGame.isMyTurn(team)) {
+            return "Not your turn!";
+        }
+
         if (multiplayerGame.getPlayerA().getStartingNode().equals(node) && team.equals(Team.TEAM_A)) {
             return null;
         }
@@ -218,10 +222,6 @@ public class MultiplayerMapController extends MapController {
 
         if (team == Team.TEAM_B && multiplayerGame.getPlayerB().getGold() < Faction.getSmallestCost()) {
             return "Not enough gold!";
-        }
-
-        if (!multiplayerGame.isMyTurn(team)) {
-            return "Not your turn!";
         }
 
         return null;
