@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GameChange;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameScopedPacket;
 
+/**
+ * List of changes to the game.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
