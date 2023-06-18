@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.server.configuration.sql.SQLConfiguration;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class represents the server configuration.
+ */
 @Data
 @NoArgsConstructor
 public class ServerConfiguration {
@@ -22,6 +25,16 @@ public class ServerConfiguration {
     private int port = 7779;
     private SQLConfiguration sql = new SQLConfiguration();
 
+    /**
+     * Loads the configuration from the given file. If the file does not exist, it
+     * will be created with default values. Throws to the logger if something goes
+     * wrong.
+     * 
+     * @param rugson - The Rugson instance to use for loading the config
+     * @param file   - The file to load the config from
+     * @param logger - The logger to throw to if something goes wrong
+     * @return - The loaded configuration
+     */
     public static ServerConfiguration loadConfiguration(Rugson rugson, File file, Logger logger) {
         try {
             if (!file.exists()) {
@@ -50,7 +63,7 @@ public class ServerConfiguration {
             config.setRugson(rugson);
 
             return config;
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
             return null;
         }
@@ -64,7 +77,7 @@ public class ServerConfiguration {
         try (FileOutputStream stream = new FileOutputStream(file)) {
             String json = this.rugson.toJson(this);
             stream.write(json.getBytes());
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
         }
     }
