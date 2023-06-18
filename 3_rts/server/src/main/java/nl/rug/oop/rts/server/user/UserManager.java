@@ -146,7 +146,7 @@ public class UserManager {
     }
 
     /**
-     * Gets the user with the given session ID
+     * Gets the user with the given session ID.
      * 
      * @param token - The session ID
      * @return - The user
@@ -156,7 +156,7 @@ public class UserManager {
     }
 
     /**
-     * Logs out the user with the given session ID
+     * Logs out the user with the given session ID.
      * 
      * @param token - The session ID
      */
@@ -165,7 +165,7 @@ public class UserManager {
     }
 
     /**
-     * Logs in the given user and returns a session ID
+     * Logs in the given user and returns a session ID.
      * 
      * @param user - The user
      * @return - The session ID
@@ -182,6 +182,8 @@ public class UserManager {
      * 
      * @param username - The username
      * @param password - The password
+     * 
+     * @return - The session ID, or null if the password is incorrect
      */
     public UUID login(String username, String password) throws SQLException {
         if (username == null || password == null) {
