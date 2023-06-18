@@ -20,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.user.User;
 
+/**
+ * This class manages all the users in the game.
+ */
 @RequiredArgsConstructor
 public class UserManager {
     @NonNull
@@ -27,6 +30,12 @@ public class UserManager {
 
     private Map<UUID, User> activeTokens = new HashMap<>();
 
+    /**
+     * Initialize the user manager. This will create the table if it doesn't
+     * exist yet.
+     * 
+     * @throws SQLException - If an error occurs while creating the table
+     */
     public void initialize() throws SQLException {
         ensureTable();
     }
@@ -59,6 +68,15 @@ public class UserManager {
         }
     }
 
+    /**
+     * Creates a user with the given username and password. The password will be
+     * hashed before it is stored in the database.
+     * 
+     * @param username - The username
+     * @param password - The password
+     * @return - The created user
+     * @throws SQLException - If an error occurs while creating the user
+     */
     public User createUser(String username, String password) throws SQLException {
         if (username == null || password == null) {
             throw new IllegalArgumentException("Username and password cannot be null");
@@ -89,6 +107,13 @@ public class UserManager {
         return getUser(username);
     }
 
+    /**
+     * Sets the ELO of the given user.
+     * 
+     * @param user - The user
+     * @param elo  - The ELO
+     * @throws SQLException - If an error occurs while setting the ELO
+     */
     public void setElo(User user, int elo) throws SQLException {
         String query = "UPDATE `rts_users` SET `elo` = ? WHERE `id` = ?;";
 
@@ -99,6 +124,13 @@ public class UserManager {
         }
     }
 
+    /**
+     * Gets the user with the given username.
+     * 
+     * @param username - The username
+     * @return - The user
+     * @throws SQLException - If an error occurs while getting the user
+     */
     public User getUser(String username) throws SQLException {
         String query = "SELECT * FROM `rts_users` WHERE `username` = ?;";
 
@@ -113,20 +145,44 @@ public class UserManager {
         }
     }
 
+    /**
+     * Gets the user with the given session ID
+     * 
+     * @param token - The session ID
+     * @return - The user
+     */
     public User getUser(UUID token) {
         return activeTokens.get(token);
     }
 
+    /**
+     * Logs out the user with the given session ID
+     * 
+     * @param token - The session ID
+     */
     public void logout(UUID token) {
         activeTokens.remove(token);
     }
 
+    /**
+     * Logs in the given user and returns a session ID
+     * 
+     * @param user - The user
+     * @return - The session ID
+     */
     public UUID login(User user) {
         UUID token = UUID.randomUUID();
         activeTokens.put(token, user);
         return token;
     }
 
+    /**
+     * Checks the given password against the stored password for the given user.
+     * and returns a session ID if the password is correct.
+     * 
+     * @param username - The username
+     * @param password - The password
+     */
     public UUID login(String username, String password) throws SQLException {
         if (username == null || password == null) {
             return null;
