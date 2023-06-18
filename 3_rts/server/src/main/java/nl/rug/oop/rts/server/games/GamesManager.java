@@ -1,15 +1,19 @@
 package nl.rug.oop.rts.server.games;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.games.MultiplayerLobby;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.GamePlayer;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
+import nl.rug.oop.rts.protocol.packet.definitions.game.GameEndPacket;
 import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.user.UserManager;
 
@@ -50,6 +54,26 @@ public class GamesManager {
     }
 
     public boolean canJoin(MultiplayerLobby lobby, User user) {
+        // Make sure the user is not the host
+        if (lobby.getHost().getId() == user.getId()) {
+            return false;
+        }
+
+        // Make sure the user is not already in another lobby
+        for (MultiplayerLobby otherLobby : lobbies.values()) {
+            if (otherLobby.getHost().getId() == user.getId()) {
+                return false;
+            }
+        }
+
+        // Make sure the player is not in another game
+        for (MultiplayerGame game : games.values()) {
+            if (game.getPlayerA().getUser().getId() == user.getId()
+                    || game.getPlayerB().getUser().getId() == user.getId()) {
+                return false;
+            }
+        }
+
         return true;
     }
 
