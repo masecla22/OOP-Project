@@ -8,6 +8,10 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * This packet is sent by the server to the client to signal that the game has
+ * started.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
