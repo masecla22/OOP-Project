@@ -66,12 +66,12 @@ public class MultiplayerView extends View implements Observer {
      * @param settingsController - the settings controller
      */
     public MultiplayerView(Game game, SettingsController settingsController) {
+        this.unitFactory = new MultiPlayerUnitFactory();
+        this.eventFactory = new EventFactory(unitFactory);
+
         this.initializeRugson();
 
         this.settingsController = settingsController;
-
-        this.unitFactory = new MultiPlayerUnitFactory();
-        this.eventFactory = new EventFactory(unitFactory);
 
         this.game = game;
 
