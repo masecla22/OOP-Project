@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * Packet that requires authentication.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
