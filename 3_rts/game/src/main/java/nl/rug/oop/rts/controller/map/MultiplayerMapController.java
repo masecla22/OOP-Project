@@ -182,13 +182,28 @@ public class MultiplayerMapController extends MapController {
             return null;
 
         List<Edge> edges = node.getEdges();
+        boolean friendlies = false;
         for (Edge cr : edges) {
-            if (cr.getOtherNode(node).getArmies().stream()
-                    .anyMatch(c -> c.getFaction().getTeam().equals(this.team)))
-                return null;
+            if (cr.getArmies().stream().anyMatch(c -> c.getFaction().getTeam().equals(this.team))) {
+                friendlies = true;
+                break;
+            }
         }
 
-        return "No friendlies nearby!";
+        if (!friendlies)
+            return "No friendlies nearby!";
+
+        if (team == Team.TEAM_A && multiplayerGame.getPlayerA().getGold() < Faction.getSmallestCost())
+            return "Not enough gold!";
+
+        if (team == Team.TEAM_B && multiplayerGame.getPlayerB().getGold() < Faction.getSmallestCost())
+            return "Not enough gold!";
+
+        if (!multiplayerGame.isMyTurn(team)) {
+            return "Not your turn!";
+        }
+
+        return null;
     }
 
     @Override
@@ -196,6 +211,11 @@ public class MultiplayerMapController extends MapController {
         return Arrays.stream(Faction.values())
                 .filter(c -> c.getTeam().equals(this.team))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean allowArmyRemoval() {
+        return false;
     }
 
     @Override
