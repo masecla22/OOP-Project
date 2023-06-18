@@ -12,6 +12,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * This class represents the SQL configuration.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +30,15 @@ public class SQLConfiguration {
     @Getter(AccessLevel.NONE)
     private transient Connection connection;
 
+    private transient Timer sqlAliver = new Timer();
+
+    /**
+     * Open a connection to the database.
+     * 
+     * @return - the connection
+     * @throws ClassNotFoundException - if the SQL driver could not be found
+     * @throws SQLException           - if the connection could not be opened
+     */
     public Connection openConnection() throws ClassNotFoundException, SQLException {
         if (connection != null && !connection.isClosed()) {
             return connection;
@@ -62,8 +74,11 @@ public class SQLConfiguration {
         return connection;
     }
 
-    private transient Timer sqlAliver = new Timer();
-
+    /**
+     * Close the connection to the database.
+     * 
+     * @throws SQLException - if the connection could not be closed
+     */
     public void closeConnection() throws SQLException {
         this.sqlAliver.cancel();
         this.connection.close();
