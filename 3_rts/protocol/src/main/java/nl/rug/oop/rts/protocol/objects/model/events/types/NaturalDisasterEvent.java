@@ -4,8 +4,14 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 
+/**
+ * Natural disaster event.
+ */
 public class NaturalDisasterEvent extends Event {
 
+    /**
+     * Constructor for NaturalDisasterEvent.
+     */
     public NaturalDisasterEvent() {
         super(EventType.NATURAL_DISASTER);
     }
