@@ -11,6 +11,9 @@ import nl.rug.oop.rts.protocol.objects.interfaces.Selectable;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
 
+/**
+ *
+ */
 @RequiredArgsConstructor
 public class MapMouseHandler extends MouseAdapter {
     @NonNull
