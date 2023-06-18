@@ -8,18 +8,20 @@ import java.time.Instant;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * This is the class used to format messages and errors to the console.
+ */
 public class CustomFormatter extends Formatter {
     @Override
     public String format(LogRecord message) {
         String msg = message.getMessage();
-        if (msg.startsWith("IGN"))
-            return msg.substring(3) + "\n";
 
         StringBuffer sb = new StringBuffer();
         sb.append(getTimeAndDate());
         sb.append(message.getLevel());
         sb.append(": ");
         sb.append(msg).append("\n");
+
         if (message.getThrown() != null) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
