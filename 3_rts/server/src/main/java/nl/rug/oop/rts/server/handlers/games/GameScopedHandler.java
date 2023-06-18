@@ -1,5 +1,7 @@
 package nl.rug.oop.rts.server.handlers.games;
 
+import java.io.IOException;
+
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
@@ -21,7 +23,7 @@ public class GameScopedHandler extends PacketListener<GameScopedPacket> {
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, GameScopedPacket packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, GameScopedPacket packet) throws IOException {
         // Get the user from the connection
         User user = userManager.getUser(packet.getSessionToken());
         if (user == null) {
