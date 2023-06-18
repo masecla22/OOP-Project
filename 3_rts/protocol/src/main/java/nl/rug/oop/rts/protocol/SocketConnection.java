@@ -17,6 +17,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -47,6 +48,8 @@ public class SocketConnection {
     private AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private Map<Class<?>, List<PacketListener<?>>> packetListeners = new HashMap<>();
+
+    private List<Consumer<SocketConnection>> closeListeners = new ArrayList<>();
 
     private Timer keepAliveSender = new Timer();
 
@@ -93,6 +96,10 @@ public class SocketConnection {
         if (this.packetListeners.get(packetClass).isEmpty()) {
             this.packetListeners.remove(packetClass);
         }
+    }
+
+    public void onConnectionClose(Consumer<SocketConnection> closeListener) {
+        this.closeListeners.add(closeListener);
     }
 
     public void removeListeners(Class<? extends Packet> packetClass) {
@@ -183,6 +190,8 @@ public class SocketConnection {
 
         this.packetListeners.values().forEach(List::clear);
         this.packetListeners.clear();
+
+        this.closeListeners.forEach(listener -> listener.accept(this));
 
         this.keepAliveSender.cancel();
         this.isRunning.set(false);
