@@ -118,6 +118,9 @@ public class ServerGameSimulator {
                 return true;
             }
         }
+        if (node.getArmies().stream().anyMatch(c -> c.getFaction().getTeam().equals(team))) {
+            return true;
+        }
 
         return false;
     }
