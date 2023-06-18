@@ -10,8 +10,14 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.game.SingleplayerMenuView;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
+/**
+ * This class is respoinsible for presenting the main menu of the game to the user.
+ */
 public class MainMenuClass extends View {
     private Game game;
+    /**
+     *
+     */
     private SettingsController settingsController;
 
     public MainMenuClass(Game game, SettingsController settingsController) {

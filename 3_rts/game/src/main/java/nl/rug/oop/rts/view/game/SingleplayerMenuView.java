@@ -28,6 +28,9 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
+/**
+ * This class is responsible for presenting the single player menu to the user.
+ */
 public class SingleplayerMenuView extends View {
     private Game game;
 

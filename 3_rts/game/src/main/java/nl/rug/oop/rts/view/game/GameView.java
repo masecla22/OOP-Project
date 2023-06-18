@@ -21,10 +21,15 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.map.MapView;
 
 @Getter(AccessLevel.PROTECTED)
+/**
+ * This class is responsible for presenting the game to the user.
+ */
 public class GameView extends View implements Observer {
     private Game game;
     private Map map;
-
+    /**
+     *
+     */
     private MapController mapController;
     private MapSimulationController simulationController;
 
@@ -62,8 +67,9 @@ public class GameView extends View implements Observer {
             this.removeEdgeButton.setEnabled(true);
         }
 
-        if (!this.mapController.isAddingEdge())
+        if (!this.mapController.isAddingEdge()) {
             this.addEdgeButton.setText("Add Edge");
+        }
 
         this.repaint();
     }
@@ -112,23 +118,26 @@ public class GameView extends View implements Observer {
         topBar.add(addNodeButton);
         addNodeButton.addActionListener(e -> {
             String name = JOptionPane.showInputDialog("What is the name of the node?");
-            if (name != null)
+            if (name != null) {
                 this.mapController.createNode(name);
+            }
         });
 
         topBar.add(removeNodeButton);
 
         removeNodeButton.setEnabled(false);
         removeNodeButton.addActionListener(e -> {
-            if (this.map.getSelection() instanceof Node selectedNode)
+            if (this.map.getSelection() instanceof Node selectedNode) {
                 this.mapController.removeNode(selectedNode);
+            }
             this.mapController.setSelection(null);
         });
 
         removeEdgeButton.setEnabled(false);
         removeEdgeButton.addActionListener(e -> {
-            if (this.map.getSelection() instanceof Edge selectedEdge)
+            if (this.map.getSelection() instanceof Edge selectedEdge) {
                 this.mapController.removeEdge(selectedEdge);
+            }
             this.map.setSelection(null);
         });
 
@@ -143,12 +152,13 @@ public class GameView extends View implements Observer {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Specify a file to save");
             fileChooser.addActionListener((selected) -> {
-                if (selected.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
+                if (selected.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
                     try {
                         this.mapController.exportToJson(fileChooser.getSelectedFile());
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                }
             });
 
             fileChooser.showOpenDialog(this);

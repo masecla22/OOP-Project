@@ -25,6 +25,9 @@ import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.view.View;
 
+/**
+ * This class is responsible for presenting the side panel menu to the user.
+ */
 public class SidePanelView extends View implements Observer {
     private Map map;
 
@@ -60,8 +63,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void showNodeOptions() {
-        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection()))
+        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection())) {
             return;
+        }
 
         showingOptionsFor = this.map.getSelection();
 
@@ -156,8 +160,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void createRemoveEventButton(Node selectedNode, JPanel nodeOptions) {
-        if (!this.mapController.allowEventModification())
+        if (!this.mapController.allowEventModification()) {
             return;
+        }
 
         JButton removeEvent = new JButton("Remove event");
         removeEvent.setPreferredSize(new Dimension(50, 30));
@@ -168,16 +173,18 @@ public class SidePanelView extends View implements Observer {
                     JOptionPane.QUESTION_MESSAGE,
                     null, selectedNode.getEvents().toArray(), null);
 
-            if (event != null)
+            if (event != null) {
                 this.mapController.removeEvent(selectedNode, event);
+            }
         });
 
         nodeOptions.add(removeEvent);
     }
 
     private void createRemoveArmyButton(Node selectedNode, JPanel nodeOptions) {
-        if (!this.mapController.allowArmyRemoval())
+        if (!this.mapController.allowArmyRemoval()) {
             return;
+        }
 
         JButton removeArmy = new JButton("Remove army");
         removeArmy.setPreferredSize(new Dimension(50, 30));
@@ -188,8 +195,9 @@ public class SidePanelView extends View implements Observer {
                     JOptionPane.QUESTION_MESSAGE,
                     null, selectedNode.getArmies().toArray(), null);
 
-            if (army != null)
+            if (army != null) {
                 this.mapController.removeArmy(selectedNode, army);
+            }
         });
         nodeOptions.add(removeArmy);
     }
@@ -215,8 +223,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void showEdgeOptions() {
-        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection()))
+        if (showingOptionsFor != null && showingOptionsFor.equals(this.map.getSelection())) {
             return;
+        }
 
         showingOptionsFor = this.map.getSelection();
         this.removeAll();
@@ -236,8 +245,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void createEdgeRemoveEventButton(JPanel edgeOptions, Edge selectedEdge) {
-        if (!this.mapController.allowEventModification())
+        if (!this.mapController.allowEventModification()) {
             return;
+        }
 
         JButton removeEvent = new JButton("Remove event");
         removeEvent.setPreferredSize(new Dimension(50, 30));
@@ -248,15 +258,17 @@ public class SidePanelView extends View implements Observer {
                     JOptionPane.QUESTION_MESSAGE,
                     null, selectedEdge.getEvents().toArray(), null);
 
-            if (event != null)
+            if (event != null) {
                 this.mapController.removeEvent(selectedEdge, event);
+            }
         });
         edgeOptions.add(removeEvent);
     }
 
     private void createEdgeAddEventButton(JPanel edgeOptions, Edge selectedEdge) {
-        if (!this.mapController.allowEventModification())
+        if (!this.mapController.allowEventModification()) {
             return;
+        }
 
         JButton addEvent = new JButton("Add event");
         addEvent.setPreferredSize(new Dimension(50, 30));
@@ -275,8 +287,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void showNoNodeSelected(boolean ignoreSelection) {
-        if (!ignoreSelection && showingOptionsFor == null)
+        if (!ignoreSelection && showingOptionsFor == null) {
             return;
+        }
 
         showingOptionsFor = null;
         this.removeAll();

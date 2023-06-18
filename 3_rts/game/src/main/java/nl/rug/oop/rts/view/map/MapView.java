@@ -20,6 +20,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.util.TextureLoader;
 import nl.rug.oop.rts.view.View;
 
+/**
+ * This class is responsible for presenting the map to the user.
+ */
 public class MapView extends View implements Observer {
 
     public static final int MAP_SIZE = 2000;
@@ -28,7 +31,6 @@ public class MapView extends View implements Observer {
     private MapController mapController;
 
     public MapView(Map map, MapController mapController) {
-        super();
         this.map = map;
         this.mapController = mapController;
 

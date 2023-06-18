@@ -27,6 +27,9 @@ import nl.rug.oop.rts.util.file.MapSaveJsonFilter;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class is responsible for presenting the lobby to the user.
+ */
 public class LobbyCreationView extends View implements Observer {
     private Game game;
     private MultiplayerConnectionController connectionController;
