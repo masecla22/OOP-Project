@@ -11,9 +11,18 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.Regist
 import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This class handles a registration request. This is sent by the client when
+ * the user wants to register a new account.
+ */
 public class RegistrationHandler extends PacketListener<RegistrationRequest> {
     private UserManager userManager;
 
+    /**
+     * Create a new RegistrationHandler.
+     * 
+     * @param userManager - The user manager
+     */
     public RegistrationHandler(UserManager userManager) {
         super(RegistrationRequest.class);
         this.userManager = userManager;
