@@ -8,6 +8,9 @@ import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * Adapter for the Unit class.
+ */
 public class UnitTypeAdapter extends TypeAdapter<Unit> {
 
     @Override
