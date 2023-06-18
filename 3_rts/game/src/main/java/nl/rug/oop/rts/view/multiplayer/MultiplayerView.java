@@ -42,6 +42,10 @@ import nl.rug.oop.rts.view.multiplayer.lobby.LobbyCreationView;
 import nl.rug.oop.rugson.Rugson;
 import nl.rug.oop.rugson.RugsonBuilder;
 
+/**
+ * The MultiplayerView is the view that is shown when the user is in the
+ * multiplayer menu.
+ */
 public class MultiplayerView extends View implements Observer {
     private Game game;
 
@@ -54,6 +58,12 @@ public class MultiplayerView extends View implements Observer {
 
     private List<MultiplayerLobby> knownLobbies = new ArrayList<>();
 
+    /**
+     * Sets up a MultiplayerView.
+     * 
+     * @param game               - the game
+     * @param settingsController - the settings controller
+     */
     public MultiplayerView(Game game, SettingsController settingsController) {
         this.initializeRugson();
 
