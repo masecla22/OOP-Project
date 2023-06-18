@@ -17,6 +17,9 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.GameEndPacket;
 import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * Manages all the games and lobbies, as well as their creation.
+ */
 @RequiredArgsConstructor
 public class GamesManager {
     @Getter
@@ -28,6 +31,13 @@ public class GamesManager {
     @NonNull
     private UserManager userManager;
 
+    /**
+     * Gets the lobby that the user is hosting.
+     * 
+     * @param user - The user to get the lobby for.
+     * @return - The lobby that the user is hosting, or null if the user is not
+     *         hosting a lobby.
+     */
     public MultiplayerLobby getByUser(User user) {
         for (MultiplayerLobby lobby : lobbies.values()) {
             if (lobby.getHost().getId() == user.getId()) {
@@ -37,6 +47,16 @@ public class GamesManager {
         return null;
     }
 
+    /**
+     * Creates a new lobby for the user.
+     * 
+     * @param user       - The user to create the lobby for.
+     * @param lobbyName  - The name of the lobby.
+     * @param map        - The map to use.
+     * @param mapName    - The name of the map.
+     * @param connection - The connection of the user who made it.
+     * @return - The created lobby.
+     */
     public MultiplayerLobby createLobby(User user, String lobbyName, Map map, String mapName,
             SocketConnection connection) {
         MultiplayerLobby lobby = new MultiplayerLobby(UUID.randomUUID(), map, mapName, lobbyName, user, connection);
@@ -45,14 +65,32 @@ public class GamesManager {
         return lobby;
     }
 
+    /**
+     * Removes the lobby from the list of lobbies.
+     * 
+     * @param lobbyId - The id of the lobby to remove.
+     */
     public void removeLobby(UUID lobbyId) {
         lobbies.remove(lobbyId);
     }
 
+    /**
+     * Gets the lobby with the given id.
+     * 
+     * @param lobbyId - The id of the lobby to get.
+     * @return - The lobby with the given id.
+     */
     public MultiplayerLobby getLobby(UUID lobbyId) {
         return this.lobbies.get(lobbyId);
     }
 
+    /**
+     * Checks if the user can join the lobby.
+     * 
+     * @param lobby - The lobby to check.
+     * @param user - The user to check.
+     * @return - True if the user can join the lobby, false otherwise.
+     */
     public boolean canJoin(MultiplayerLobby lobby, User user) {
         // Make sure the user is not the host
         if (lobby.getHost().getId() == user.getId()) {
@@ -77,6 +115,14 @@ public class GamesManager {
         return true;
     }
 
+    /**
+     * Creates a game from the given lobby.
+     * 
+     * @param lobby - The lobby to create the game from.
+     * @param otherUser - The user to play against.
+     * @param otherUserConnection - The connection of the user to play against.
+     * @return - The created game.
+     */
     public MultiplayerGame createGame(MultiplayerLobby lobby, User otherUser, SocketConnection otherUserConnection) {
         UUID gameId = UUID.randomUUID();
 
@@ -92,10 +138,22 @@ public class GamesManager {
         return game;
     }
 
+    /**
+     * Gets the game with the given id.
+     * 
+     * @param gameId - The id of the game to get.
+     * @return - The game with the given id.
+     */
     public MultiplayerGame getGame(UUID gameId) {
         return games.get(gameId);
     }
 
+    /**
+     * Handles a finished game.
+     * 
+     * @param game - The game that finished.
+     * @param winner - The winner of the game.
+     */
     public void handleFinishedGame(MultiplayerGame game, GamePlayer winner) {
         games.remove(game.getGameId());
 
