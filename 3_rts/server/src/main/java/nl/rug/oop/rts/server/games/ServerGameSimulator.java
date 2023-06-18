@@ -40,7 +40,6 @@ public class ServerGameSimulator {
 
         // Make sure the team has enough gold to apply the changes
         if (game.getGamePlayer(team).getGold() < totalCost) {
-            System.out.println("Not enough gold");
             return false;
         }
 
@@ -53,7 +52,6 @@ public class ServerGameSimulator {
 
         for (GameChange change : changes) {
             if (!nodes.keySet().contains(change.getNodeId())) {
-                System.out.println("Node does not exist");
                 return false;
             }
         }
@@ -61,17 +59,14 @@ public class ServerGameSimulator {
         // Make sure the armies he places are part of his own team
         for (GameChange change : changes) {
             if (change.getFaction().getTeam() != team) {
-                System.out.println("Team does not match");
                 return false;
             }
         }
 
-        // Make sure the player was allowed to place armies on the nodes it places them
-        // on
+        // Make sure the player is allowed to place armies on the nodes
         for (GameChange change : changes) {
             Node node = nodes.get(change.getNodeId());
             if (!canTeamPlace(node, team)) {
-                System.out.println("Cannot place on node");
                 return false;
             }
         }
@@ -79,34 +74,36 @@ public class ServerGameSimulator {
         return true;
     }
 
+    /**
+     * Applies a list of changes to the game.
+     * 
+     * @param changes - the changes to apply
+     * @param team    - the team that is applying the changes
+     */
     public void applyChanges(List<GameChange> changes, Team team) {
-        try {
-            // First subtract the gold from the player's balance
-            GamePlayer player = game.getGamePlayer(team);
-            int gold = player.getGold();
+        // First subtract the gold from the player's balance
+        GamePlayer player = game.getGamePlayer(team);
+        int gold = player.getGold();
 
-            for (GameChange change : changes) {
-                gold -= change.getFaction().getCost();
-            }
-
-            player.setGold(gold);
-
-            // Then apply the changes to the map
-            Map<Integer, Node> nodes = new HashMap<>();
-            for (Node node : game.getMap().getNodes()) {
-                nodes.put(node.getId(), node);
-            }
-
-            for (GameChange change : changes) {
-                Node node = nodes.get(change.getNodeId());
-                node.addArmy(unitFactory.buildArmy(change.getFaction()));
-            }
-
-            // Switch game turn
-            game.setPlayerATurn(!game.isPlayerATurn());
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (GameChange change : changes) {
+            gold -= change.getFaction().getCost();
         }
+
+        player.setGold(gold);
+
+        // Then apply the changes to the map
+        Map<Integer, Node> nodes = new HashMap<>();
+        for (Node node : game.getMap().getNodes()) {
+            nodes.put(node.getId(), node);
+        }
+
+        for (GameChange change : changes) {
+            Node node = nodes.get(change.getNodeId());
+            node.addArmy(unitFactory.buildArmy(change.getFaction()));
+        }
+
+        // Switch game turn
+        game.setPlayerATurn(!game.isPlayerATurn());
     }
 
     private boolean canTeamPlace(Node node, Team team) {
@@ -125,6 +122,9 @@ public class ServerGameSimulator {
         return false;
     }
 
+    /**
+     * Runs an entire simulation step.
+     */
     public void simulateStep() {
         resolveAllBattles();
         moveNodeArmies();
