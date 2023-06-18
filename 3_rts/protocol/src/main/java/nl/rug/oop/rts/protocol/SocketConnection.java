@@ -127,10 +127,10 @@ public class SocketConnection {
 
     public void pollPackets() {
         while (isRunning.get()) {
-            // We're giving it 10 seconds, as client and server are supposed to
+            // We're giving it 20 seconds, as client and server are supposed to
             // exchange a KeepAlive packet every 5 seconds
             try {
-                Packet packet = readNextPacket(10000);
+                Packet packet = readNextPacket(20000);
                 if (packet == null)
                     continue;
                 handleIncomingPacket(packet);
@@ -219,6 +219,8 @@ public class SocketConnection {
         int id = readInt(inputStream);
         int size = readInt(inputStream);
 
+        int prev = inputStream.available();
+
         ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
         while (bufferedPacket.size() < size) {
             // Wait for data to be available
@@ -228,6 +230,12 @@ public class SocketConnection {
                     Thread.sleep(5);
                     if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
                         throw new TimeoutException();
+                    }
+
+                    if (inputStream.available() != prev) {
+                        // Reset timeout as data is trickling in
+                        currentTimestamp = Instant.now().toEpochMilli();
+                        prev = inputStream.available();
                     }
                 } catch (InterruptedException e) {
                     this.closeConnection();
