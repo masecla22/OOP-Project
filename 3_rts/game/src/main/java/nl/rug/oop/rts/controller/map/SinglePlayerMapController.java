@@ -15,11 +15,22 @@ import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * Controller for the map in singleplayer.
+ */
 public class SinglePlayerMapController extends MapController {
 
     private UnitFactory unitFactory;
     private EventFactory eventFactory;
 
+    /**
+     * Create a new map controller for singleplayer games.
+     * 
+     * @param rugson       - the rugson instance
+     * @param unitFactory  - the unit factory
+     * @param eventFactory - the event factory
+     * @param map          - the map
+     */
     public SinglePlayerMapController(Rugson rugson, UnitFactory unitFactory, EventFactory eventFactory, Map map) {
         super(rugson, map);
         this.unitFactory = unitFactory;
@@ -99,10 +110,12 @@ public class SinglePlayerMapController extends MapController {
 
     @Override
     public Color getColorForNode(Node node) {
-        if (this.getMap().getSelection() == null)
+        if (this.getMap().getSelection() == null) {
             return null;
-        if (!(this.getMap().getSelection() instanceof Node))
+        }
+        if (!(this.getMap().getSelection() instanceof Node)) {
             return null;
+        }
 
         Node selectedNode = (Node) this.getMap().getSelection();
 
