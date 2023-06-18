@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * This packet is sent by the server to the client to signal that the game has
+ * ended.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
