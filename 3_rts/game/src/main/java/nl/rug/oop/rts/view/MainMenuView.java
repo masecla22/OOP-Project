@@ -25,7 +25,6 @@ public class MainMenuView extends View {
      * @param settingsController - the settings controller
      */
     public MainMenuView(Game game, SettingsController settingsController) {
-        super();
         this.game = game;
         this.settingsController = settingsController;
 
