@@ -12,11 +12,21 @@ import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This class handles a lobby creation request, and sends back a response with
+ * the lobby.
+ */
 public class LobbyCreationRequestHandler extends PacketListener<LobbyCreationRequest> {
 
     private GamesManager gamesManager;
     private UserManager userManager;
 
+    /**
+     * Create a new LobbyCreationRequestHandler.
+     * 
+     * @param gamesManager - The games manager
+     * @param userManager - The user manager
+     */
     public LobbyCreationRequestHandler(GamesManager gamesManager, UserManager userManager) {
         super(LobbyCreationRequest.class);
 
