@@ -71,6 +71,8 @@ public abstract class MapController {
 
     public abstract boolean showUnitCost();
 
+    public abstract boolean allowArmyRemoval();
+
     public void setSelection(Selectable selection) {
         if (selection == null) {
             this.addingEdge = null;
