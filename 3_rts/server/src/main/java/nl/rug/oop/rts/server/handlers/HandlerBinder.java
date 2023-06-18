@@ -18,11 +18,17 @@ import nl.rug.oop.rts.server.handlers.leaderboard.LeaderboardRequestHandler;
 import nl.rug.oop.rts.server.main.RTSServer;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This class binds all the handlers to the connection.
+ */
 @AllArgsConstructor
 public class HandlerBinder {
     private RTSServer server;
     private SocketConnection connection;
 
+    /**
+     * Bind all the handlers to the connection.
+     */
     public void bind() {
         this.registerAuthenticationListeners();
     }
