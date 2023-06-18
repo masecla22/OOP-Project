@@ -20,7 +20,6 @@ import nl.rug.oop.rts.view.game.SidePanelView;
 import nl.rug.oop.rts.view.map.MapView;
 
 public class MultiplayerGameView extends View implements Observer {
-    private Game game;
 
     private MultiplayerGame multiGame;
     private Team team;
@@ -31,7 +30,6 @@ public class MultiplayerGameView extends View implements Observer {
 
     public MultiplayerGameView(Game game, MultiplayerGame multiGame,
             MultiplayerConnectionController connectionController, Team team, UnitFactory unitFactory) {
-        this.game = game;
         this.multiGame = multiGame;
         this.team = team;
 
@@ -39,9 +37,8 @@ public class MultiplayerGameView extends View implements Observer {
         this.multiGame.getMap().addObserver(this);
 
         this.mapController = new MultiplayerMapController(multiGame, team, null, multiGame.getMap(), unitFactory);
-
-        this.connectionController = new MultiplayerGameConnectionController(mapController,
-                connectionController, multiGame);
+        this.connectionController = new MultiplayerGameConnectionController(mapController, connectionController,
+                multiGame, game);
 
         this.setLayout(new BorderLayout());
 
@@ -53,11 +50,13 @@ public class MultiplayerGameView extends View implements Observer {
         this.add(new SidePanelView(this.multiGame.getMap(), mapController), BorderLayout.LINE_START);
 
         this.connectionController.bindGameChangeListener();
+        this.connectionController.bindGameEndListener();
     }
 
     @Override
     public void onClose() {
         this.connectionController.unbindGameChangeListener();
+        this.connectionController.unbindGameEndListener();
     }
 
     private JPanel topBar = null;
@@ -105,8 +104,6 @@ public class MultiplayerGameView extends View implements Observer {
             SwingUtilities.invokeLater(this::update);
             return;
         }
-
-        System.out.println("UPDATE CALLED " + this.multiGame.isMyTurn(team));
 
         this.buildTopBar();
 
