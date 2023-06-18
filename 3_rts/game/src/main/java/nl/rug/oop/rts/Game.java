@@ -60,6 +60,30 @@ public class Game {
         this.frame.repaint();
     }
 
+    public void handleBackUpTo(Class<? extends View> view) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> handleBackUpTo(view));
+            return;
+        }
+
+        while (this.accessedViews.size() > 0) {
+            View lastView = this.accessedViews.get(this.accessedViews.size() - 1);
+            if (lastView.getClass() == view) {
+                break;
+            }
+
+            lastView.onClose();
+            this.accessedViews.remove(this.accessedViews.size() - 1);
+        }
+
+        View lastView = this.accessedViews.get(this.accessedViews.size() - 1);
+        this.frame.setContentPane(lastView);
+        lastView.onOpen();
+
+        this.frame.revalidate();
+        this.frame.repaint();
+    }
+
     public void handleView(View panel) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> handleView(panel));
