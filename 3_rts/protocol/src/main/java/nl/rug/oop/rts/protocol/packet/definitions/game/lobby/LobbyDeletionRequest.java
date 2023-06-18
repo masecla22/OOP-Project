@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Request to delete a lobby.
+ */
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
