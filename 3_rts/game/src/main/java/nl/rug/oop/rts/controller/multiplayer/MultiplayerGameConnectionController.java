@@ -15,6 +15,7 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.GameScopedPacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameUpdatePacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListConfirm;
 import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
+import nl.rug.oop.rts.view.multiplayer.MultiplayerView;
 
 @AllArgsConstructor
 public class MultiplayerGameConnectionController {
@@ -76,6 +77,6 @@ public class MultiplayerGameConnectionController {
     public void showGameEnding(boolean won, int elo) {
         JOptionPane.showMessageDialog(null,
                 "Game ended. You " + (won ? "won" : "lost") + "! You now have " + elo + " ELO");
-        game.handleBack();
+        game.handleBackUpTo(MultiplayerView.class);
     }
 }
