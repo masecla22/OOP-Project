@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.packet.Packet;
 
+/**
+ * Response to a registration request.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
