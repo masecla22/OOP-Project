@@ -3,6 +3,7 @@ package nl.rug.oop.rts.view.multiplayer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -33,6 +34,13 @@ public class RegisterView extends View implements Observer {
     private JPasswordField passwordField;
     private JPasswordField checkPasswordField;
 
+    /**
+     * Constructor for the register view.
+     * 
+     * @param game                 - the game
+     * @param settingsController   - the settings controller
+     * @param connectionController - the connection controller
+     */
     public RegisterView(Game game, SettingsController settingsController,
             MultiplayerConnectionController connectionController) {
         this.game = game;
@@ -137,7 +145,7 @@ public class RegisterView extends View implements Observer {
                     setError(c.getError());
                 }
             });
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             setError(e.getMessage());
             return;
