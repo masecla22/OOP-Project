@@ -9,6 +9,8 @@ import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameUpdatePacket;
 import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListConfirm;
 import nl.rug.oop.rts.protocol.packet.definitions.game.changes.GameChangeListPacket;
+import nl.rug.oop.rts.protocol.packet.definitions.game.leaderboard.LeaderboardRequest;
+import nl.rug.oop.rts.protocol.packet.definitions.game.leaderboard.LeaderboardResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyCreationResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.lobby.LobbyDeletionRequest;
@@ -38,9 +40,12 @@ public class RTSPacketDictionary extends PacketDictionary {
         this.registerPacket(GameStartPacket.class);
         this.registerPacket(GameChangeListPacket.class);
         this.registerPacket(GameChangeListConfirm.class);
-
         this.registerPacket(GameEndPacket.class);
         this.registerPacket(GameUpdatePacket.class);
+
+        // Leaderboard packets here
+        this.registerPacket(LeaderboardRequest.class);
+        this.registerPacket(LeaderboardResponse.class);
     }
 
 }
