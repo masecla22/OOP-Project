@@ -34,8 +34,13 @@ public class SidePanelView extends View implements Observer {
     private Selectable showingOptionsFor;
     private MapController mapController;
 
+    /**
+     * Constructor for the side panel view.
+     * 
+     * @param map           - the map
+     * @param mapController - the map controller
+     */
     public SidePanelView(Map map, MapController mapController) {
-        super();
         this.map = map;
         this.map.addObserver(this);
 
@@ -203,8 +208,9 @@ public class SidePanelView extends View implements Observer {
     }
 
     private void createAddEventButton(Node selectedNode, JPanel nodeOptions) {
-        if (!this.mapController.allowEventModification())
+        if (!this.mapController.allowEventModification()) {
             return;
+        }
 
         JButton addEvent = new JButton("Add event");
         addEvent.setPreferredSize(new Dimension(50, 30));
