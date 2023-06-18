@@ -20,21 +20,30 @@ import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.map.MapView;
 
-@Getter(AccessLevel.PROTECTED)
 /**
  * This class is responsible for presenting the game to the user.
  */
+@Getter(AccessLevel.PROTECTED)
 public class GameView extends View implements Observer {
     private Game game;
     private Map map;
-    /**
-     *
-     */
     private MapController mapController;
     private MapSimulationController simulationController;
 
+    private JButton addEdgeButton = new JButton("Add Edge");
+    private JButton removeEdgeButton = new JButton("Remove Edge");
+    private JButton addNodeButton = new JButton("Add Node");
+    private JButton removeNodeButton = new JButton("Remove Node");
+
+    /**
+     * Constructor for the game view.
+     * 
+     * @param game                 - the game
+     * @param map                  - the map
+     * @param mapController        - the map controller
+     * @param simulationController - the simulation controller
+     */
     public GameView(Game game, Map map, MapController mapController, MapSimulationController simulationController) {
-        super();
         this.game = game;
 
         this.map = map;
@@ -74,79 +83,51 @@ public class GameView extends View implements Observer {
         this.repaint();
     }
 
-    private JButton addEdgeButton = new JButton("Add Edge");
-    private JButton removeEdgeButton = new JButton("Remove Edge");
-    private JButton addNodeButton = new JButton("Add Node");
-    private JButton removeNodeButton = new JButton("Remove Node");
-
     private JPanel buildTopBar() {
         JPanel topBar = new JPanel();
 
-        // Add back button
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> {
-            this.game.handleBack();
-        });
+        addBackButton(topBar);
+        addCreateEdgeButton(topBar);
+        addCreateNodeButton(topBar);
+        addRemoveNodeButton(topBar);
+        addRemoveEdgeButton(topBar);
+        addSimulateStepButton(topBar);
+        addExportToJsonButton(topBar);
 
-        // Add all buttons to the top bar
-        topBar.add(backButton);
+        return topBar;
+    }
 
-        topBar.add(addEdgeButton);
-        addEdgeButton.addActionListener(e -> {
-            this.mapController.markAddingEdge();
-            this.mapController.getAddingEdge().thenAccept(endNode -> {
-                Node nodeA = (Node) this.getMap().getSelection();
-                Node nodeB = endNode;
-
-                if (!nodeA.equals(nodeB)) {
-                    if (nodeA != null && nodeB != null) {
-                        this.mapController.addEdge(nodeA, nodeB);
-                    }
-                }
-
-                this.mapController.unmarkAddingEdge();
-                this.mapController.setSelection(null);
-            });
-
-            addEdgeButton.setText("Select a second node...");
-        });
-
-        addEdgeButton.setEnabled(false);
-
-        topBar.add(removeEdgeButton);
-
-        topBar.add(addNodeButton);
-        addNodeButton.addActionListener(e -> {
-            String name = JOptionPane.showInputDialog("What is the name of the node?");
-            if (name != null) {
-                this.mapController.createNode(name);
-            }
-        });
-
-        topBar.add(removeNodeButton);
-
-        removeNodeButton.setEnabled(false);
-        removeNodeButton.addActionListener(e -> {
-            if (this.map.getSelection() instanceof Node selectedNode) {
-                this.mapController.removeNode(selectedNode);
-            }
-            this.mapController.setSelection(null);
-        });
-
-        removeEdgeButton.setEnabled(false);
+    private void addRemoveEdgeButton(JPanel topBar) {
         removeEdgeButton.addActionListener(e -> {
             if (this.map.getSelection() instanceof Edge selectedEdge) {
                 this.mapController.removeEdge(selectedEdge);
             }
             this.map.setSelection(null);
         });
+        removeEdgeButton.setEnabled(false);
+        topBar.add(removeEdgeButton);
+    }
 
+    private void addRemoveNodeButton(JPanel topBar) {
+        removeNodeButton.addActionListener(e -> {
+            if (this.map.getSelection() instanceof Node selectedNode) {
+                this.mapController.removeNode(selectedNode);
+            }
+            this.mapController.setSelection(null);
+        });
+        removeNodeButton.setEnabled(false);
+        topBar.add(removeNodeButton);
+    }
+
+    private void addSimulateStepButton(JPanel topBar) {
         JButton simulateStep = new JButton("Simulate Step");
         simulateStep.addActionListener(e -> {
             this.simulationController.simulateStep();
         });
         topBar.add(simulateStep);
+    }
 
+    private void addExportToJsonButton(JPanel topBar) {
         JButton exportToJson = new JButton("Export to JSON");
         exportToJson.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -164,7 +145,51 @@ public class GameView extends View implements Observer {
             fileChooser.showOpenDialog(this);
         });
         topBar.add(exportToJson);
+    }
 
-        return topBar;
+    private void addCreateNodeButton(JPanel topBar) {
+        addNodeButton.addActionListener(e -> {
+            String name = JOptionPane.showInputDialog("What is the name of the node?");
+            if (name != null) {
+                this.mapController.createNode(name);
+            }
+        });
+        topBar.add(addNodeButton);
+    }
+
+    private void addCreateEdgeButton(JPanel topBar) {
+        addEdgeButton.addActionListener(e -> handleAddEdge());
+        addEdgeButton.setEnabled(false);
+
+        topBar.add(addEdgeButton);
+    }
+
+    private void handleAddEdge() {
+        this.mapController.markAddingEdge();
+        this.mapController.getAddingEdge().thenAccept(endNode -> {
+            Node nodeA = (Node) this.getMap().getSelection();
+            Node nodeB = endNode;
+
+            if (!nodeA.equals(nodeB)) {
+                if (nodeA != null && nodeB != null) {
+                    this.mapController.addEdge(nodeA, nodeB);
+                }
+            }
+
+            this.mapController.unmarkAddingEdge();
+            this.mapController.setSelection(null);
+        });
+
+        addEdgeButton.setText("Select a second node...");
+    }
+
+    private void addBackButton(JPanel topBar) {
+        // Add back button
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            this.game.handleBack();
+        });
+        // Add all buttons to the top bar
+        topBar.add(backButton);
     }
 }
