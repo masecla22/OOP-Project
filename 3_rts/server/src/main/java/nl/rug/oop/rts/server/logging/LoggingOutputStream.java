@@ -28,7 +28,8 @@ public class LoggingOutputStream extends OutputStream {
 				logger.log(level, stringBuilder.toString());
 				stringBuilder = new StringBuilder();
 			}
-		} else
+		} else {
 			stringBuilder.append(c);
+		}
 	}
 }
