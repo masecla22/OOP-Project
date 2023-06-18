@@ -10,6 +10,9 @@ import nl.rug.oop.rts.protocol.objects.model.Node;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.user.User;
 
+/**
+ * Represents a player in a multiplayer game.
+ */
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
