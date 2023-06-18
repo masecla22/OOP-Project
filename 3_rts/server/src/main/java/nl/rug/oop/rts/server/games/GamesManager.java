@@ -176,6 +176,26 @@ public class GamesManager {
             loser.getConnection().sendPacket(packet);
         } catch (IOException e) {
             e.printStackTrace();
+    /**
+     * Handles a disconnect from a socket.
+     * 
+     * @param connection - The connection that disconnected.
+     */
+    public void handleDisconnect(SocketConnection connection) {
+        // Wipe any lobbies containing this socket
+        for (MultiplayerLobby lobby : lobbies.values()) {
+            if (lobby.getConnection() == connection) {
+                lobbies.remove(lobby.getLobbyId());
+            }
+        }
+
+        // Close out any games in progress
+        for (MultiplayerGame game : games.values()) {
+            if (game.getPlayerA().getConnection() == connection) {
+                handleFinishedGame(game, game.getPlayerB(), true);
+            } else if (game.getPlayerB().getConnection() == connection) {
+                handleFinishedGame(game, game.getPlayerA(), true);
+            }
         }
     }
 }

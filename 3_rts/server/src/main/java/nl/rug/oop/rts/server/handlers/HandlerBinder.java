@@ -56,5 +56,9 @@ public class HandlerBinder {
         connection.addListener(new GameChangeHandler(userManager, gamesManager, unitFactory));
 
         connection.addListener(new LeaderboardRequestHandler(userManager));
+
+        connection.onConnectionClose(c -> {
+            gamesManager.handleDisconnect(c);
+        });
     }
 }

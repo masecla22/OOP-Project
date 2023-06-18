@@ -98,8 +98,8 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
 
         Team possibleWinner = game.checkWinner();
         if (possibleWinner != null) {
-            this.gamesManager.handleFinishedGame(game,
-                    possibleWinner == Team.TEAM_A ? game.getPlayerA() : game.getPlayerB());
+            GamePlayer winner = possibleWinner == Team.TEAM_A ? game.getPlayerA() : game.getPlayerB();
+            this.gamesManager.handleFinishedGame(game, winner, false);
         }
     }
 
