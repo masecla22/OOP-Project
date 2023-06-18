@@ -47,8 +47,7 @@ public class LobbyCreationView extends View implements Observer {
 
         this.mapLoader = new PredefinedMapLoader(rugson);
 
-        this.selectedMap = mapLoader.getMap("star");
-        this.selectedMapName = "star";
+        this.setMap("star", this.mapLoader.getMap("star"));
 
         this.setLayout(new BorderLayout());
 
