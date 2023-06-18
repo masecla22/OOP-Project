@@ -7,8 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import lombok.NonNull;
@@ -201,6 +205,19 @@ public class UserManager {
             this.setElo(looser, (int) looserNewRating);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<Entry<String, Integer>> getLeaderboard() throws SQLException {
+        String query = "SELECT * FROM `rts_users` ORDER BY `elo` DESC LIMIT 10;";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet set = statement.executeQuery();
+            List<Entry<String, Integer>> leaderboard = new ArrayList<>();
+            while (set.next()) {
+                leaderboard.add(new SimpleEntry<>(set.getString("username"), set.getInt("elo")));
+            }
+            return leaderboard;
         }
     }
 
