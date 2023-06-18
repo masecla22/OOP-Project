@@ -10,11 +10,21 @@ import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This class handles a lobby scoped packet, and makes sure the lobby id
+ * matches the user's lobby id.
+ */
 public class LobbyScopedHandler extends PacketListener<LobbyScopedPacket> {
 
     private UserManager userManager;
     private GamesManager gamesManager;
 
+    /**
+     * Create a new LobbyScopedHandler.
+     * 
+     * @param userManager  - The user manager
+     * @param gamesManager - The games manager
+     */
     public LobbyScopedHandler(UserManager userManager, GamesManager gamesManager) {
         super(LobbyScopedPacket.class);
 
