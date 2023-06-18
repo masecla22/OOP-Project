@@ -1,5 +1,7 @@
 package nl.rug.oop.rts.server.handlers.games.lobby;
 
+import java.io.IOException;
+
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.games.MultiplayerLobby;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
@@ -23,7 +25,7 @@ public class LobbyCreationRequestHandler extends PacketListener<LobbyCreationReq
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, LobbyCreationRequest packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, LobbyCreationRequest packet) throws IOException {
         User user = userManager.getUser(packet.getSessionToken());
 
         Map map = packet.getMap();
