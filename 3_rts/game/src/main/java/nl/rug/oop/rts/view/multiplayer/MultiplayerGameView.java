@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -15,6 +16,7 @@ import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
+import nl.rug.oop.rts.view.MainMenuView;
 import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.game.SidePanelView;
 import nl.rug.oop.rts.view.map.MapView;
@@ -31,6 +33,8 @@ public class MultiplayerGameView extends View implements Observer {
     private MultiplayerMapController mapController;
     private MultiplayerGameConnectionController connectionController;
 
+    private Game game;
+
     private JPanel topBar = null;
 
     /**
@@ -46,6 +50,8 @@ public class MultiplayerGameView extends View implements Observer {
             MultiplayerConnectionController connectionController, Team team, UnitFactory unitFactory) {
         this.multiGame = multiGame;
         this.team = team;
+
+        this.game = game;
 
         this.multiGame.addObserver(this);
         this.multiGame.getMap().addObserver(this);
@@ -124,7 +130,9 @@ public class MultiplayerGameView extends View implements Observer {
     }
 
     private void handleBack() {
-
+        if (JOptionPane.showConfirmDialog(this, "Are you sure you want to leave?", "Confirm",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            this.game.handleBackUpTo(MainMenuView.class);
+        }
     }
-
 }
