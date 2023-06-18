@@ -1,5 +1,6 @@
 package nl.rug.oop.rts.server.handlers.games.lobby;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import nl.rug.oop.rts.protocol.SocketConnection;
@@ -22,7 +23,7 @@ public class LobbyScopedHandler extends PacketListener<LobbyScopedPacket> {
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, LobbyScopedPacket packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, LobbyScopedPacket packet) throws IOException {
         // Make sure the game belongs to the user authenticated
         UUID authToken = packet.getSessionToken();
         UUID lobbyId = packet.getLobbyId();
