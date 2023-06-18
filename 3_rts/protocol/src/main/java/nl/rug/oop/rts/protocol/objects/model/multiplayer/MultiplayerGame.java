@@ -25,6 +25,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.user.User;
 
+/**
+ * Represents an ongoing multiplayer game.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,6 +51,9 @@ public class MultiplayerGame implements Observable {
 
     private transient Set<Observer> observers = new HashSet<>();
 
+    /**
+     * Finds the furthest node from a given node.
+     */
     public void initialize() {
         this.initializeStartingPosition();
         this.initializeGoldNodes();
@@ -55,6 +61,12 @@ public class MultiplayerGame implements Observable {
         this.isPlayerATurn = true;
     }
 
+    /**
+     * Checks if a user is part of this game.
+     * 
+     * @param user - the user
+     * @return - true if the user is part of this game, false otherwise.
+     */
     public boolean isPartOf(User user) {
         return playerA.getUser().getName().equals(user.getName()) ||
                 playerB.getUser().getName().equals(user.getName());
@@ -109,8 +121,9 @@ public class MultiplayerGame implements Observable {
             return Integer.compare(distanceDiff, distanceDiff2);
         });
 
-        for (int i = 0; i < Math.min(goldGeneratingNodesCount, possibleNodes.size()); i++)
+        for (int i = 0; i < Math.min(goldGeneratingNodesCount, possibleNodes.size()); i++) {
             goldGeneratingNodes.add(possibleNodes.get(i));
+        }
     }
 
     private Node findFurthestNodeFrom(Node node) {
@@ -156,8 +169,9 @@ public class MultiplayerGame implements Observable {
 
     @Override
     public void addObserver(Observer observer) {
-        if (observers == null)
+        if (observers == null) {
             observers = new HashSet<>();
+        }
         this.observers.add(observer);
     }
 
@@ -166,6 +180,12 @@ public class MultiplayerGame implements Observable {
         this.observers.remove(observer);
     }
 
+    /**
+     * Check if it is the turn of the given team.
+     * 
+     * @param team - the team
+     * @return - true if it is the turn of the given team, false otherwise
+     */
     public boolean isMyTurn(Team team) {
         if (team == Team.TEAM_A) {
             return isPlayerATurn;
@@ -174,6 +194,12 @@ public class MultiplayerGame implements Observable {
         }
     }
 
+    /**
+     * Gets a game player from a team.
+     * 
+     * @param team - the team
+     * @return - the game player
+     */
     public GamePlayer getGamePlayer(Team team) {
         if (team == Team.TEAM_A) {
             return playerA;
@@ -182,6 +208,12 @@ public class MultiplayerGame implements Observable {
         }
     }
 
+    /**
+     * Returns the team of the given user.
+     * 
+     * @param user - the user
+     * @return - the team of the user or null if the user is not part of the game
+     */
     public Team getTeam(User user) {
         if (playerA.getUser().getName().equals(user.getName())) {
             return Team.TEAM_A;
@@ -192,24 +224,37 @@ public class MultiplayerGame implements Observable {
         }
     }
 
+    /**
+     * Checks if the game is over and returns the winning team if it is.
+     * 
+     * @return - the winning team or null if the game is not over yet
+     */
     public Team checkWinner() {
         Node startingNodeTeamA = getPlayerA().getStartingNode();
         // Check if the starting node has any armies from the other team
         for (Army cr : startingNodeTeamA.getArmies()) {
-            if (cr.getFaction().getTeam() != Team.TEAM_A)
+            if (cr.getFaction().getTeam() != Team.TEAM_A) {
                 return Team.TEAM_B;
+            }
         }
 
         Node startingNodeTeamB = getPlayerB().getStartingNode();
         // Check if the starting node has any armies from the other team
         for (Army cr : startingNodeTeamB.getArmies()) {
-            if (cr.getFaction().getTeam() != Team.TEAM_B)
+            if (cr.getFaction().getTeam() != Team.TEAM_B) {
                 return Team.TEAM_A;
+            }
         }
 
         return null;
     }
 
+    /**
+     * Given a player, returns the other player.
+     * 
+     * @param player - the player to get the other player from
+     * @return - the other player
+     */
     public GamePlayer getOtherPlayer(GamePlayer player) {
         if (player == playerA) {
             return playerB;
