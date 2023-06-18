@@ -4,7 +4,13 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Army;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventType;
 
+/**
+ * Hidden weaponry event.
+ */
 public class HiddenWeaponryEvent extends Event {
+    /**
+     * Constructor for HiddenWeaponryEvent.
+     */
     public HiddenWeaponryEvent() {
         super(EventType.HIDDEN_WEAPONRY);
     }
