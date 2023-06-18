@@ -18,6 +18,9 @@ import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.view.View;
 
+/**
+ * This class is responsible for presenting the login menu to the user.
+ */
 public class LoginView extends View implements Observer {
     private Game game;
 
