@@ -141,4 +141,9 @@ public class SinglePlayerMapController extends MapController {
     public boolean showUnitCost() {
         return false;
     }
+
+    @Override
+    public boolean allowArmyRemoval() {
+        return true;
+    }
 }
