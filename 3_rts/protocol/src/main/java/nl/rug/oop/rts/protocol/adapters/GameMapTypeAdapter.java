@@ -16,6 +16,9 @@ import nl.rug.oop.rugson.objects.JsonArray;
 import nl.rug.oop.rugson.objects.JsonElement;
 import nl.rug.oop.rugson.objects.JsonObject;
 
+/**
+ * Adapter for the Map class.
+ */
 public class GameMapTypeAdapter extends TypeAdapter<Map> {
 
     @Override
@@ -49,14 +52,12 @@ public class GameMapTypeAdapter extends TypeAdapter<Map> {
         if (!(consumer instanceof JsonObject)) {
             throw new IllegalArgumentException("Expected JsonObject, got " + consumer.getClass().getSimpleName());
         }
-
         JsonObject object = consumer.asJsonObject();
-
         Set<Node> nodes = this.getTreeSerializer().fromJson(object.get("nodes"), Set.class, Node.class);
-
         java.util.Map<Integer, Node> nodeMap = new HashMap<>();
-        for (Node node : nodes)
+        for (Node node : nodes) {
             nodeMap.put(node.getId(), node);
+        }
 
         JsonArray edges = object.get("edges").asJsonArray();
         Set<Edge> resultingEdges = new HashSet<>();
@@ -66,31 +67,25 @@ public class GameMapTypeAdapter extends TypeAdapter<Map> {
             }
 
             JsonObject edge = element.asJsonObject();
-
             int from = (int) edge.get("from").asJsonNumber().asInt();
             int to = (int) edge.get("to").asJsonNumber().asInt();
             int id = (int) edge.get("id").asJsonNumber().asInt();
-
             List<Army> armies = this.getTreeSerializer().fromJson(edge.get("armies"), List.class, Army.class);
             List<Event> events = this.getTreeSerializer().fromJson(edge.get("events"), List.class, Event.class);
 
             Node fromNode = nodeMap.get(from);
             Node toNode = nodeMap.get(to);
-
             Edge edgeObject = new Edge(id, fromNode, toNode, armies, events);
             fromNode.getEdges().add(edgeObject);
             toNode.getEdges().add(edgeObject);
-
             resultingEdges.add(edgeObject);
         }
 
         Point offset = this.getTreeSerializer().fromJson(object.get("offset"), Point.class);
-
         Map map = new Map();
         map.setOffset(offset);
         map.setEdges(resultingEdges);
         map.setNodes(nodes);
-
         return map;
     }
 
