@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,9 @@ import nl.rug.oop.rts.protocol.packet.definitions.keepalive.KeepAlivePacket;
 import nl.rug.oop.rts.protocol.packet.dictionary.PacketDictionary;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * Represents a connection to a remote socket.
+ */
 public class SocketConnection {
     @NonNull
     private Rugson rugson;
@@ -53,6 +57,14 @@ public class SocketConnection {
 
     private Timer keepAliveSender = new Timer();
 
+    /**
+     * Creates a new socker connection and starts polling for packets.
+     * 
+     * @param rugson           The Rugson instance
+     * @param socket           The socket to connect to
+     * @param executorService  The executor service to run the polling thread on
+     * @param packetDictionary The packet dictionary to use
+     */
     public SocketConnection(Rugson rugson, Socket socket, ExecutorService executorService,
             PacketDictionary packetDictionary) {
         this.rugson = rugson;
@@ -77,6 +89,11 @@ public class SocketConnection {
         }, 100, 3000);
     }
 
+    /**
+     * Adds a packet listener.
+     * 
+     * @param packetListener - The packet listener to add
+     */
     public void addListener(PacketListener<? extends Packet> packetListener) {
         Class<?> packetClass = packetListener.getPacketClass();
         if (!this.packetListeners.containsKey(packetClass)) {
@@ -86,6 +103,11 @@ public class SocketConnection {
         this.packetListeners.get(packetClass).add(packetListener);
     }
 
+    /**
+     * Removes the listener from the packet listener list.
+     * 
+     * @param packetListener - The packet listener to remove
+     */
     public void removeListener(PacketListener<? extends Packet> packetListener) {
         Class<?> packetClass = packetListener.getPacketClass();
         if (!this.packetListeners.containsKey(packetClass)) {
@@ -98,10 +120,20 @@ public class SocketConnection {
         }
     }
 
+    /**
+     * Adds a listener for when the connection closes.
+     * 
+     * @param closeListener - The listener to add
+     */
     public void onConnectionClose(Consumer<SocketConnection> closeListener) {
         this.closeListeners.add(closeListener);
     }
 
+    /**
+     * Removes all listeners for a given class.
+     * 
+     * @param packetClass - The class to remove listeners for
+     */
     public void removeListeners(Class<? extends Packet> packetClass) {
         this.packetListeners.remove(packetClass);
     }
@@ -120,6 +152,12 @@ public class SocketConnection {
         stream.write(bb.array());
     }
 
+    /**
+     * Sends a packet to the remote socket.
+     * 
+     * @param packet - The packet to send
+     * @throws IOException - When the packet could not be sent
+     */
     public synchronized void sendPacket(Packet packet) throws IOException {
         OutputStream stream = this.socket.getOutputStream();
 
@@ -132,14 +170,15 @@ public class SocketConnection {
         stream.write(jsonString.getBytes());
     }
 
-    public void pollPackets() {
+    private void pollPackets() {
         while (isRunning.get()) {
             // We're giving it 20 seconds, as client and server are supposed to
             // exchange a KeepAlive packet every 5 seconds
             try {
                 Packet packet = readNextPacket(20000);
-                if (packet == null)
+                if (packet == null) {
                     continue;
+                }
                 handleIncomingPacket(packet);
             } catch (IOException | InterruptedException | TimeoutException e) {
                 e.printStackTrace();
@@ -159,34 +198,45 @@ public class SocketConnection {
         packetClasses.add(Packet.class);
 
         this.executorService.execute(() -> {
-            for (int i = packetClasses.size() - 1; i >= 0; i--) {
-                Class<?> packetClassToCheck = packetClasses.get(i);
-                if (!this.packetListeners.containsKey(packetClassToCheck)) {
-                    continue;
-                }
-
-                boolean shouldContinue = true;
-                List<PacketListener<?>> toInvoke = new ArrayList<>(this.packetListeners.get(packetClassToCheck));
-                for (PacketListener<?> packetListener : toInvoke) {
-                    try {
-                        shouldContinue = packetListener.onReceive(this, packet);
-                        if (!shouldContinue)
-                            break;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (!shouldContinue)
-                    break;
-            }
+            passPacketThroughListeners(packet, packetClasses);
         });
     }
 
+    private void passPacketThroughListeners(Packet packet, List<Class<? extends Packet>> packetClasses) {
+        for (int i = packetClasses.size() - 1; i >= 0; i--) {
+            Class<?> packetClassToCheck = packetClasses.get(i);
+            if (!this.packetListeners.containsKey(packetClassToCheck)) {
+                continue;
+            }
+
+            boolean shouldContinue = true;
+            List<PacketListener<?>> toInvoke = new ArrayList<>(this.packetListeners.get(packetClassToCheck));
+            for (PacketListener<?> packetListener : toInvoke) {
+                try {
+                    shouldContinue = packetListener.onReceive(this, packet);
+                    if (!shouldContinue) {
+                        break;
+                    }
+                } catch (IOException | NullPointerException | 
+                    IllegalStateException | IllegalArgumentException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (!shouldContinue) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Closes the connection.
+     */
     @SneakyThrows
     public void closeConnection() {
-        if (!this.isRunning.get())
+        if (!this.isRunning.get()) {
             return;
+        }
 
         this.packetListeners.values().forEach(List::clear);
         this.packetListeners.clear();
@@ -203,9 +253,6 @@ public class SocketConnection {
     }
 
     private Packet readNextPacket(int millisTimeout) throws IOException, InterruptedException, TimeoutException {
-        int read = 0;
-        int bufferSize = 1024;
-
         InputStream inputStream = this.socket.getInputStream();
         long currentTimestamp = Instant.now().toEpochMilli();
 
@@ -228,13 +275,28 @@ public class SocketConnection {
         int id = readInt(inputStream);
         int size = readInt(inputStream);
 
+        ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
+        if (!readIntoBuffer(inputStream, bufferedPacket, size, currentTimestamp, millisTimeout)) {
+            return null;
+        }
+
+        String jsonString = bufferedPacket.toString();
+        Class<? extends Packet> packetClass = this.packetDictionary.getPacketClass(id);
+
+        return this.rugson.fromJson(jsonString, packetClass);
+    }
+
+    private boolean readIntoBuffer(InputStream inputStream, ByteArrayOutputStream bufferedPacket, int size,
+            long currentTimestamp, int millisTimeout) throws IOException, TimeoutException {
+
         int prev = inputStream.available();
 
-        ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
+        int read = 0;
+        int bufferSize = 1024;
+
         while (bufferedPacket.size() < size) {
             // Wait for data to be available
-            while (inputStream.available() < size - read &&
-                    inputStream.available() < bufferSize) {
+            while (inputStream.available() < size - read && inputStream.available() < bufferSize) {
                 try {
                     Thread.sleep(5);
                     if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
@@ -248,7 +310,7 @@ public class SocketConnection {
                     }
                 } catch (InterruptedException e) {
                     this.closeConnection();
-                    return null;
+                    return false;
                 }
             }
 
@@ -259,9 +321,6 @@ public class SocketConnection {
             bufferedPacket.write(tempBuf);
         }
 
-        String jsonString = bufferedPacket.toString();
-        Class<? extends Packet> packetClass = this.packetDictionary.getPacketClass(id);
-
-        return this.rugson.fromJson(jsonString, packetClass);
+        return true;
     }
 }
