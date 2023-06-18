@@ -38,8 +38,12 @@ public class SingleplayerMenuView extends View {
     private EventFactory spEventFactory;
     private Rugson rugson;
 
+    /**
+     * Constructor for the single player menu view.
+     * 
+     * @param game - the game
+     */
     public SingleplayerMenuView(Game game) {
-        super();
         this.game = game;
 
         this.spUnitFactory = new SinglePlayerUnitFactory(-1);
