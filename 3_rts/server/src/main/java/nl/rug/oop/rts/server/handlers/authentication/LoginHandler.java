@@ -11,10 +11,19 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResp
 import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This class handles a login request. This is sent by the client when the user
+ * wants to login.
+ */
 public class LoginHandler extends PacketListener<LoginRequest> {
 
     private UserManager userManager;
 
+    /**
+     * Create a new LoginHandler.
+     * 
+     * @param userManager - The user manager
+     */
     public LoginHandler(UserManager userManager) {
         super(LoginRequest.class);
         this.userManager = userManager;
