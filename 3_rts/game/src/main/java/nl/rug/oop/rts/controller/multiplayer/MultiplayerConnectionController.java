@@ -32,6 +32,9 @@ import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.view.multiplayer.MultiplayerGameView;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * This class manages the connection to the central server.
+ */
 @RequiredArgsConstructor
 public class MultiplayerConnectionController {
     @Getter
@@ -61,6 +64,12 @@ public class MultiplayerConnectionController {
     @Getter
     private User user = null;
 
+    /**
+     * Starts the connection to the central server.
+     * 
+     * @return - Whether the connection was successful
+     * @throws IOException - When the connection cannot be opened
+     */
     public boolean openConnection() throws IOException {
         if (connection != null) {
             if (!connection.getSocket().isConnected()) {
@@ -98,10 +107,14 @@ public class MultiplayerConnectionController {
 
     }
 
+    /**
+     * Closes the connection to the central server.
+     */
     @SneakyThrows
     public void closeConnection() {
-        if (connection != null)
+        if (connection != null) {
             this.connection.closeConnection();
+        }
 
         this.threadPool.shutdown();
         this.threadPool.awaitTermination(5, TimeUnit.SECONDS);
@@ -111,11 +124,19 @@ public class MultiplayerConnectionController {
         return new RTSPacketDictionary();
     }
 
+    /**
+     * Attempts to login to the central server.
+     * 
+     * @return - A future that will be completed when the login is complete
+     * @throws IOException - When the connection is not open
+     */
     public CompletableFuture<Boolean> ensureLogin() throws IOException {
-        if (this.connection == null)
+        if (this.connection == null) {
             return CompletableFuture.completedFuture(false);
-        if (this.authToken != null)
+        }
+        if (this.authToken != null) {
             return CompletableFuture.completedFuture(true);
+        }
 
         String username = settingsController.getSettings().getUsername();
         String password = settingsController.getSettings().getPassword();
@@ -125,11 +146,13 @@ public class MultiplayerConnectionController {
 
         return result.getAwaiting().thenApply(c -> {
             LoginResponse response = (LoginResponse) c.getValue();
-            if (!response.isSuccess())
+            if (!response.isSuccess()) {
                 return false;
+            }
 
-            if (!response.getUser().getName().equals(username))
+            if (!response.getUser().getName().equals(username)) {
                 return false;
+            }
 
             this.authToken = response.getToken();
             this.user = response.getUser();
@@ -138,20 +161,31 @@ public class MultiplayerConnectionController {
         });
     }
 
+    /**
+     * Attempts to register to the central server.
+     * 
+     * @param username - The username to register with
+     * @param password - The password to register with
+     * @return - A future that will be completed when the registration is complete
+     * @throws IOException - When the connection is not open
+     */
     public CompletableFuture<RegistrationResponse> attemptRegister(String username, String password)
             throws IOException {
-        if (this.connection == null)
+        if (this.connection == null) {
             return CompletableFuture.completedFuture(new RegistrationResponse(false, "Not connected to server.", null));
-        if (this.authToken != null)
+        }
+        if (this.authToken != null) {
             return CompletableFuture.completedFuture(new RegistrationResponse(true, "Already logged in.", null));
+        }
 
         AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(RegistrationResponse.class).bindTo(connection);
         this.connection.sendPacket(new RegistrationRequest(username, password));
 
         return result.getAwaiting().thenApply(c -> {
             RegistrationResponse response = (RegistrationResponse) c.getValue();
-            if (!response.isSuccess())
+            if (!response.isSuccess()) {
                 return response;
+            }
 
             this.authToken = response.getToken();
             this.user = new User(-1, username, null, 1000);
@@ -159,9 +193,16 @@ public class MultiplayerConnectionController {
         });
     }
 
+    /**
+     * Sends a packet to the central server.
+     * 
+     * @param packet - The packet to send
+     */
     public void sendPacket(Packet packet) {
-        if (this.connection == null)
+        if (this.connection == null) {
             return;
+        }
+
         this.threadPool.execute(() -> actuallySendPacket(packet));
     }
 
@@ -170,19 +211,33 @@ public class MultiplayerConnectionController {
         this.connection.sendPacket(packet);
     }
 
+    /**
+     * Sends a packet to the central server, but only if the user is logged in.
+     * Automatically sets the session ID inside of the packet.
+     * 
+     * @param packet - The packet to send
+     */
     public void sendAuthenticatedPacket(AuthenticatedPacket packet) {
-        if (this.connection == null)
+        if (this.connection == null) {
             throw new IllegalStateException("Not connected to server.");
-        if (this.authToken == null)
+        }
+        if (this.authToken == null) {
             throw new IllegalStateException("Not logged in.");
+        }
 
         packet.setSessionToken(authToken);
         sendPacket(packet);
     }
 
+    /**
+     * Sends a packet to the central server, but only if the user is logged in.
+     * 
+     * @param packet - The packet to send
+     */
     public void handleGameStartPacket(GameStartPacket packet) {
-        if (!packet.isSuccess())
+        if (!packet.isSuccess()) {
             throw new IllegalStateException("GameStartPacket was not successful");
+        }
 
         MultiplayerGameView view = new MultiplayerGameView(game, packet.getGame(),
                 this, packet.getTeam(), unitFactory);
