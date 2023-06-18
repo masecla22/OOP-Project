@@ -14,6 +14,9 @@ import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.view.View;
 
+/**
+ * This class is responsible for presenting the settings menu to the user.
+ */
 public class SettingsView extends View {
     private Game game;
 
