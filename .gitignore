@@ -67,3 +67,6 @@ target/
 # Ignore the RTS config file
 config.json
 game.json
+
+# Caused by Maven shading
+dependency-reduced-pom.xml
