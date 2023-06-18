@@ -19,6 +19,9 @@ import nl.rug.oop.rts.view.View;
 import nl.rug.oop.rts.view.game.SidePanelView;
 import nl.rug.oop.rts.view.map.MapView;
 
+/**
+ * This class is responsible for presenting the multiplayer game to the user.
+ */
 public class MultiplayerGameView extends View implements Observer {
 
     private MultiplayerGame multiGame;
@@ -28,6 +31,17 @@ public class MultiplayerGameView extends View implements Observer {
     private MultiplayerMapController mapController;
     private MultiplayerGameConnectionController connectionController;
 
+    private JPanel topBar = null;
+
+    /**
+     * Constructor for the multiplayer game view.
+     * 
+     * @param game                 - the game
+     * @param multiGame            - the multiplayer game
+     * @param connectionController - the connection controller
+     * @param team                 - the team
+     * @param unitFactory          - the unit factory
+     */
     public MultiplayerGameView(Game game, MultiplayerGame multiGame,
             MultiplayerConnectionController connectionController, Team team, UnitFactory unitFactory) {
         this.multiGame = multiGame;
@@ -58,8 +72,6 @@ public class MultiplayerGameView extends View implements Observer {
         this.connectionController.unbindGameChangeListener();
         this.connectionController.unbindGameEndListener();
     }
-
-    private JPanel topBar = null;
 
     private void buildTopBar() {
         if (topBar == null) {
