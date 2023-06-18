@@ -31,7 +31,7 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
     }
 
     @Override
-    protected boolean handlePacket(SocketConnection connection, GameChangeListPacket packet) throws Exception {
+    protected boolean handlePacket(SocketConnection connection, GameChangeListPacket packet) throws IOException {
         try {
             // Get the user from the connection
             User user = userManager.getUser(packet.getSessionToken());
