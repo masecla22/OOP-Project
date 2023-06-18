@@ -10,11 +10,23 @@ import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This handler is responsible for handling game scoped packets.
+ * It will make sure that the user sending them is part of the correct game
+ * and will discard the packets if there is any mismatch. That way users
+ * are only able to control games they are part of.
+ */
 public class GameScopedHandler extends PacketListener<GameScopedPacket> {
 
     private UserManager userManager;
     private GamesManager gamesManager;
 
+    /**
+     * Create a new GameScopedHandler.
+     * 
+     * @param userManager - The user manager
+     * @param gamesManager - The games manager
+     */
     public GameScopedHandler(UserManager userManager, GamesManager gamesManager) {
         super(GameScopedPacket.class);
 
