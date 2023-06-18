@@ -78,7 +78,7 @@ public class MultiplayerView extends View implements Observer {
     @Override
     public void onOpen() {
         this.attemptLogin();
-    } 
+    }
 
     private void attemptLogin() {
         try {
@@ -122,10 +122,12 @@ public class MultiplayerView extends View implements Observer {
             handleLobbyCreate();
         });
         lobbyButtons.add(create);
+
         JButton leaderboards = new JButton("Leaderboards");
         leaderboards.addActionListener(e -> {
             this.game.handleView(new LeaderboardView(this.game, this.connectionController));
         });
+        lobbyButtons.add(leaderboards);
 
         lobbyPanel.add(lobbyButtons, BorderLayout.PAGE_END);
         lobbyPanel.add(getLobbyList(), BorderLayout.CENTER);
