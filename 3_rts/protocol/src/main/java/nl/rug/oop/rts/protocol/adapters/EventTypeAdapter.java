@@ -17,7 +17,7 @@ public class EventTypeAdapter extends TypeAdapter<Event> {
     private EventFactory eventFactory;
 
     /**
-     * Constructor for EventTypeAdapter
+     * Constructor for EventTypeAdapter.
      * 
      * @param eventFactory - EventFactory to use for building Event objects
      */
