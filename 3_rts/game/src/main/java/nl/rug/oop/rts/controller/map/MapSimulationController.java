@@ -14,6 +14,9 @@ import nl.rug.oop.rts.protocol.objects.model.armies.Team;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
 
+/**
+ * Controller for the map simulation.
+ */
 @AllArgsConstructor
 public class MapSimulationController {
     private Map map;
@@ -22,6 +25,9 @@ public class MapSimulationController {
         map.update();
     }
 
+    /**
+     * Simulates a full step.
+     */
     public void simulateStep() {
         resolveAllBattles();
         moveNodeArmies();
@@ -118,8 +124,9 @@ public class MapSimulationController {
                 }
 
                 Node nextNode = cr.getMovingToNextStep();
-                if (nextNode == null)
+                if (nextNode == null) {
                     nextNode = edge.getPointA();
+                }
 
                 nextNode.addArmy(cr);
 
@@ -134,10 +141,12 @@ public class MapSimulationController {
 
     private void resetArmiesStatus() {
         List<Army> toChange = new ArrayList<>();
-        for (Node node : map.getNodes())
+        for (Node node : map.getNodes()) {
             toChange.addAll(node.getArmies());
-        for (Edge edge : map.getEdges())
+        }
+        for (Edge edge : map.getEdges()) {
             toChange.addAll(edge.getArmies());
+        }
 
         for (Army cr : toChange) {
             cr.setMoved(false);
@@ -146,16 +155,18 @@ public class MapSimulationController {
 
     private boolean shouldBattleHappen(Node node) {
         Set<Team> teams = new HashSet<>();
-        for (Army cr : node.getArmies())
+        for (Army cr : node.getArmies()) {
             teams.add(cr.getFaction().getTeam());
+        }
 
         return teams.size() > 1;
     }
 
     private boolean shouldBattleHappen(Edge edge) {
         Set<Team> teams = new HashSet<>();
-        for (Army cr : edge.getArmies())
+        for (Army cr : edge.getArmies()) {
             teams.add(cr.getFaction().getTeam());
+        }
 
         return teams.size() > 1;
     }
@@ -177,10 +188,12 @@ public class MapSimulationController {
             Army bArmy = teamB.get(0);
 
             resolveSingleArmy(aArmy, bArmy);
-            if (aArmy.getUnits().size() == 0)
+            if (aArmy.getUnits().size() == 0) {
                 teamA.remove(aArmy);
-            if (bArmy.getUnits().size() == 0)
+            }
+            if (bArmy.getUnits().size() == 0) {
                 teamB.remove(bArmy);
+            }
         }
 
         armies.removeIf(cr -> cr.getUnits().size() == 0);
@@ -195,10 +208,12 @@ public class MapSimulationController {
             Unit bUnit = bUnits.get(0);
 
             resolveSingleUnitBattle(aUnit, bUnit);
-            if (aUnit.getHealth() <= 0)
+            if (aUnit.getHealth() <= 0) {
                 aUnits.remove(aUnit);
-            if (bUnit.getHealth() <= 0)
+            }
+            if (bUnit.getHealth() <= 0) {
                 bUnits.remove(bUnit);
+            }
         }
     }
 
@@ -207,14 +222,16 @@ public class MapSimulationController {
             double damage = a.dealDamage(b);
             b.takeDamage(b, damage);
 
-            if (b.getHealth() <= 0)
+            if (b.getHealth() <= 0) {
                 break;
+            }
 
             damage = b.dealDamage(a);
             a.takeDamage(a, damage);
 
-            if (a.getHealth() <= 0)
+            if (a.getHealth() <= 0) {
                 break;
+            }
         }
     }
 }
