@@ -13,11 +13,21 @@ import nl.rug.oop.rts.protocol.user.User;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.user.UserManager;
 
+/**
+ * This handler is responsible for handling lobby joining requests.
+ * It will create a new game and notify both players of the game starting.
+ */
 public class LobbyJoinRequestHandler extends PacketListener<LobbyJoiningRequest> {
 
     private GamesManager gamesManager;
     private UserManager userManager;
 
+    /**
+     * Create a new LobbyJoinRequestHandler.
+     * 
+     * @param gamesManager - The games manager
+     * @param userManager  - The user manager
+     */
     public LobbyJoinRequestHandler(GamesManager gamesManager, UserManager userManager) {
         super(LobbyJoiningRequest.class);
 
