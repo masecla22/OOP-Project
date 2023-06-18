@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.AuthenticatedPacket;
 
+/**
+ * Request to create a lobby.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +17,6 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.AuthenticatedPa
 public class LobbyCreationRequest extends AuthenticatedPacket {
     private String name;
     private String mapName;
-    
+
     private Map map;
 }
