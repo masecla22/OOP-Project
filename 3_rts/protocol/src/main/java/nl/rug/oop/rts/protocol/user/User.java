@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * A user for the game.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +22,12 @@ public class User {
     private String password;
     private int elo;
 
+    /**
+     * Create a new user from a result set.
+     * 
+     * @param set - the result set
+     * @throws SQLException - if the result set is invalid
+     */
     public User(ResultSet set) throws SQLException {
         this.id = set.getInt("id");
         this.name = set.getString("username");
