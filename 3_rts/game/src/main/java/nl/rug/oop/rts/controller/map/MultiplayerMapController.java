@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 import lombok.NonNull;
+import nl.rug.oop.rts.exceptions.MultiplayerUneditableException;
 import nl.rug.oop.rts.protocol.objects.model.Edge;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.Node;
@@ -27,6 +28,9 @@ import nl.rug.oop.rts.protocol.objects.model.multiplayer.MultiplayerGame;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameUpdatePacket;
 import nl.rug.oop.rugson.Rugson;
 
+/**
+ * Controller for the map.
+ */
 public class MultiplayerMapController extends MapController {
     private Team team;
     private MultiplayerGame multiplayerGame;
@@ -36,6 +40,15 @@ public class MultiplayerMapController extends MapController {
     @Getter
     private List<GameChange> changes = new ArrayList<>();
 
+    /**
+     * Create a new map controller for multiplayer games.
+     * 
+     * @param multiplayerGame - the multiplayer game
+     * @param team            - the team of the player
+     * @param rugson          - the rugson instance
+     * @param map             - the map
+     * @param unitFactory     - the unit factory
+     */
     public MultiplayerMapController(MultiplayerGame multiplayerGame, Team team, Rugson rugson,
             @NonNull Map map, UnitFactory unitFactory) {
         super(rugson, map);
@@ -65,47 +78,47 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public void removeArmy(Node node, Army army) {
-        throw new UnsupportedOperationException("You cannot remove armies in MP!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void addEdge(Node node1, Node node2) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void addEvent(Node node, EventType type) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void addEvent(Edge edge, EventType type) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public Node createNode(String nodeName) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void removeEdge(Edge edge) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void removeEvent(Node node, Event event) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void removeEvent(Edge edge, Event event) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void removeNode(Node node) {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
@@ -120,12 +133,12 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public void markAddingEdge() {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
     public void unmarkAddingEdge() {
-        throw new UnsupportedOperationException("Multiplayer maps cannot be edited!");
+        throw new MultiplayerUneditableException();
     }
 
     @Override
@@ -176,10 +189,12 @@ public class MultiplayerMapController extends MapController {
 
     @Override
     public String canPlaceArmy(Node node) {
-        if (multiplayerGame.getPlayerA().getStartingNode().equals(node) && team.equals(Team.TEAM_A))
+        if (multiplayerGame.getPlayerA().getStartingNode().equals(node) && team.equals(Team.TEAM_A)) {
             return null;
-        if (multiplayerGame.getPlayerB().getStartingNode().equals(node) && team.equals(Team.TEAM_B))
+        }
+        if (multiplayerGame.getPlayerB().getStartingNode().equals(node) && team.equals(Team.TEAM_B)) {
             return null;
+        }
 
         List<Edge> edges = node.getEdges();
         boolean friendlies = false;
@@ -189,15 +204,21 @@ public class MultiplayerMapController extends MapController {
                 break;
             }
         }
+        if (node.getArmies().stream().anyMatch(c -> c.getFaction().getTeam().equals(this.team))) {
+            friendlies = true;
+        }
 
-        if (!friendlies)
+        if (!friendlies) {
             return "No friendlies nearby!";
+        }
 
-        if (team == Team.TEAM_A && multiplayerGame.getPlayerA().getGold() < Faction.getSmallestCost())
+        if (team == Team.TEAM_A && multiplayerGame.getPlayerA().getGold() < Faction.getSmallestCost()) {
             return "Not enough gold!";
+        }
 
-        if (team == Team.TEAM_B && multiplayerGame.getPlayerB().getGold() < Faction.getSmallestCost())
+        if (team == Team.TEAM_B && multiplayerGame.getPlayerB().getGold() < Faction.getSmallestCost()) {
             return "Not enough gold!";
+        }
 
         if (!multiplayerGame.isMyTurn(team)) {
             return "Not your turn!";
@@ -223,6 +244,11 @@ public class MultiplayerMapController extends MapController {
         return true;
     }
 
+    /**
+     * Ingests a map update packet.
+     * 
+     * @param packet - the packet to ingest
+     */
     public void ingestMapUpdate(GameUpdatePacket packet) {
         this.changes.clear();
 
