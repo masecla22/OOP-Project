@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -104,7 +105,7 @@ public class MultiplayerView extends View implements Observer {
                     SwingUtilities.invokeLater(this::addLoginRegister);
                 }
             });
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             SwingUtilities.invokeLater(this::addSomethingWrong);
             return;
@@ -161,10 +162,7 @@ public class MultiplayerView extends View implements Observer {
         Object[][] data = new Object[this.knownLobbies.size()][4];
         for (int i = 0; i < this.knownLobbies.size(); i++) {
             MultiplayerLobby lobby = this.knownLobbies.get(i);
-            data[i][0] = lobby.getName();
-            data[i][1] = lobby.getHost().getName();
-            data[i][2] = lobby.getMapName();
-            data[i][3] = "Join lobby!";
+            data[i] = new Object[] { lobby.getName(), lobby.getHost().getName(), lobby.getMapName(), "Join lobby!" };
         }
 
         JTable table = new JTable(data, columnNames) {
@@ -176,20 +174,16 @@ public class MultiplayerView extends View implements Observer {
         table.setFillsViewportHeight(true);
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
-
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
-
                 if (row < 0 || col < 0) {
                     return;
                 }
 
-                if (col == 3) {
-                    handleJoinLobby(knownLobbies.get(row).getLobbyId());
-                }
+                handleJoinLobby(knownLobbies.get(row).getLobbyId());
             }
         });
 
@@ -306,12 +300,8 @@ public class MultiplayerView extends View implements Observer {
         this.connectionController.sendAuthenticatedPacket(new LobbyListingRequest());
 
         return awaitPacketOnce.getAwaiting().thenAccept(c -> {
-            try {
-                LobbyListingResponse response = (LobbyListingResponse) c.getValue();
-                this.knownLobbies = response.getLobbies();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            LobbyListingResponse response = (LobbyListingResponse) c.getValue();
+            this.knownLobbies = response.getLobbies();
         });
     }
 
