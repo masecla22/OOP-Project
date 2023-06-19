@@ -69,6 +69,7 @@ public class JsonWriter {
     }
 
     private void printStartObject(StringBuilder builder, JsonValue current) {
+        newLine(builder);
         indent(builder);
         builder.append("{");
         incrementIndent();
@@ -101,9 +102,6 @@ public class JsonWriter {
     private void printName(StringBuilder builder, JsonValue current) {
         indent(builder);
         builder.append("\"" + current.getValue() + "\"");
-        if (prettyPrint) {
-            builder.append(" ");
-        }
         builder.append(":");
         if (prettyPrint) {
             builder.append(" ");
