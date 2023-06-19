@@ -151,8 +151,9 @@ public class GamesManager {
     /**
      * Handles a finished game.
      * 
-     * @param game   - The game that finished.
-     * @param winner - The winner of the game.
+     * @param game       - The game that finished.
+     * @param winner     - The winner of the game.
+     * @param disconnected - Whether the game ended due to a disconnect.
      */
     public void handleFinishedGame(MultiplayerGame game, GamePlayer winner, boolean disconnected) {
         games.remove(game.getGameId());
