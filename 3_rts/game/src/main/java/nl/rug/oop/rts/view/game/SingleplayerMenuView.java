@@ -98,9 +98,12 @@ public class SingleplayerMenuView extends View {
     }
 
     private void loadGame(File file) throws IOException {
-        FileInputStream inputStream = new FileInputStream(file);
-        Map map = rugson.fromJson(inputStream, Map.class);
-        loadMap(map);
+        try {
+            FileInputStream inputStream = new FileInputStream(file);
+            Map map = rugson.fromJson(inputStream, Map.class);
+            loadMap(map);
+        } catch (IOException e) {
+        }
     }
 
     private void handleLoadGame() {
