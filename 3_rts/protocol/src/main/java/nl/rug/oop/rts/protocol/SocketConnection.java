@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -20,8 +23,13 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.packet.Packet;
@@ -57,6 +65,9 @@ public class SocketConnection {
 
     private Timer keepAliveSender = new Timer();
 
+    @Setter
+    private SecretKey aesKey;
+
     /**
      * Creates a new socker connection and starts polling for packets.
      * 
@@ -73,7 +84,9 @@ public class SocketConnection {
         this.packetDictionary = packetDictionary;
 
         this.isRunning.set(true);
+    }
 
+    public void initializeSending() {
         this.pollingThread = new Thread(this::pollPackets);
         this.pollingThread.start();
 
@@ -87,6 +100,40 @@ public class SocketConnection {
                 }
             }
         }, 100, 3000);
+    }
+
+    /**
+     * Initializes a client-side AES key.
+     */
+    @SneakyThrows
+    public void initializeAESKey() {
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        this.aesKey = keyGen.generateKey();
+    }
+
+    @SneakyThrows
+    public void broadcastEncryptedAESKey() throws IOException {
+        this.waitUntilBytesAvailable(4, 1000);
+
+        int publicKeyLength = this.readInt(this.socket.getInputStream());
+
+        ByteArrayOutputStream publicKeyStream = new ByteArrayOutputStream();
+        readIntoBuffer(socket.getInputStream(), publicKeyStream, publicKeyLength, Instant.now().toEpochMilli(),
+                4000);
+
+        byte[] publicKeyBytes = publicKeyStream.toByteArray();
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+        PublicKey publicKey = factory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+
+        // Encrypt the AES key with the public key
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        byte[] encryptedKey = cipher.doFinal(this.aesKey.getEncoded());
+
+        writeInt(this.socket.getOutputStream(), encryptedKey.length);
+        this.socket.getOutputStream().write(encryptedKey);
     }
 
     /**
@@ -138,7 +185,14 @@ public class SocketConnection {
         this.packetListeners.remove(packetClass);
     }
 
-    private int readInt(InputStream stream) throws IOException {
+    /**
+     * Reads a 4-byte integer from the stream.
+     * 
+     * @param stream - The stream to read from
+     * @return - The integer that was read
+     * @throws IOException - When the integer could not be read
+     */
+    public int readInt(InputStream stream) throws IOException {
         byte[] bfs = new byte[4];
         stream.read(bfs);
         ByteBuffer bfr = ByteBuffer.wrap(bfs);
@@ -146,7 +200,14 @@ public class SocketConnection {
         return bfr.getInt();
     }
 
-    private void writeInt(OutputStream stream, int i) throws IOException {
+    /**
+     * Writes a 4-byte integer to the stream.
+     * 
+     * @param stream - The stream to write to
+     * @param i      - The integer to write
+     * @throws IOException - When the integer could not be written
+     */
+    public void writeInt(OutputStream stream, int i) throws IOException {
         ByteBuffer bb = ByteBuffer.allocate(4);
         bb.putInt(i);
         stream.write(bb.array());
@@ -158,16 +219,28 @@ public class SocketConnection {
      * @param packet - The packet to send
      * @throws IOException - When the packet could not be sent
      */
+    @SneakyThrows
     public synchronized void sendPacket(Packet packet) throws IOException {
         OutputStream stream = this.socket.getOutputStream();
 
         int id = this.packetDictionary.getPacketId(packet);
         String jsonString = this.rugson.toJson(packet);
-        int size = jsonString.getBytes().length;
+
+        byte[] encryptedBytes = null;
+
+        if (this.aesKey != null) {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, this.aesKey);
+            encryptedBytes = cipher.doFinal(jsonString.getBytes());
+        } else {
+            throw new RuntimeException("AES key not initialized");
+        }
+
+        int size = encryptedBytes.length;
 
         writeInt(stream, id);
         writeInt(stream, size);
-        stream.write(jsonString.getBytes());
+        stream.write(encryptedBytes);
     }
 
     private void pollPackets() {
@@ -180,6 +253,7 @@ public class SocketConnection {
                     continue;
                 }
                 handleIncomingPacket(packet);
+            } catch (RuntimeException e) {
             } catch (IOException | InterruptedException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -217,8 +291,8 @@ public class SocketConnection {
                     if (!shouldContinue) {
                         break;
                     }
-                } catch (IOException | NullPointerException | 
-                    IllegalStateException | IllegalArgumentException | SQLException e) {
+                } catch (IOException | NullPointerException | IllegalStateException | IllegalArgumentException
+                        | SQLException e) {
                     e.printStackTrace();
                 }
             }
@@ -252,35 +326,52 @@ public class SocketConnection {
                 "Connection closed! " + this.socket.getInetAddress().getHostAddress() + ":" + this.socket.getPort());
     }
 
-    private Packet readNextPacket(int millisTimeout) throws IOException, InterruptedException, TimeoutException {
+    public void waitUntilBytesAvailable(int amount, int millisTimeout) throws IOException {
         InputStream inputStream = this.socket.getInputStream();
         long currentTimestamp = Instant.now().toEpochMilli();
 
-        // We're waiting for the first 8 bytes to be available
-        // (4 bytes for the packet id, 4 bytes for the packet size)
-        // This should be essentially instant, but we're waiting just in case
-        while (inputStream.available() < 8) {
+        while (inputStream.available() < amount) {
             try {
                 Thread.sleep(10);
                 if (Instant.now().toEpochMilli() - currentTimestamp > millisTimeout) {
                     this.closeConnection();
-                    return null;
+                    return;
                 }
             } catch (InterruptedException e) {
                 this.closeConnection();
-                return null;
+                return;
             }
         }
+    }
+
+    @SneakyThrows
+    private Packet readNextPacket(int millisTimeout) throws IOException, InterruptedException, TimeoutException {
+        InputStream inputStream = this.socket.getInputStream();
+
+        // We're waiting for the first 8 bytes to be available
+        // (4 bytes for the packet id, 4 bytes for the packet size)
+        // This should be essentially instant, but we're waiting just in case
+        waitUntilBytesAvailable(8, millisTimeout);
 
         int id = readInt(inputStream);
         int size = readInt(inputStream);
 
         ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
-        if (!readIntoBuffer(inputStream, bufferedPacket, size, currentTimestamp, millisTimeout)) {
+        if (!readIntoBuffer(inputStream, bufferedPacket, size, Instant.now().toEpochMilli(), millisTimeout)) {
             return null;
         }
 
-        String jsonString = bufferedPacket.toString();
+        byte[] encryptedBytes = bufferedPacket.toByteArray();
+
+        if (this.aesKey != null) {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, this.aesKey);
+            encryptedBytes = cipher.doFinal(encryptedBytes);
+        } else {
+            throw new RuntimeException("AES key not initialized");
+        }
+
+        String jsonString = new String(encryptedBytes);
         Class<? extends Packet> packetClass = this.packetDictionary.getPacketClass(id);
 
         return this.rugson.fromJson(jsonString, packetClass);
@@ -318,9 +409,25 @@ public class SocketConnection {
             int tempRead = inputStream.read(tempBuf, 0, Math.min(bufferSize, size - bufferedPacket.size()));
             read += tempRead;
 
-            bufferedPacket.write(tempBuf);
+            bufferedPacket.write(tempBuf, 0, tempRead);
         }
 
         return true;
+    }
+
+    public byte[] readRawKeyByte() throws IOException {
+        waitUntilBytesAvailable(4, 1000);
+        InputStream inputStream = this.socket.getInputStream();
+
+        int size = readInt(inputStream);
+
+        ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
+        try {
+            readIntoBuffer(inputStream, bufferedPacket, size, Instant.now().toEpochMilli(), 1000);
+        } catch (TimeoutException e) {
+            return null;
+        }
+
+        return bufferedPacket.toByteArray();
     }
 }
