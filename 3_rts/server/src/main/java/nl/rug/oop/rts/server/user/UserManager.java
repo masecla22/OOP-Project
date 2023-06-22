@@ -3,12 +3,14 @@ package nl.rug.oop.rts.server.user;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,7 @@ public class UserManager {
                 "`id` INT NOT NULL AUTO_INCREMENT," +
                 "`username` TEXT NOT NULL," +
                 "`password` TEXT NOT NULL," +
+                "`salt` TEXT NOT NULL," +
                 "`elo` INT NOT NULL DEFAULT 1000," +
                 "PRIMARY KEY (`id`)" +
                 ");";
@@ -94,13 +97,15 @@ public class UserManager {
             throw new IllegalArgumentException("User already exists with that username");
         }
 
-        String hashedPassword = hashPassword(password);
+        String salt = getSalt();
+        String hashedPassword = hashPassword(password, salt);
 
-        String query = "INSERT INTO `rts_users` (`username`, `password`) VALUES (?, ?);";
+        String query = "INSERT INTO `rts_users` (`username`, `password`, `salt`) VALUES (?, ?, ?);";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             statement.setString(2, hashedPassword);
+            statement.setString(3, salt);
             statement.execute();
         }
 
@@ -190,11 +195,27 @@ public class UserManager {
             return null;
         }
 
-        String query = "SELECT * FROM `rts_users` WHERE `username` = ? AND `password` = ?;";
-
+        // Fetch the salt of the user first
+        String query = "SELECT `salt` FROM `rts_users` WHERE `username` = ?;";
+        String salt = null;
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
-            statement.setString(2, hashPassword(password));
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                salt = set.getString(1);
+            }
+        }
+
+        if (salt == null)
+            return null;
+
+        // Hash the password with the salt
+        String hashedPassword = hashPassword(password, salt);
+
+        query = "SELECT * FROM `rts_users` WHERE `username` = ? AND `password` = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, hashedPassword);
 
             ResultSet set = statement.executeQuery();
 
@@ -222,16 +243,29 @@ public class UserManager {
     }
 
     @SneakyThrows(NoSuchAlgorithmException.class) // I swear SHA-256 exists
-    private String hashPassword(String password) {
+    private String hashPassword(String password, String salt) {
         if (password == null) {
             return null;
         }
 
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+        byte[] saltBytes = Base64.getDecoder().decode(salt);
+        digest.update(saltBytes);
+
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
         String hashResult = bytesToHex(hash);
 
         return hashResult;
+    }
+
+    private String getSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+
+        String base64 = Base64.getEncoder().encodeToString(salt);
+        return base64;
     }
 
     private double calculateEloProbability(double rating1, double rating2) {
