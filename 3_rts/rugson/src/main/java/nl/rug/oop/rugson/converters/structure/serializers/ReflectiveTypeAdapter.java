@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.SneakyThrows;
+import nl.rug.oop.rugson.annotations.WriteOnly;
 import nl.rug.oop.rugson.converters.structure.TypeAdapter;
 import nl.rug.oop.rugson.json.JsonToken;
 import nl.rug.oop.rugson.json.JsonValue;
@@ -56,6 +57,8 @@ public class ReflectiveTypeAdapter extends TypeAdapter<Object> {
         Class<?> clazz = object.getClass();
 
         List<Field> fields = this.getFieldsFor(clazz);
+        fields.removeIf(c -> c.getAnnotation(WriteOnly.class) != null);
+
         for (Field field : fields) {
             field.setAccessible(true);
             jsonResult.put(field.getName(), this.getTreeSerializer().toJson(field.get(object), field.getType()));

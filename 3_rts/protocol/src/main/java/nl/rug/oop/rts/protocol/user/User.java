@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import nl.rug.oop.rugson.annotations.WriteOnly;
 
 /**
  * A user for the game.
@@ -19,7 +20,10 @@ public class User {
     private int id;
 
     private String name;
+
+    @WriteOnly
     private String password;
+
     private int elo;
 
     /**
