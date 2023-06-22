@@ -90,6 +90,12 @@ public class MultiplayerConnectionController {
 
             Socket socket = new Socket(centralServer, port);
             this.connection = new SocketConnection(rugson, socket, threadPool, getPacketDictionary());
+
+            this.connection.initializeAESKey();
+            this.connection.broadcastEncryptedAESKey();
+
+            this.connection.initializeSending();
+
             this.connection.addListener(new PacketListener<>(Packet.class) {
                 @Override
                 protected boolean handlePacket(SocketConnection connection, Packet packet) {
@@ -140,6 +146,11 @@ public class MultiplayerConnectionController {
 
         String username = settingsController.getSettings().getUsername();
         String password = settingsController.getSettings().getPassword();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
 
         AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(LoginResponse.class).bindTo(connection);
         this.connection.sendPacket(new LoginRequest(username, password));
@@ -204,6 +215,19 @@ public class MultiplayerConnectionController {
         }
 
         this.threadPool.execute(() -> actuallySendPacket(packet));
+    }
+
+    /**
+     * Sends a packet to the central server synchronously.
+     * 
+     * @param packet - The packet to send
+     */
+    public void sendPacketSyncronously(Packet packet) {
+        if (this.connection == null) {
+            return;
+        }
+
+        actuallySendPacket(packet);
     }
 
     @SneakyThrows
