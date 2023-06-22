@@ -79,6 +79,11 @@ public class GameSettings {
         }
     }
 
+    /**
+     * Returns the password.
+     * 
+     * @return - the password
+     */
     public String getPassword() {
         if (password == null) {
             return null;
@@ -86,6 +91,11 @@ public class GameSettings {
         return new String(Base64.getDecoder().decode(password));
     }
 
+    /**
+     * Sets the password.
+     * 
+     * @param password - the password
+     */
     public void setPassword(String password) {
         if (password == null) {
             this.password = null;

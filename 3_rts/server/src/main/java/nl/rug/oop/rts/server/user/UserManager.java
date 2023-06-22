@@ -216,8 +216,9 @@ public class UserManager {
             }
         }
 
-        if (salt == null)
+        if (salt == null) {
             return null;
+        }
 
         // Hash the password with the salt
         String hashedPassword = hashPassword(password, salt);

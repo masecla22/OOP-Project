@@ -122,7 +122,7 @@ public class ConnectionManager {
 
         try {
             serverSideEncryption(connection);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             connection.closeConnection();
             return;
@@ -140,8 +140,8 @@ public class ConnectionManager {
     }
 
     @SneakyThrows({ NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidKeyException.class,
-            BadPaddingException.class, IllegalBlockSizeException.class })
-    public void serverSideEncryption(SocketConnection connection) throws IOException {
+        BadPaddingException.class, IllegalBlockSizeException.class }) // Jesus christ checkstyle
+    private void serverSideEncryption(SocketConnection connection) throws IOException {
         // The server sends out it's public RSA key
         // The client encrypts the AES key with the public RSA key
         // Then, the client sends the encrypted AES key to the server

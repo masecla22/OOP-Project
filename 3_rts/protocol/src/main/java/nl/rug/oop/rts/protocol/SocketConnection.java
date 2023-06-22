@@ -86,6 +86,9 @@ public class SocketConnection {
         this.isRunning.set(true);
     }
 
+    /**
+     * Initializes the polling thread and the keep-alive sender.
+     */
     public void initializeSending() {
         this.pollingThread = new Thread(this::pollPackets);
         this.pollingThread.start();
@@ -112,6 +115,11 @@ public class SocketConnection {
         this.aesKey = keyGen.generateKey();
     }
 
+    /**
+     * Establishes the encryption protocol with the server.
+     * 
+     * @throws IOException - When an IO error occurs
+     */
     @SneakyThrows
     public void broadcastEncryptedAESKey() throws IOException {
         this.waitUntilBytesAvailable(4, 1000);
@@ -253,7 +261,6 @@ public class SocketConnection {
                     continue;
                 }
                 handleIncomingPacket(packet);
-            } catch (RuntimeException e) {
             } catch (IOException | InterruptedException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -326,6 +333,13 @@ public class SocketConnection {
                 "Connection closed! " + this.socket.getInetAddress().getHostAddress() + ":" + this.socket.getPort());
     }
 
+    /**
+     * Waits until a given amount of bytes is available in the input stream.
+     * 
+     * @param amount        - The amount of bytes to wait for
+     * @param millisTimeout - The timeout in milliseconds
+     * @throws IOException - When the connection was closed
+     */
     public void waitUntilBytesAvailable(int amount, int millisTimeout) throws IOException {
         InputStream inputStream = this.socket.getInputStream();
         long currentTimestamp = Instant.now().toEpochMilli();
@@ -415,6 +429,12 @@ public class SocketConnection {
         return true;
     }
 
+    /**
+     * Reads a key byte array from the input stream.
+     * 
+     * @return - The key byte array
+     * @throws IOException - When the connection was closed
+     */
     public byte[] readRawKeyByte() throws IOException {
         waitUntilBytesAvailable(4, 1000);
         InputStream inputStream = this.socket.getInputStream();

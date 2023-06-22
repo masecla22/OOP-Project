@@ -90,10 +90,8 @@ public class MultiplayerConnectionController {
 
             Socket socket = new Socket(centralServer, port);
             this.connection = new SocketConnection(rugson, socket, threadPool, getPacketDictionary());
-
             this.connection.initializeAESKey();
             this.connection.broadcastEncryptedAESKey();
-
             this.connection.initializeSending();
 
             this.connection.addListener(new PacketListener<>(Packet.class) {
@@ -150,6 +148,7 @@ public class MultiplayerConnectionController {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(LoginResponse.class).bindTo(connection);
