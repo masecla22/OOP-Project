@@ -65,7 +65,6 @@ public class MultiplayerGameConnectionController {
         connectionController.getConnection().addListener(new PacketListener<GameUpdatePacket>(GameUpdatePacket.class) {
             @Override
             protected boolean handlePacket(SocketConnection connection, GameUpdatePacket packet) throws IOException {
-                System.out.println("Received game update packet");
                 mapController.ingestMapUpdate(packet);
                 return true;
             }
