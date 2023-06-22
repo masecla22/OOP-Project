@@ -41,6 +41,8 @@ import nl.rug.oop.rugson.Rugson;
  * Represents a connection to a remote socket.
  */
 public class SocketConnection {
+    private static final int PACKET_MAX_SIZE = 1024 * 1024 * 16;
+
     @NonNull
     private Rugson rugson;
 
@@ -369,6 +371,10 @@ public class SocketConnection {
 
         int id = readInt(inputStream);
         int size = readInt(inputStream);
+
+        if (size > PACKET_MAX_SIZE) {
+            throw new IOException("Packet size too large");
+        }
 
         ByteArrayOutputStream bufferedPacket = new ByteArrayOutputStream();
         if (!readIntoBuffer(inputStream, bufferedPacket, size, Instant.now().toEpochMilli(), millisTimeout)) {
