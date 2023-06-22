@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,5 +77,20 @@ public class GameSettings {
         } catch (IOException | NullPointerException | IllegalStateException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getPassword() {
+        if (password == null) {
+            return null;
+        }
+        return new String(Base64.getDecoder().decode(password));
+    }
+
+    public void setPassword(String password) {
+        if (password == null) {
+            this.password = null;
+            return;
+        }
+        this.password = Base64.getEncoder().encodeToString(password.getBytes());
     }
 }
