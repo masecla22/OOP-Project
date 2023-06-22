@@ -45,6 +45,8 @@ Taking into account the fact that we have full control over the client and the s
 
 These packets are then serialized and deserialized using Rugson, and while it's true that a JSON based approach is not necessarily the most efficient, it is extremely easy to work with and allows us to easily add new packets to the protocol without writing all that much extra code. 
 
+Encryption over the network is handled using RSA with a 2048 bit key. The server generates a keypair and sends the public key to the client, which then uses it to encrypt the AES key which is used to encrypt the rest of the packets. This allows us to easily encrypt the packets without having to worry about the overhead of RSA.
+
 Finally, in order to make sure that the connection is always alive, we exchange a small packet (see `KeepAlivePacket`) every couple of seconds. This allows us to easily detect when the connection is lost or if something went wrong. 
 
 ## The Server 
@@ -53,7 +55,7 @@ The server for the game is also built in Java, and it is a simple multithreaded 
 
 The Multiplayer logic is not entirely identical to the singleplayer one, specifically, each player is only able to add armies from their own team, events get used up instead of being permanent on the map, and the game ends if one of the players is able to get any army on the starting node of the other player. 
 
-All of the server side data is stored in a MySQL database, with all password being hashed using SHA-256. (bCrypt would have been a better choice, however, in the spirit of the challenge, we wanted to use as little external sources as possible, and SHA is already built into Java). 
+All of the server side data is stored in a MySQL database, with all password being hashed and then salted using SHA-256. We made sure to use a cryptographically secure source of randomness. (bCrypt would have been a better choice, however, in the spirit of the challenge, we wanted to use as little external sources as possible, and SHA is already built into Java). 
 
 ### A quick note about cheating and disruptive behaviour
 
