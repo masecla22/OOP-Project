@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +93,14 @@ public class UserManager {
 
         if (password.length() < 8 || password.length() > 32) {
             throw new IllegalArgumentException("Password must be between 8 and 32 characters");
+        }
+
+        if (!checkIfAllowed(username)) {
+            throw new IllegalArgumentException("Username contains illegal characters");
+        }
+
+        if (!checkIfAllowed(password)) {
+            throw new IllegalArgumentException("Password contains illegal characters");
         }
 
         if (userExists(username)) {
@@ -257,6 +267,13 @@ public class UserManager {
         String hashResult = bytesToHex(hash);
 
         return hashResult;
+    }
+
+    private boolean checkIfAllowed(String value) {
+        Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+        Matcher matcher = pattern.matcher(value);
+
+        return !matcher.find();
     }
 
     private String getSalt() {
