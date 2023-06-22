@@ -89,6 +89,8 @@ public class RTSServer {
         this.setupGameManager();
 
         this.setupConnectionManager();
+
+        System.out.println("Done! Server started!");
     }
 
     private void setupConfiguration() {
