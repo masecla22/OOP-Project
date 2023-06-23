@@ -35,12 +35,13 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
 
         try {
             User registered = this.userManager.createUser(username, password);
-
             UUID token = this.userManager.login(registered);
-            RegistrationResponse response = new RegistrationResponse(true, null, token);
+            UUID refreshToken = this.userManager.createRefreshToken(registered);
+
+            RegistrationResponse response = new RegistrationResponse(true, null, token, refreshToken);
             connection.sendPacket(response);
         } catch (IllegalArgumentException | SQLException e) {
-            RegistrationResponse response = new RegistrationResponse(false, e.getMessage(), null);
+            RegistrationResponse response = new RegistrationResponse(false, e.getMessage(), null, null);
             connection.sendPacket(response);
         }
 
