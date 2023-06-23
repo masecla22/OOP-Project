@@ -21,5 +21,7 @@ public class LoginResponse extends Packet {
     private String error;
 
     private UUID token;
+    private UUID refreshToken;
+
     private User user;
 }
