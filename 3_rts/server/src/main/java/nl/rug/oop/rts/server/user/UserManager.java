@@ -74,7 +74,7 @@ public class UserManager {
     }
 
     /**
-     * Creates a refresh token for a given user
+     * Creates a refresh token for a given user.
      * 
      * @param user - The user to create the token for
      * @return - The refresh token
@@ -92,6 +92,13 @@ public class UserManager {
         }
     }
 
+    /**
+     * Logs in a user by a given refresh token.
+     * 
+     * @param refreshToken - The refresh token
+     * @return - The access token
+     * @throws SQLException - If an error occurs while logging in
+     */
     public UUID login(UUID refreshToken) throws SQLException {
         String query = "SELECT * FROM `rts_tokens` WHERE `refresh_token` = ?;";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -211,7 +218,7 @@ public class UserManager {
     }
 
     /**
-     * Gets the user with a given ID
+     * Gets the user with a given ID.
      * 
      * @param id - The user ID
      * @return - The user
