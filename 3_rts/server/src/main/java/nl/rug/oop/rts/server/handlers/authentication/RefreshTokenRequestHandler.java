@@ -26,7 +26,7 @@ public class RefreshTokenRequestHandler extends PacketListener<TokenRefreshingRe
     @Override
     protected boolean handlePacket(SocketConnection connection, TokenRefreshingRequest packet)
             throws IOException, SQLException {
-        UUID sessionToken = userManager.login(packet.getRefreshToken());
+        UUID sessionToken = userManager.login(connection, packet.getRefreshToken());
         User user = userManager.getUser(sessionToken);
 
         if (sessionToken == null) {

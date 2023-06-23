@@ -35,7 +35,7 @@ public class LoginHandler extends PacketListener<LoginRequest> {
         String password = packet.getPassword();
 
         try {
-            UUID token = this.userManager.login(username, password);
+            UUID token = this.userManager.login(connection, username, password);
             if (token == null) {
                 LoginResponse response = new LoginResponse(false, "Invalid Credentials", null, null, null);
                 connection.sendPacket(response);

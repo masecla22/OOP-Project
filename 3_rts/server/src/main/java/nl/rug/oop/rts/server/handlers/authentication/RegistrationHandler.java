@@ -35,7 +35,7 @@ public class RegistrationHandler extends PacketListener<RegistrationRequest> {
 
         try {
             User registered = this.userManager.createUser(username, password);
-            UUID token = this.userManager.login(registered);
+            UUID token = this.userManager.login(connection, registered);
             UUID refreshToken = this.userManager.createRefreshToken(registered);
 
             RegistrationResponse response = new RegistrationResponse(true, null, token, refreshToken);
