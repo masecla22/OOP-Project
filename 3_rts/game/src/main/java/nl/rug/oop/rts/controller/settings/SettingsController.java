@@ -1,6 +1,7 @@
 package nl.rug.oop.rts.controller.settings;
 
 import java.io.File;
+import java.util.UUID;
 
 import nl.rug.oop.rts.protocol.objects.model.settings.GameSettings;
 import nl.rug.oop.rugson.Rugson;
@@ -27,11 +28,7 @@ public class SettingsController {
         settings.setCentralServer(centralServer);
     }
 
-    public void setUsername(String username) {
-        settings.setUsername(username);
-    }
-
-    public void setPassword(String password) {
-        settings.setPassword(password);
+    public void setRefreshToken(UUID token) {
+        settings.setRefreshToken(token);
     }
 }
