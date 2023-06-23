@@ -13,18 +13,15 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.adapters.EventTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.GameMapTypeAdapter;
 import nl.rug.oop.rts.protocol.adapters.UnitTypeAdapter;
-import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.objects.model.Map;
 import nl.rug.oop.rts.protocol.objects.model.events.Event;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.singleplayer.MultiPlayerUnitFactory;
 import nl.rug.oop.rts.protocol.objects.model.units.Unit;
-import nl.rug.oop.rts.protocol.packet.Packet;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
 import nl.rug.oop.rts.server.configuration.ServerConfiguration;
 import nl.rug.oop.rts.server.connection.ConnectionManager;
@@ -137,14 +134,6 @@ public class RTSServer {
             // Register all listeners on the connection
             logger.info("New connection! " + connection.getSocket().getInetAddress().getHostAddress() + ":"
                     + connection.getSocket().getPort());
-            connection.addListener(new PacketListener<>(Packet.class) {
-                @Override
-                protected boolean handlePacket(SocketConnection connection, Packet packet) {
-                    logger.info("Received packet: " + packet);
-                    return true;
-                }
-            });
-
             HandlerBinder binder = new HandlerBinder(this, connection);
             binder.bind();
         });

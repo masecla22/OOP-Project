@@ -16,7 +16,6 @@ import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.listeners.AwaitPacketOnce;
-import nl.rug.oop.rts.protocol.listeners.PacketListener;
 import nl.rug.oop.rts.protocol.objects.model.events.EventFactory;
 import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.protocol.packet.Packet;
@@ -95,14 +94,6 @@ public class MultiplayerConnectionController {
             this.connection.initializeAESKey();
             this.connection.broadcastEncryptedAESKey();
             this.connection.initializeSending();
-
-            this.connection.addListener(new PacketListener<>(Packet.class) {
-                @Override
-                protected boolean handlePacket(SocketConnection connection, Packet packet) {
-                    System.out.println("Received packet: " + packet);
-                    return true;
-                }
-            });
 
             return true;
         } catch (IOException e) {

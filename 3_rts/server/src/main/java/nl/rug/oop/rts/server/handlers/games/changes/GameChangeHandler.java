@@ -84,13 +84,10 @@ public class GameChangeHandler extends PacketListener<GameChangeListPacket> {
     }
 
     private void sendGameUpdates(MultiplayerGame game) {
-        System.out.println("Sending game updates");
         GameUpdatePacket packet = new GameUpdatePacket(game);
 
         try {
-            System.out.println("Sending game updates");
             game.getPlayerA().getConnection().sendPacket(packet);
-            System.out.println("Sending game updates");
             game.getPlayerB().getConnection().sendPacket(packet);
         } catch (IOException e) {
             e.printStackTrace();
