@@ -1,5 +1,6 @@
 package nl.rug.oop.rts.server.connection;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -68,10 +69,21 @@ public class ConnectionManager {
 
     }
 
-    @SneakyThrows(NoSuchAlgorithmException.class)
+    @SneakyThrows
     private void initializeRSA() {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        SecureRandom random = SecureRandom.getInstanceStrong();
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+
+        // If we're on linux, we seed the random number generator with /dev/urandom
+        if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+            FileInputStream urandom = new FileInputStream("/dev/urandom");
+            byte[] bytes = new byte[1024];
+            urandom.read(bytes);
+            urandom.close();
+
+            random.setSeed(bytes);
+            System.out.println("Seeded random number generator with /dev/urandom!");
+        }
 
         keyPairGenerator.initialize(2048, random);
 
