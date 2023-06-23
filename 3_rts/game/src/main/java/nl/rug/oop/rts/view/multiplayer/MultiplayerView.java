@@ -98,7 +98,7 @@ public class MultiplayerView extends View implements Observer {
                 return;
             }
 
-            this.connectionController.ensureLogin().thenAccept(c -> {
+            this.connectionController.validateRefreshToken().thenAccept(c -> {
                 if (c) {
                     requestGames().thenAccept((v) -> SwingUtilities.invokeLater(this::handleLobbyView));
                 } else {
@@ -291,7 +291,7 @@ public class MultiplayerView extends View implements Observer {
     }
 
     private void handleLogin() {
-        this.game.handleView(new LoginView(game, settingsController, connectionController));
+        this.game.handleView(new LoginView(game, connectionController));
     }
 
     private CompletableFuture<Void> requestGames() {
