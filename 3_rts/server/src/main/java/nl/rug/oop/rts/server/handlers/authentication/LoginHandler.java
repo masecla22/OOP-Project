@@ -37,16 +37,18 @@ public class LoginHandler extends PacketListener<LoginRequest> {
         try {
             UUID token = this.userManager.login(username, password);
             if (token == null) {
-                LoginResponse response = new LoginResponse(false, "Invalid Credentials", null, null);
+                LoginResponse response = new LoginResponse(false, "Invalid Credentials", null, null, null);
                 connection.sendPacket(response);
                 return true;
             }
 
             User user = this.userManager.getUser(token);
-            LoginResponse response = new LoginResponse(true, null, token, user);
+            UUID refreshToken = this.userManager.createRefreshToken(user);
+
+            LoginResponse response = new LoginResponse(true, null, token, refreshToken, user);
             connection.sendPacket(response);
         } catch (IllegalArgumentException | SQLException e) {
-            LoginResponse response = new LoginResponse(false, e.getMessage(), null, null);
+            LoginResponse response = new LoginResponse(false, e.getMessage(), null, null, null);
             connection.sendPacket(response);
         }
 
