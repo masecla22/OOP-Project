@@ -6,6 +6,7 @@ import nl.rug.oop.rts.protocol.objects.model.factories.UnitFactory;
 import nl.rug.oop.rts.server.games.GamesManager;
 import nl.rug.oop.rts.server.handlers.authentication.AuthenticatedPacketHandler;
 import nl.rug.oop.rts.server.handlers.authentication.LoginHandler;
+import nl.rug.oop.rts.server.handlers.authentication.RefreshTokenRequestHandler;
 import nl.rug.oop.rts.server.handlers.authentication.RegistrationHandler;
 import nl.rug.oop.rts.server.handlers.games.GameScopedHandler;
 import nl.rug.oop.rts.server.handlers.games.changes.GameChangeHandler;
@@ -39,6 +40,7 @@ public class HandlerBinder {
 
         connection.addListener(new LoginHandler(userManager));
         connection.addListener(new RegistrationHandler(userManager));
+        connection.addListener(new RefreshTokenRequestHandler(userManager));
 
         connection.addListener(new AuthenticatedPacketHandler(userManager));
 
