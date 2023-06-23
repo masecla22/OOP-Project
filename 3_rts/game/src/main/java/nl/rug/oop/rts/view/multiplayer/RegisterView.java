@@ -137,8 +137,7 @@ public class RegisterView extends View implements Observer {
         try {
             this.connectionController.attemptRegister(username, password).thenAccept(c -> {
                 if (c.isSuccess()) {
-                    this.settingsController.setUsername(username);
-                    this.settingsController.setPassword(password);
+                    this.settingsController.setRefreshToken(c.getRefreshToken());
 
                     this.game.handleBack();
                 } else {
