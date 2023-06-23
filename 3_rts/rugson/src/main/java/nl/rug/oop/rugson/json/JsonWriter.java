@@ -52,7 +52,7 @@ public class JsonWriter {
                 printEndArray(builder, current, next);
                 break;
             case NAME:
-                printName(builder, current);
+                printName(builder, current, next);
                 break;
             case BOOLEAN:
             case NULL:
@@ -70,7 +70,6 @@ public class JsonWriter {
 
     private void printStartObject(StringBuilder builder, JsonValue current) {
         if (indent > 0) {
-            newLine(builder);
             indent(builder);
         }
         builder.append("{");
@@ -87,7 +86,9 @@ public class JsonWriter {
     }
 
     private void printStartArray(StringBuilder builder, JsonValue current) {
-        indent(builder);
+        if (indent > 0) {
+            indent(builder);
+        }
         builder.append("[");
         incrementIndent();
         newLine(builder);
@@ -101,12 +102,16 @@ public class JsonWriter {
         addCommaIfNeeded(builder, next.getType());
     }
 
-    private void printName(StringBuilder builder, JsonValue current) {
+    private void printName(StringBuilder builder, JsonValue current, JsonValue next) {
         indent(builder);
         builder.append("\"" + current.getValue() + "\"");
         builder.append(":");
         if (prettyPrint) {
-            builder.append(" ");
+            if (next.getType().equals(JsonToken.START_OBJECT) || next.getType().equals(JsonToken.START_ARRAY)) {
+                newLine(builder);
+            } else {
+                builder.append(" ");
+            }
         }
     }
 
