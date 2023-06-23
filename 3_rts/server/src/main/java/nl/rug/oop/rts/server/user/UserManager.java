@@ -430,6 +430,8 @@ public class UserManager {
 
     /**
      * Invalidates the token for a given connection.
+     * 
+     * @param connection - The connection
      */
     public void invalidateToken(SocketConnection connection) {
         UUID token = activeConnections.get(connection);
