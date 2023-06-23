@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import nl.rug.oop.rts.protocol.SocketConnection;
 import nl.rug.oop.rts.protocol.user.User;
 
 /**
@@ -33,6 +34,7 @@ public class UserManager {
     private Connection connection;
 
     private Map<UUID, User> activeTokens = new HashMap<>();
+    private Map<SocketConnection, UUID> activeConnections = new HashMap<>();
 
     /**
      * Initialize the user manager. This will create the table if it doesn't
@@ -95,11 +97,12 @@ public class UserManager {
     /**
      * Logs in a user by a given refresh token.
      * 
-     * @param refreshToken - The refresh token
+     * @param socketConnection - The connection to log in
+     * @param refreshToken     - The refresh token
      * @return - The access token
      * @throws SQLException - If an error occurs while logging in
      */
-    public UUID login(UUID refreshToken) throws SQLException {
+    public UUID login(SocketConnection socketConnection, UUID refreshToken) throws SQLException {
         String query = "SELECT * FROM `rts_tokens` WHERE `refresh_token` = ?;";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, refreshToken.toString());
@@ -109,6 +112,7 @@ public class UserManager {
                 UUID token = UUID.randomUUID();
                 User user = getUser(userId);
                 activeTokens.put(token, user);
+                activeConnections.put(socketConnection, token);
                 return token;
             } else {
                 return null;
@@ -258,12 +262,16 @@ public class UserManager {
     /**
      * Logs in the given user and returns a session ID.
      * 
-     * @param user - The user
+     * @param connection - The connection
+     * @param user       - The user
      * @return - The session ID
      */
-    public UUID login(User user) {
+    public UUID login(SocketConnection connection, User user) {
         UUID token = UUID.randomUUID();
+
         activeTokens.put(token, user);
+        activeConnections.put(connection, token);
+
         return token;
     }
 
@@ -271,12 +279,13 @@ public class UserManager {
      * Checks the given password against the stored password for the given user.
      * and returns a session ID if the password is correct.
      * 
-     * @param username - The username
-     * @param password - The password
+     * @param socketConnection - The connection
+     * @param username         - The username
+     * @param password         - The password
      * 
      * @return - The session ID, or null if the password is incorrect
      */
-    public UUID login(String username, String password) throws SQLException {
+    public UUID login(SocketConnection socketConnection, String username, String password) throws SQLException {
         if (username == null || password == null) {
             return null;
         }
@@ -308,7 +317,7 @@ public class UserManager {
 
             if (set.next()) {
                 User user = new User(set);
-                return login(user);
+                return login(socketConnection, user);
             } else {
                 return null;
             }
@@ -419,4 +428,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Invalidates the token for a given connection.
+     */
+    public void invalidateToken(SocketConnection connection) {
+        UUID token = activeConnections.get(connection);
+        activeTokens.remove(token);
+        activeConnections.remove(connection);
+    }
 }
