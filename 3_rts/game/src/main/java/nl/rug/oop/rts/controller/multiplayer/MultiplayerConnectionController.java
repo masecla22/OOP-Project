@@ -25,6 +25,8 @@ import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginRequ
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.login.LoginResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationRequest;
 import nl.rug.oop.rts.protocol.packet.definitions.authentication.register.RegistrationResponse;
+import nl.rug.oop.rts.protocol.packet.definitions.authentication.tokens.TokenRefreshingRequest;
+import nl.rug.oop.rts.protocol.packet.definitions.authentication.tokens.TokenRefreshingResponse;
 import nl.rug.oop.rts.protocol.packet.definitions.game.GameStartPacket;
 import nl.rug.oop.rts.protocol.packet.dictionary.PacketDictionary;
 import nl.rug.oop.rts.protocol.packet.dictionary.RTSPacketDictionary;
@@ -134,7 +136,7 @@ public class MultiplayerConnectionController {
      * @return - A future that will be completed when the login is complete
      * @throws IOException - When the connection is not open
      */
-    public CompletableFuture<Boolean> ensureLogin() throws IOException {
+    public CompletableFuture<Boolean> validateRefreshToken() throws IOException {
         if (this.connection == null) {
             return CompletableFuture.completedFuture(false);
         }
@@ -142,8 +144,10 @@ public class MultiplayerConnectionController {
             return CompletableFuture.completedFuture(true);
         }
 
-        String username = settingsController.getSettings().getUsername();
-        String password = settingsController.getSettings().getPassword();
+        UUID refreshToken = settingsController.getSettings().getRefreshToken();
+        if (refreshToken == null) {
+            return CompletableFuture.completedFuture(false);
+        }
 
         try {
             Thread.sleep(500);
@@ -151,21 +155,52 @@ public class MultiplayerConnectionController {
             e.printStackTrace();
         }
 
-        AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(LoginResponse.class).bindTo(connection);
-        this.connection.sendPacket(new LoginRequest(username, password));
+        AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(TokenRefreshingResponse.class).bindTo(connection);
+        this.connection.sendPacket(new TokenRefreshingRequest(refreshToken));
 
         return result.getAwaiting().thenApply(c -> {
-            LoginResponse response = (LoginResponse) c.getValue();
+            TokenRefreshingResponse response = (TokenRefreshingResponse) c.getValue();
             if (!response.isSuccess()) {
-                return false;
-            }
-
-            if (!response.getUser().getName().equals(username)) {
                 return false;
             }
 
             this.authToken = response.getToken();
             this.user = response.getUser();
+
+            return true;
+        });
+    }
+
+    /**
+     * Attempts to login to the central server.
+     * 
+     * @param username - The username to login with
+     * @param password - The password to login with
+     * @return - A future that will be completed when the login is complete
+     * @throws IOException - When the connection is not open
+     */
+    public CompletableFuture<Boolean> attemptLogin(String username, String password) throws IOException {
+        if (this.connection == null) {
+            return CompletableFuture.completedFuture(false);
+        }
+        if (this.authToken != null) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(LoginResponse.class).bindTo(connection);
+        this.connection.sendPacket(new LoginRequest(username, password));
+
+        return result.getAwaiting().thenApply(c -> {
+            LoginResponse request = (LoginResponse) c.getValue();
+            if (!request.isSuccess()) {
+                return false;
+            }
+
+            this.authToken = request.getToken();
+            this.user = request.getUser();
+
+            this.settingsController.setRefreshToken(request.getRefreshToken());
+            this.settingsController.save();
 
             return true;
         });
@@ -182,10 +217,12 @@ public class MultiplayerConnectionController {
     public CompletableFuture<RegistrationResponse> attemptRegister(String username, String password)
             throws IOException {
         if (this.connection == null) {
-            return CompletableFuture.completedFuture(new RegistrationResponse(false, "Not connected to server.", null));
+            return CompletableFuture
+                    .completedFuture(new RegistrationResponse(false, "Not connected to server.", null, null));
         }
         if (this.authToken != null) {
-            return CompletableFuture.completedFuture(new RegistrationResponse(true, "Already logged in.", null));
+            return CompletableFuture.completedFuture(new RegistrationResponse(true, "Already logged in.",
+                    null, null));
         }
 
         AwaitPacketOnce<Packet> result = new AwaitPacketOnce<>(RegistrationResponse.class).bindTo(connection);
