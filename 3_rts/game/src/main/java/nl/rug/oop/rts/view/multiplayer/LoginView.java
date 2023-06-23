@@ -15,7 +15,6 @@ import javax.swing.SwingUtilities;
 
 import nl.rug.oop.rts.Game;
 import nl.rug.oop.rts.controller.multiplayer.MultiplayerConnectionController;
-import nl.rug.oop.rts.controller.settings.SettingsController;
 import nl.rug.oop.rts.protocol.objects.interfaces.observing.Observer;
 import nl.rug.oop.rts.view.View;
 
@@ -25,7 +24,6 @@ import nl.rug.oop.rts.view.View;
 public class LoginView extends View implements Observer {
     private Game game;
 
-    private SettingsController settingsController;
     private MultiplayerConnectionController connectionController;
 
     private JLabel errorLabel = new JLabel("", SwingConstants.CENTER);
@@ -37,13 +35,10 @@ public class LoginView extends View implements Observer {
      * Constructor for the login view.
      * 
      * @param game                 - the game
-     * @param settingsController   - the settings controller
      * @param connectionController - the connection controller
      */
-    public LoginView(Game game, SettingsController settingsController,
-            MultiplayerConnectionController connectionController) {
+    public LoginView(Game game, MultiplayerConnectionController connectionController) {
         this.game = game;
-        this.settingsController = settingsController;
         this.connectionController = connectionController;
 
         this.setLayout(new BorderLayout());
@@ -99,20 +94,16 @@ public class LoginView extends View implements Observer {
             String username = this.usernameField.getText();
             String password = new String(this.passwordField.getPassword());
 
-            this.settingsController.setUsername(username);
-            this.settingsController.setPassword(password);
-            this.settingsController.save();
-
-            this.attemptLogin();
+            this.attemptLogin(username, password);
         });
 
         startButton.setPreferredSize(new Dimension(200, 50));
         this.add(startButton, BorderLayout.PAGE_END);
     }
 
-    private void attemptLogin() {
+    private void attemptLogin(String username, String password) {
         try {
-            this.connectionController.ensureLogin().thenAccept(c -> {
+            this.connectionController.attemptLogin(username, password).thenAccept(c -> {
                 if (c) {
                     SwingUtilities.invokeLater(() -> game.handleBack());
                 } else {
