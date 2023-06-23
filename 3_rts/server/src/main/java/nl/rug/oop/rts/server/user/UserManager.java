@@ -41,10 +41,11 @@ public class UserManager {
      * @throws SQLException - If an error occurs while creating the table
      */
     public void initialize() throws SQLException {
-        ensureTable();
+        ensureUserTable();
+        ensureTokenTable();
     }
 
-    private void ensureTable() throws SQLException {
+    private void ensureUserTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS `rts_users` (" +
                 "`id` INT NOT NULL AUTO_INCREMENT," +
                 "`username` TEXT NOT NULL," +
@@ -56,6 +57,55 @@ public class UserManager {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.execute();
+        }
+    }
+
+    private void ensureTokenTable() throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS `rts_tokens` (" +
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`user_id` INT NOT NULL," +
+                "`refresh_token` TEXT NOT NULL," +
+                "PRIMARY KEY (`id`)" +
+                ");";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.execute();
+        }
+    }
+
+    /**
+     * Creates a refresh token for a given user
+     * 
+     * @param user - The user to create the token for
+     * @return - The refresh token
+     * @throws SQLException - If an error occurs while creating the token
+     */
+    public UUID createRefreshToken(User user) throws SQLException {
+        String query = "INSERT INTO `rts_tokens` (`user_id`, `refresh_token`) VALUES (?, ?);";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, user.getId());
+            UUID token = UUID.randomUUID();
+            statement.setString(2, token.toString());
+            statement.execute();
+
+            return token;
+        }
+    }
+
+    public UUID login(UUID refreshToken) throws SQLException {
+        String query = "SELECT * FROM `rts_tokens` WHERE `refresh_token` = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, refreshToken.toString());
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                int userId = set.getInt("user_id");
+                UUID token = UUID.randomUUID();
+                User user = getUser(userId);
+                activeTokens.put(token, user);
+                return token;
+            } else {
+                return null;
+            }
         }
     }
 
@@ -151,6 +201,25 @@ public class UserManager {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return new User(set);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Gets the user with a given ID
+     * 
+     * @param id - The user ID
+     * @return - The user
+     */
+    public User getUser(int id) throws SQLException {
+        String query = "SELECT * FROM `rts_users` WHERE `id` = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
                 return new User(set);
