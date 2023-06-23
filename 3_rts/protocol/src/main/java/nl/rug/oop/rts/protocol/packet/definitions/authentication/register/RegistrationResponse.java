@@ -20,4 +20,5 @@ public class RegistrationResponse extends Packet {
     private String error;
 
     private UUID token;
+    private UUID refreshToken;
 }
