@@ -1,0 +1,46 @@
+<!-- POM specification -->
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>
+        4.0.0
+    </modelVersion>
+
+    <parent>
+        <groupId>nl.rug.oop.rts</groupId>
+        <artifactId>rts</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- Names -->
+    <groupId>nl.rug.oop.rts</groupId>
+    <artifactId>protocol</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>protocol</name>
+
+    <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.rug.oop.rts</groupId>
+            <artifactId>rugson</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
