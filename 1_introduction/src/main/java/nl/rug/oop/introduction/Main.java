@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * This class contains and manages the main method.
  */
+
 public class Main {
     /**
      * The main method.
